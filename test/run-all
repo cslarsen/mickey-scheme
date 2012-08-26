@@ -1,0 +1,48 @@
+#! ../mickey
+
+;; Run all programs
+(map load (list
+  "begin.scm"
+  "block-comment.scm"
+  "bytevector1.scm"
+  "combinators.scm"
+  "complex.scm"
+  "curry.scm"
+  "debug.scm"
+  "fact.scm"
+  "fib.scm"
+  "hello.scm"
+  "hofstaedter-male-female.scm"
+  "implicit-define.scm"
+  "lambda-lambda.scm"
+  "lambda.scm"
+  "less-equal.scm"
+  "let-fxy.scm"
+  "local-fun.scm"
+  "loop1.scm"
+  "macro1.scm"
+  "macro2.scm"
+  "mandelbrot.scm"
+  "math.scm"
+  "named-let.scm"
+  "rest-lambda.scm"
+  "rest.scm"
+  "sicp-tests.scm"
+  "strings.scm"
+  "syntax-rules-01.scm"
+  "test-closure-1.scm"
+  "test-cond-mm.scm"
+  "test-cond.scm"
+  "test-do.scm"
+  "test-let-2.scm"
+  "test-let-star.scm"
+  "test-let.scm"
+  "test-letrec-2.scm"
+  "test-letrec.scm"
+  "test-lexical-scoping-2.scm"
+  "variadic.scm"
+  "vector1.scm"
+  "version.scm"))
+
+;"test-lexical-scoping.scm" ;; mickey CRASHES if you include this in this way
+;"tests.scm" ;; this ALSO crashes Mickey :

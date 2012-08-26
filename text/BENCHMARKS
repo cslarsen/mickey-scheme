@@ -1,0 +1,24 @@
+I've performed some simple benchmarks just to see how I'm doing.
+
+For this I'm running an unoptimized Mandelbrot renderer and comparing
+with other schemes.  So far, I do:
+
+- time ../mickey mandelbrot.scm
+- time csi -bq mandelbrot.scm    # Chicken scheme, interpreted
+- csc -O5 mandelbrot.scm -o mandelbrot && time ./mandelbrot # ditto, compiled
+
+BENCHMARK HISTORY
+
+== 2011-05-02 ==
+This is the first time that Mickey actually would run the Mandelbrot
+program.  Actually not TOO bad, considering we don't do TCO or JIT,
+and that the code is otherwise completely unoptimized. :)
+
+Program     User     Time/fastest
+---------------------------------
+mickey -g   2.527s   34.1x
+mickey -O6  0.921s   12.4x
+csi -bq     0.136s    1.8x
+csc -O5     0.074s    1.0x
+
+Anyway, at this point, it's more important to build a *correct* scheme.

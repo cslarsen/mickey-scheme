@@ -1,0 +1,4 @@
+To install Mickey Scheme, you need
+
+- A C++ compiler
+- Optional: A readline implementation (-DUSE_READLINE)

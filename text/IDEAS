@@ -1,0 +1,102 @@
+Marketing & Research
+- Lag "ACID test" for Scheme.  Publiser resultater for en haug med forskjellige schemes.
+  ACID-testen var opprinnelig test av CSS der en rendret en "ACID"-figur, altså smiley.
+  Vi lager en annen test.. feks holder det at programmet forventer å printe en spesiell
+  tekst ut, feks en tekst fra Shakespeare eller noe, så kaller vi det "Macbeth test", eller
+  noe sånt... eller noe som ligner på ACID eller noe sånt.. ah, eller at den faktisk
+  printer ut en ASCII acid-figur!:D Jaa!
+
+  "ACID test for Scheme"; hvis alt går bra skal den se ut som referanserenderingen:
+
+     ,*****.
+   .* _   _ *,
+   *  o   o  *
+   *    +    *
+   * \_____/ *
+    *       *
+     *******
+
+  Ja, bare at det som printes ut er MYE større.. og innenfor 76x20, sånn den kan
+  embeddes i epost osv.
+
+  Og den bør være THOROUGH for RnRS... sånn den faktisk kan teste om forskjellige
+  schemes ikke følger spekken.
+
+- Reseach: Lag stor oversikt over hvordan forskjellige schemes løser div problem,
+  spesifikt tail call elimination (trampoline, extended trampoline, cheney on the
+  mta, osv) og GC (mark-and-sweep, boehm gc, generational, incremental, stop the
+  world, no-gc, osv) og hvordan de fikser closures/gc mot C verden.
+
+CORE FEATURES, sortert fra lett til vanskelig
+- Format funksjon, defun_format(), altså C-versjon
+- Add let* (er ikke det bare reverse-ordering fra over? Altså
+          (let* ((a1 b1) (a2 b2)) <body>) => ((lambda (a2 a1) <body>) b2 b1) ?
+- Quote form, altså 'a eller '(), må det gjøres i parser?
+- nil == '() ? Altså at type=nil er samme som '() ?
+- Vector support, #(1 2 3) (dvs, arrays)
+
+MORE FEATURES
+- Enkel, stop-the-world, mark-and-sweep GC
+     - 3 steg: Mark all objects to 1, reach all objects and set to 0, collect all objects still set to 1
+- Tail call recursion elimination
+- Generell tail call optimization
+     - Trampoline?
+     - Extended trampoline?
+     - Cheney on the MTA?
+- Continuations
+- Unrolled linked lists
+ - Macros (merk, macros bør kanskje gjøres så tidlig en kan, da det er veldig nyttig for å kode andre ting)
+
+
+- Hygienic macros
+- Partial evaluation
+     - Brukes for å inline/optimize helt ned til LLVM primitives
+     - Bør dermed være mulig å få syk speed improvement
+     - Kanskje en bør se litt på hvordan eliminere push-call-pop calling convention? Kanskje en
+        kan bruke threaded execution a la Forth, for å få opp hastigheten noe sykt
+- SIMD / SSE optimized vector instructions
+     - Kanskje via #(1 2 3) vektorer?
+- Format funksjon som macro, expanderer code
+     - Burde implementeres i scheme selv, men har dårlig string-processing, så enklere å få gjort i C
+     - På sikt, bruk macro (evt partial evaluation) til å "compile" / ekspandere til feks
+          (format "Hello, ~s!\n" "world") => (macro expansion) =>
+          (string-append "Hello, " "world" "!\n") => (partial evaluation + concatenation) =>
+          (string-append "Hello, world!\n") => bør gi MAX speed
+ - Profiler, bruker AOP/metaprogramming til å injecte (time expr) og collecte i hierarki, altså
+     (* (+ 1 2 3)) => (time (* (time + 1 2 3))) er basically apply macro + hierarkisk tidtakning
+
+Eksterne libs:
+- Rask malloc, feks tcmalloc: http://code.google.com/p/google-perftools/
+- Rask hashtable (sparse/dense), se Google sine
+- libgmp for multi precision numbers
+- libffi for eksterne libs
+- llvm selvsagt for JIT og AOT compilation
+- Qt interface
+- libsdl interface (kanskje via qt?)
+- opengl via libsdl/qt
+
+Lag masse morsomme eksempelprogrammer:
+- Mandelbrot
+     - I ASCII
+     - I grafikk (SDL)
+     - Med fine, kontinuerlige farger (smooth coloring)
+- Recreate 20k lines of C to generate the THX Deep Note in Scheme
+     - Originalkoden finnes ikke, men noen har brukt SuperCollider:
+          http://www.earslap.com/instruction/recreating-the-thx-deep-note
+     - De klarte å få den ned i 140 chars eller noe, så her trengs et greit soundlib
+     - Få Olli til å mekke et kult eksempel her
+- Forth interpreter / compiler
+     (siden llvm brukes av mickey scheme bør primitives være tilgjengelige for å kode ting som Forth også)
+- Cellular automaton (rule 101)
+- Graf-algoritmer, spesielt er det gøy å bruke topologisk sorting for å løse enkle problemer
+- Småspill
+     - Pacman-klone
+     - Space invaders klone
+- Metacircular evaluator
+     - Hiv på en reader og parser, start en egen repl og du har SKIKKELIG dsl språk, dvs ikke s-expressions men et skikkelig språk
+- Noe skikkelig kick ass.. hva med å rendre Calabi-Yau manifold?
+
+MARKEDSFØRING / HYPE
+- Har jo "Now you're thinking in portals", men når jeg tenker på alt over, hvordan jeg har endret mitt syn på kode, så blir det "Now you're thinking in LISP" eller "Now you're thinking in Scheme"
+- "Scheme ACID test", altså bruk RnRS (feks R7RS?) for å rendre en ascii smiley, brukes for å se om alt funker, hvis mickey scheme passerer denne helt perfekt så er jo det automatisk sykt god reklame for oss
+- Masse blogging med eksempelprogrammer på små tøffe ting, husk å lage rom for ENKLE forbedringer, sånn at de som leser tenker "hekkan, dette kan jeg lett forbedre" sånn de får lyst å prøve

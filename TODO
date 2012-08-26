@@ -1,0 +1,293 @@
+- libscheme-base.so is both loaded dynamically and statically linked in via
+object files.  Moved all eval-internal procs to this module and make it 100%
+dynamically loaded.
+
+- This does not work:
+#; mickey> (define a '(1 2 3))
+#; mickey> `(+ ,@a 10)
+(+ 10)
+
+Should return (+ 1 2 3 10)
+
+It works by doing it literally, `(+ ,@(list 1 2 3) 10) gives (+ 1 2 3 10)
+
+Random stuff:
+- Funker i chibi men ikke i mickey
+> (define a (list 1 2 3))
+> (set-cdr! (cdr a) 99)
+> a
+(1 2 . 99)
+
+- This is a bug:
+#; mickey> (cons (cons 1 2) (cons 3 4))
+((1 . 2) 3 . 4)
+
+- "define" and friends should be exported by (scheme base), so that e.g.
+  prefixing them with base: would mean you would have to do (base:define
+  ...), so fix that.
+- If backtrace() has only one entry in REPL, don't print it
+- Create a library (mickey defmacro) with straight expansion, like
+  (defmacro (my-unless condition body)
+    `(if (not ,condition)
+       (begin ,@body))) ; see what the function signature
+       ; for defmacro is in norvig's jscheme
+- See how MIT Scheme present first class environments to the user.
+  Also see in the T book how they do it.
+- In symbol(...), add assert_identifier(...) to check that we have a
+  legal name for an identifier (e.g., no spaces, etc).  Could optionally
+  also be done in the parser.
+- For all functions, record arity somewhere (and, optionally, expected
+  types), so that we can easily (and statically) detect errors.
+- Lib: (scheme base) should refer to lib/scheme/base.scm
+- eval() shold only intercept scheme core symbols, because of
+  shadowing.
+- Now that we have syntactic:bool in named_function_t, move functions
+  from eval out to modules.
+- In primitives.cpp symbol(...), don't seem to use environment to store
+  symbols, meaning we have a global symbol table.  This should be in
+  symbol-table.h or something like that, and should be fast(er) to
+  lookup.  Also, remove the environment_t param from symbol("lala", e)
+  since it's not needed.  Also, for string and symbol, it should suffice
+  with pointer comparison with global tables.
+- REPL: Add context-sensitive tab-completion, with double tab to cycle
+  through alternatives.. e.g. (im<tab> -> (import and then
+  (import (sch<tab> should give you (import (scheme, and then
+  (import (scheme <tab>)) should give you a list of the scheme libraries.
+- If we define identical symbols in two modules and import both, we should
+  generate an appropriate error message.
+- Rename module_blabla to module-blabla or library-blabla
+- What happens if foo.scm contains (load "foo.scm") ? We should detect this.
+- Should have a mutable list of internal and external lib names ("scheme
+  base" . "base.scm" og externals_base)
+- Create cxr.h and cxr.scm lib
+- Does this work "#\ " (for space) ?
+- Make current-*-port parameter-objects
+- In {"make-string", proc_make_string}, use a struct to indicate if function
+  should be syntactic so that args will not be evlis'ed
+- Add func null_environment(int version = 7) that returns blank environment
+  with only "import" defined
+- Add func that returns typical repl environment
+- If a C/.so scheme library contains some code in scheme form, then itself
+  should be responsible to proc_load("file.scm") (so, we need a module api
+  and init functions)
+- ./mickey file.scm should have a completely empty environent except for
+  (import), but eval has hardcoded some symbols, so fix that. (The way to do
+  it is to move the core stuff into base library and mark the procedures as
+  syntax (not normal syntax expand, but functions whose arguments are not
+  evaluated)
+- Fix (import) to handle multiple import statements (import (scheme base) (scheme write))
+- Fix (import) to correctly exclude, rename, etc
+- Make a C module system first, a la Python, with dynamic compiled
+  libraries, to write a module you just include "mickey-api.h" and then
+  you have cons and all that stuff and all the function signatures.
+  Dynamically compiled modules must export name of library, symbols,
+  etc and be fully compatible with the existing source level module
+  system, etc.
+- Add PORT type
+- Add COMPLEX support
+- For numbers, add bool exact field, enable for exact ops
+- For all cons cells, add bool constant field, enable for constant lists
+  like '(foo bar
+- Add full number format support in parser
+- Add support for wide chars (wprintf, std::wstring, etc)
+- Count linenumbers in parser and use that in exceptions (add filename and
+  linenumber to exceptions as own fiels?)
+- BUG: Cannot parse consecutive strings like "a""b""c"; the tokenizer should
+       emit three tokens in that situation: "a", "b" and "c" to remedy the
+       situation.  A good test that this is supported is to perform
+       these tests:
+       (length '(#;"a""b""c")) should return 2
+       (length '("a"#;"b""c""d""e")) should return 4
+
+List of what is most important to get a full r7rs system:
+- call/cc, because lots of lib stuff depends on it
+- proper syntax-rules with correct ... and :::, because
+  many lib forms can use this for implementation
+- correct module system, so that libs can be formalized
+
+Other stuff:
+-- This should be legal: (let ((=> #f)) (cond (#t => 'ok))) because of
+   hygiene (see r7rs example on this, it should recognize => as a local
+   variable and then allow its use)
+-- Fiks at REPL viser '()
+-- Fiks syntax match på bugs/macro4.scm
+-- Fjern append() overalt det finnes
+-- Lag SYMBOL-TABLE slik at ALLE symboler som har samme navn peker
+   til samme globale symbol.
+-- Lag enkel PRE-PARSER av kodesnutter som OVERSETTER (dvs enkel
+   kompilering) feks alle slike symboler slik de peker på samme
+   symbol, og at visse variabel-referanser ikke bruker lookup()
+   men peker direkte med peker til variabelen som refereres osv.
+   Dette er ganske safe optimaliseringer, men gjør at interpretation
+   går mye raskere.
+
+Now:
+- repl> '() does not print anything, so fix that
+- try to simplify print.cpp
+- refactor the parser, extract methods into files (parse-string.cpp,
+  parse-quotation.cpp etc) and add a table of tokens ("(", ")", "'", "#(",
+  "#|", ...) etc and generally clean up
+
+- BUG: (length (cons 1 2)) ==> 2 but should be an error
+- Add primitives.cpp unspecified_value() or something that we use everywhere
+  where values are unspecified.  (Sometimes it makes sense in
+  implementations to return actually diverse set of values for unspecifieds,
+  but it's not a bad idea to mark these spots... so we could do
+  unspecified() to return a default unspecified value, or unspecified(123)
+  to MARK this as an unspecified return value but return 123 nevertheless.
+
+Fix 1:
+#; mickey> (cons 1 2)
+1 . 2
+
+but should display (1 . 2).  See listp() and pairp(), and/or sprint.
+
+Fix 2:
+
+#; mickey> '(1. 2)
+(1 2)
+
+Should return (1 . 2) or the same as (cons 1 2).
+
+- BUG: (cdr '(a . b)) should return (b) and not (. b)
+- FEATURE: Support for let-syntax
+- Quotation-parser is broken, e.g. can't do "Just say \"Yes!\" please"
+- BUG, VARIADIC FUNCTIONS: Now I'm looking for the dot in the input
+  arguments, but the CORRECT way of doing that is to let the reader
+  translate a "first . rest" into "(cons first rest)" so we get an
+  improper list.  This alleviates the need to handle dots, and will
+  also make it easier system-wide to handle variadic functions (e.g.,
+  in double macro invocation, variadic functions arguments will
+  "expand" correctly).
+- Support for non-syntax rules() define-syntax (if allowed in r7rs)
+  (it just says "it SHOULD be syntax-rules")
+- BUG: Detection of proper list/circular lists must be done in many lisp functions
+- UTF8 support
+- Think about constancy, like a quoted list like '(1 2 3). Should we mark it
+  as constant?  What does the draft say about this?
+- This '#(1 2 foo) parses to (quote (vector(1 2 foo))).  NOt sure if that's
+  correct, or whether the ' just means it's a constant-vector
+- Problem with "repl> '(1 . 3)" as it does not produce ONE pair with CAR->1
+  and CDR->3.  But "(let ((v (list 1 2))) (set-cdr! v 3))" DOES produce a
+  proper pair with CAR->1 and CDR->3.
+- Allow #true and #false as #t and #f, but currently we can to #tfoo and
+  #ffoo, so fix that
+- Apparently, this is not allowed in r7rs: "1.2f" to donate floats, or "2f"
+- Allow |foo bar| identifiers, e.g. (define (|hello world| message) (display message))
+- Enforce rules for names of definitions. E.g., this is not ok: (define (1+ num) (+ 1 num))
+- Regarding vectors passed to functions expecting lists, find out the
+  exact differences... i.e., read up on vectors
+
+* BUG: Should be false: (list? '(a . b)) but is true b/c "." is considered an atom
+* BUG: Can't do negative modulus operations
+* BUG: Can't parse +nan.0
+* BUG: Should be true: mickey> (integer? 3.0)
+* BUG: Can't parse real number -2.5+0.0i
+* BUG: Can't parse real number #e1e10
+* BUG: Can't parse +inf.0
+* BUG: Can't parse infix integer expression 8/4
+* BUG: This must work: `(a `(b ,foo)) ==> (a (quasiquote (b (unquote * foo))))
+* BUG: Hangs: mickey> 'a
+* BUG: Unsupported: '#(1 2 3)
+* BUG: N quotes should equal one: mickey> ''''a ; should be same as 'a
+* BUG: Hairy implementation of mickey> '()
+* BUG: Cannot parse #\) or #\(, e.g.: mickey> (display #\))
+* BUG: Space "#\ " can work with ANY non-printable character in the last
+       position, e.g. "#\<CTRL+V+TAB>" will also give a space.  This is because
+       of the strange parser implementation
+* BUG: Nested quasiquotation does not work (this works in guile): `(a `(b ,(+ 1 2) ,(foo ,(+ 1 3) d) e) f)
+* BUG: Should be true: (real? 3) ==> #t but returns #f
+* BUG: Macro system does not pattern match correctly -> see macro4.scm
+
+- Reader notation for vectors: repl> #(1 2 3)
+- Add third param to assoc, being the equality operator: (assoc 2.0 '((2 two) (3 three)) =)
+- Add (string-ci=?)
+- Add (list-set!)
+- Add (inexact->exact)
+- Add (make-list)
+- Add (string->number <string> <opt2>), takes <opt2> option, (radix?)
+- Add (call-with-values)
+- Add (denominator)
+- Add (numerator)
+- Add (remainder)
+- Add (exact?)
+- Add (inexact?)
+- Add (exact-integer?)
+- Add (rational?)
+- Add (complex?)
+- Add (letrec-syntax)
+- Add (let-syntax) ; almost same as define-syntax, so should be asy
+- Add ,@(...) support.  Same as ,(...) BUT it does not cons(...) its result
+- Add (stream-filter)
+- Add (make-parameter)
+- Add (parameterize)
+- Add (lazy) (didn't know this was a function?)
+- Add (let*-values)
+- Add (letrec*)
+- Add "#(1 2 3)" -> "(make-vector 1 2 3)"
+- Fix (delay) doesn't work properly; can do (define foo (delay (+ 1 2 3))) and then (foo) ==> 6, but that shouldn't evaluate.
+- Add parsing of quoted vectors, i.e.: '#(1 2 3)
+- Trampoline more stuff in eval()
+- Add PROPER support for '()
+- Add for-each
+- Add vector-map
+- Add vector-for-each
+- Add support for case-folding and other hash-bang stuff
+- REPL: If expression hasn't been closed, wait for more lines.
+- Add support for '#(1 2 3)
+- Add support for '#u8(1 2 3)
+- Add eqp() support for vectors
+- Add eqp() support for pairs (lists)
+- Run "(4 5)" and "(vector 1 2 (3 4))" works fine.  Fix in invoke().
+- Fix TRY-CATCH jump implementation (TRY=excepation_raised()+goto)
+- Update append() in primitives to be same as idiom in proc_vector_to_list.
+
+RANDOM STUFF
+
+NEXT STEPS, SHOULD BE ORDERED BY INCREASING DIFFICULTY
+- In closure_t, add "cons_t *args, *body" instead of using __args__ and __body__
+- Add module system (module, export, import, etc)
+- Put as many functions as possible into the base module
+- Add let-syntax
+- Fix define-syntax / syntax rules: LOTS of bugs in the macro system
+- Add more recognized patterns in syntax-rules
+- Add letrec*
+- Add let-values
+- Add let*-values
+- Fix native string type; using C-string doesn't work with make-string 10 #\nul
+- Add simple mark-and-sweep GC (simple; currently not needed)
+- Look into exact->inexact stuff
+- Add continuation passing style (CPS) transform for all code
+- Refactor the code, it's A MESS at the moment...
+- Fix expt for fractional exponents
+- Add support for continuations
+- Add call/cc
+- Add support for first class continuations
+- Add memoization to lazy evaluation form
+- Add UTF8 support for strings
+- Add UTF8 support for define names (if allowed by r7rs)
+
+LATER / HARDER
+- Add library functions
+- Add libffi support
+- Add llvm primitives in scheme
+- Craft llvm compiler (in scheme?)
+- Add (fast) vector/SSE support through #(1 2 3)
+- Add parallelization support (through some lib; see comp benchmarks game)
+
+LLVM
+Make all llvm primitives callable by interpreter, i.e.
+implement functions as llvm primitives, e.g.:
+
+  (define display
+    (lambda (p)
+      (while (not (null? p))
+        (begin
+          (if (not (pair? p))
+            (ffi:printf "%s" (->c_string p))
+            (display (eval (car p))))
+          (set! p (cdr p))))))
+
+Some functions must be built-in, I guess, like "no", "null?", "->c_string"
+and so on.  But perhaps later on, these can as well become something that
+can be implemented (?).  (At least many of them).
