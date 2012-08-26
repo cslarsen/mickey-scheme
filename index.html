@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Mickey-scheme : Mickey Scheme is an interpreter for R7RS Scheme written in C++" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Mickey-scheme</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/cslarsen/mickey-scheme">View on GitHub</a>
+
+          <h1 id="project_title">Mickey-scheme</h1>
+          <h2 id="project_tagline">Mickey Scheme is an interpreter for R7RS Scheme written in C++</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/cslarsen/mickey-scheme/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/cslarsen/mickey-scheme/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>Mickey R7RS Scheme</h1>
+
+<p>Mickey Scheme is an incomplete, slow and buggy implementation of R7RS Scheme
+small.</p>
+
+<p>The current project goals are to</p>
+
+<ul>
+<li>Provide a <em>correct</em> and <em>complete</em> implementation of R7RS-small (WG1)</li>
+<li>Emphasize clarity and simplicity in the implementation</li>
+<li>Be a powerful platform for experimentation and creation of a more advanced
+scheme compiler.</li>
+</ul><p>Note that <em>Mickey</em> is just a codeword for the early stages of this project.
+The name will change as the project matures.</p>
+
+<h2>Current Features</h2>
+
+<ul>
+<li>Most core scheme functions</li>
+<li>Supports 164 of 240 R7RS base library definitions</li>
+<li>Quotation and quasiquotation</li>
+<li>Most <code>let</code>-forms, including named let</li>
+<li>Rest arguments, also known as variadic functions</li>
+<li>A macro system via syntax-rules (though, it's incomplete)</li>
+<li>Lazy evaluation with memoization</li>
+<li>R7RS library system</li>
+<li>Experimental LLVM JIT compilation (for <em>one</em> function only, currently)</li>
+<li>Tail call eliminiation (yeah, neither the JVM nor Python has that,
+so that's at least <em>something</em> to be a little proud of!)</li>
+</ul><p>Some of these are demonstrated in the <a href="#examples">example code section</a>.</p>
+
+<h2>Extensions to standard Scheme and libraries</h2>
+
+<p>It's extremely easy to hack on Mickey Scheme.  Because of this it has some
+experimental extensions to normal R7RS scheme:</p>
+
+<ul>
+<li>First class environments via the library <code>(mickey environment)</code>
+(<a href="#environments">see examples</a>)</li>
+</ul><p>Other libraries include:</p>
+
+<ul>
+<li>Dynamic loading of shared libraries via <code>(unix dlopen)</code>
+(<a href="#c-libraries">see dlopen example</a>)</li>
+</ul><h2>Current Shortcomings</h2>
+
+<ul>
+<li><p>It's <strong>slow</strong>: The code is completely interpreted, without <em>any</em>
+optimizations.  I have plans to change this.</p></li>
+<li><p>It's <strong>incomplete</strong>: Some key Scheme features are still missing, and
+quite some R7RS library functions (currently it supports 176 of 335
+R7RS definitinos).</p></li>
+<li><p>It's <strong>buggy</strong>: There are inherent bugs in the engine as well as
+erronous implementations of library functions.</p></li>
+<li><p>It does not collect <strong>garbage</strong>: Currently, there is no garbage
+collector.  Adding a simple mark-and-sweep GC is trivial, though, so
+I'll get to it once I think it's important enough.</p></li>
+<li><p>It doesn't support <strong>continuations</strong> (yet):  I think I'll have to
+convert to continuation passing style for a proper implementation of
+this.</p></li>
+</ul><h2>Compiling</h2>
+
+<p>Run <code>make -j check</code> to perform a simple check, then <code>./mickey</code> to play with a REPL.</p>
+
+<p>The project is not really release-ready, so there is no use of autotools.
+The Makefile assumes you have llvm-g++ installed.  If you want to compile
+using gcc, do something like:</p>
+
+<pre><code>CXX=g++ make -ej
+</code></pre>
+
+<p>to compile using <code>g++</code> and in parallel.</p>
+
+<h2>Feature flags</h2>
+
+<ul>
+<li>
+<code>-DUSE_READLINE</code> and <code>-lreadline</code> for readline support (including TAB
+ completion)</li>
+</ul><h2>License</h2>
+
+<p>Mickey R7RS Scheme
+Copyright (C) 2011-2012 Christian Stigen Larsen</p>
+
+<p>Distributed under version 2.1 of the Lesser GNU Public License (LGPL) while
+also allowing anyone to change the license on a particular copy of the code
+to the LGPL 3.0, the GPL 2.0 or the GPL 3.0.</p>
+
+<p>See the file COPYING for the full text of the LGPL 2.1.</p>
+
+<h2>Author</h2>
+
+<p>Christian Stigen Larsen <a href="mailto:csl@sublevel3.org">csl@sublevel3.org</a> <a href="http://csl.sublevel3.org">http://csl.sublevel3.org</a></p>
+
+<h2>Examples</h2>
+
+<p>Here are a few example code snippets for Mickey Scheme.  </p>
+
+<p>Besides demonstrating the basic capabilities of Mickey, it also serves as a
+kind of soft introduction to Scheme.</p>
+
+<p>First, let's start <code>mickey</code>.</p>
+
+<pre><code>$ ./mickey
+                                                                _
+Mickey Scheme (C) 2011-2012 Christian Stigen Larsen              \
+4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.9.00)    /\
+Readline 4.2                                                    /  \_
+
+Loaded 150 definitions
+Execute (exit [ code ]) to quit
+You can also (:run-test) and (list-globals)
+
+mickey&gt; 
+</code></pre>
+
+<p>This is the REPL, or <em>read-evaluate-print loop</em>.  Now, let's type some code.</p>
+
+<pre><code>mickey&gt; (display "Hello, world!\n")
+Hello, world!
+</code></pre>
+
+<h2>Lambda</h2>
+
+<p>Let's play with lambdas.  First we'll create a lambda to square a
+number and execute it on the fly.</p>
+
+<pre><code>mickey&gt; ((lambda (x) (* x x)) 12)
+144
+</code></pre>
+
+<p>We can it to a variable as well.  Let's bind it to the variable <code>square</code>.</p>
+
+<pre><code>mickey&gt; (define square (lambda (x) (* x x)))
+mickey&gt; (square 12)
+144
+mickey&gt; (square 3.1415)
+9.86902
+</code></pre>
+
+<p>Let's have some fun with lambdas.  Let's create
+a function that creates other functions.</p>
+
+<p>We'll create a general function <code>make-adder</code> that
+creates a function that can add a static number to another
+number.</p>
+
+<pre><code>mickey&gt; (define make-adder
+          (lambda (frozen-number)
+            (lambda (x)
+              (+ x frozen-number))))
+</code></pre>
+
+<p>As you can see, we give it a <code>frozen-number</code> and it returns
+a lambda that takes a number <code>x</code> and adds the two together.</p>
+
+<p>So to make a function that adds 5 to its argument, we simply
+do</p>
+
+<pre><code>mickey&gt; (define add5 (make-adder 5))
+mickey&gt; (add5 10)
+15
+</code></pre>
+
+<p>Likewise</p>
+
+<pre><code>mickey&gt; (define add17 (make-adder 17))
+mickey&gt; (add17 10)
+27
+</code></pre>
+
+<p>Writing <code>(define (lambda (x) ...))</code> is tedious, so a
+shorter variant is available:</p>
+
+<pre><code>mickey&gt; (define (cube x) (* x x x))
+mickey&gt; (cube 101)
+1030301
+</code></pre>
+
+<p>Mickey uses GNU readline, so it offers both tab completion and history.  And
+it actually works, too.  Here we write <code>(ca</code> and hit <code>TAB</code> two times to see
+available definitions.</p>
+
+<pre><code>mickey&gt; (ca
+caaar  caadr  caar   cadr   car  
+</code></pre>
+
+<p>Here are <code>car</code> and <code>cdr</code>.  They extract the first and remaining items in a
+list.</p>
+
+<pre><code>mickey&gt; (car '(1 2 3))
+1
+mickey&gt; (cdr '(1 2 3)))
+(2 3)
+</code></pre>
+
+<p>I like the old school "car" and "could-er" forms because you can compose them, so that you can extract the <code>car</code>
+of the <code>cdr</code> like so:</p>
+
+<pre><code>mickey&gt; (cadr '(1 2 3))
+2
+</code></pre>
+
+<p>They might not be very interesting for flat lists, but they shine for
+accessing trees.</p>
+
+<h2>Arithmetic</h2>
+
+<p>Here is some simple arithmetic.</p>
+
+<pre><code>mickey&gt; (+ 1 2 3 4 5 6 7 8 9 10)
+55
+</code></pre>
+
+<p>Summation of sequences can be calculated more quickly with</p>
+
+<pre><code>mickey&gt; (define (seq-sum n)
+          (* n (/ (+ n 1) 2)))
+</code></pre>
+
+<p>which gives us</p>
+
+<pre><code>mickey&gt; (seq-sum 10)
+55
+mickey&gt; (seq-sum 100)
+5050
+mickey&gt; (seq-sum 127)
+8128
+</code></pre>
+
+<h2>Let-forms</h2>
+
+<p>Here is an example of the "let star" form.  It creates a local variable
+scope, and evaluates them in the given order.</p>
+
+<pre><code>mickey&gt; (let* ((x 2)
+               (y 3)
+               (z (* x y)))
+               (display z))
+</code></pre>
+
+<p>This, of course, prints <code>6</code>.</p>
+
+<p>There is also a <code>letrec</code> form that allows for mutually recursive
+definitions.  Or in plain english, expressions that refer to each other.</p>
+
+<p>The typical example of this is to implement <code>even?</code> and <code>odd?</code> in terms of
+each other:</p>
+
+<ul>
+<li>A number is <em>even</em> if the preceding number is odd, and</li>
+<li>A number is <em>odd</em> if the preceding number is even</li>
+</ul><p>Since our definition is going to be mutually recursive, we need to handle
+base cases of zero (negative values will make the code loop forever, though).</p>
+
+<p>Let's write that out, along with a <code>check-number</code> function.</p>
+
+<pre><code>(letrec
+  ((even? (lambda (n)
+            (if (zero? n) #t
+                (odd? (- n 1)))))
+
+   (odd? (lambda (n)
+           (if (zero? n) #f
+               (even? (- n 1)))))
+
+   (check-number
+     (lambda (n)
+       (display `(The number ,n is ,(if (even? n) 'even 'odd)))
+       (newline))))
+
+   (check-number 2)
+   (check-number 3)
+   (check-number 88)
+   (check-number 99))
+</code></pre>
+
+<p>If you run the above code in <code>mickey</code>, you'll get this output:</p>
+
+<pre><code>(The number 2 is even)
+(The number 3 is odd)
+(The number 88 is even)
+(The number 99 is odd)
+</code></pre>
+
+<h2>Macros</h2>
+
+<p>Now, Scheme doesn't have a <code>when</code> function.  The <code>when</code> function checks
+whether the first argument is true.  If it is, then it will evaluate --- or
+execute --- the code given in the remaining arguments.</p>
+
+<p>You can't do this with a simple function, because it would <em>always</em> evaluate
+the code body.  As an example, let's say we have a boolean variable
+<code>green-light</code>.  If it's <code>true</code>, we'll format the hard drive:</p>
+
+<pre><code>(when green-light (format-drive))
+</code></pre>
+
+<p>If <code>when</code> was implemented as a function, it would always format the hard drive,
+because function parameters must be evaluated <em>before</em> entering the function
+itself.</p>
+
+<p>It is clear that we need a way to <em>control evaluation</em>.  Scheme's macros
+will let ut do exactly that.</p>
+
+<p>So let's implement <code>when</code> as a hygienic macro.</p>
+
+<pre><code>mickey&gt; (define-syntax when
+          (syntax-rules ()
+            ((when test expr ...)
+              (if test (begin expr ...)))))
+</code></pre>
+
+<p>That's it.  To demonstrate that we control the evaluation, let's create a
+function with a side effect that prints to the console when it's evaluated.</p>
+
+<pre><code>mickey&gt; (define (say-hello) (display "Hello\n"))
+mickey&gt; (say-hello)
+Hello
+</code></pre>
+
+<p>Calling</p>
+
+<pre><code>mickey&gt; (when #f (say-hello))
+</code></pre>
+
+<p>does not print anything, which is good.  In contrast,</p>
+
+<pre><code>mickey&gt; (when #t (say-hello))
+Hello
+</code></pre>
+
+<p>does indeed print to the console.</p>
+
+<h2>Quotation</h2>
+
+<p>Now let's try some examples with quasi-quotation.  Since Scheme is a
+symbolic language, we can easily create syntax trees for languages like SQL
+by just using quotation.  But sometimes we'll want to embed actual
+computations into them, so therefore we can use the specual <code>unquote</code> prefix
+with a comma.</p>
+
+<p>Here is an example of just that.</p>
+
+<pre><code>mickey&gt; (define (sql-get-user name)
+          `(select * from user where name = ,name))
+</code></pre>
+
+<p><em>Note</em>: <em>There is currently a bug in the mickey REPL, so that
+quasiquotation requires an extra closing parenthesis to parse.<br>
+This bug is not present if you run this example from a file, though.</em></p>
+
+<p>Running the function should be self-explanatory.</p>
+
+<pre><code>mickey&gt; (sql-get-user "foo")
+(select * from user where name = "foo")
+</code></pre>
+
+<p>Furthermore, sometimes we want to splice two lists together when we quote.
+We can do that by using unquote splice, or the <code>,@</code> prefix.</p>
+
+<pre><code>mickey&gt; (define date '(2012 05 17))
+mickey&gt; date
+(2012 5 17)
+mickey&gt; `(here is a date: ,@date)
+(here is a date: 2012 5 17)
+</code></pre>
+
+<h2>Lazy evaluation</h2>
+
+<p>Mickey Scheme also supports delayed -- or lazy -- evaluation.  That is,
+computations that are not executed right away.</p>
+
+<p>In fact, all languages that support evaluation control (for instance, via a
+macro facility) and first class closures should be able to <em>implement</em> lazy
+evaluation without any external library.</p>
+
+<p>Let's create a list <code>queue</code> that contains some code we want to execute at a
+later time.</p>
+
+<pre><code>(define queue
+  (list (delay (display "One! "))
+        (delay (display "Three! "))
+        (delay (display "Two! "))))
+</code></pre>
+
+<p>Now we want to execute the code in the list, but reordered so that it will
+print "One! Two! Three!":</p>
+
+<pre><code>(force (list-ref queue 0))
+(force (list-ref queue 2))
+(force (list-ref queue 1))
+</code></pre>
+
+<p>This outputs:</p>
+
+<pre><code>One! Two! Three!
+</code></pre>
+
+<h1>Extensions</h1>
+
+<p>For debugging purposes, I've added some extension functions only available
+to Mickey Scheme.</p>
+
+<h2>(:syntax-expand <em>code</em>)</h2>
+
+<p>If you want to see how a macro is expanded, you can use
+<code>(:syntax-expand ...)</code>.  Below is an example.</p>
+
+<pre><code>mickey&gt; (define-syntax my-when
+          (syntax-rules ()
+              ((my-when test expr ...)
+                    (if test (begin expr ...)))))
+mickey&gt; (:syntax-expand '(my-when #t 123))
+(if #t (begin 123))
+mickey&gt; (:syntax-expand '(my-when #f 123))
+(if #f (begin 123))
+</code></pre>
+
+<h2>(:debug ...)</h2>
+
+<p>Returns string with printable debug information.</p>
+
+<pre><code>mickey&gt; (display (:debug "foo"))
+adr=0x7fe501536560 type=pair    car=0x7fe501536340 cdr=0x7fe501536540
+adr=0x7fe501536340 type=string  value='foo'
+adr=0x7fe501536540 type=nil   
+</code></pre>
+
+<h2>(:type-of ...)</h2>
+
+<p>Prints what type Mickey determines the expression to be.</p>
+
+<pre><code>mickey&gt; (:type-of 123)
+integer
+mickey&gt; (:type-of '())
+pair
+mickey&gt; (:type-of "hey")
+string
+</code></pre>
+
+<h2>(:list-&gt;dot ...)</h2>
+
+<p>Convert the given expressions to Graphviz dot(1) format, which will display
+a graph of the cons cells.</p>
+
+<pre><code>mickey&gt; (display (:list-&gt;dot '(root (left-child (left-grandchild) (right-child)))))
+digraph Scheme {
+  "0x7fefeaceaca0":head -&gt; "0x7fefeaceab40":head ["ol"="box"];
+  "0x7fefeaceab40":head -&gt; "0x7fefeace9cf0" ["ol"="box"];
+  "0x7fefeace9cf0" [label="root", shape="none"];
+  "0x7fefeaceab40":tail -&gt; "0x7fefeaceab20":head ["ol"="box"];
+  "0x7fefeaceab20":head -&gt; "0x7fefeaceab00":head ["ol"="box"];
+  "0x7fefeaceab00":head -&gt; "0x7fefeace9d50" ["ol"="box"];
+  "0x7fefeace9d50" [label="left-child", shape="none"];
+  "0x7fefeaceab00":tail -&gt; "0x7fefeaceaae0":head ["ol"="box"];
+  "0x7fefeaceaae0":head -&gt; "0x7fefeacea9c0":head ["ol"="box"];
+  "0x7fefeacea9c0":head -&gt; "0x7fefeacea020" ["ol"="box"];
+  "0x7fefeacea020" [label="left-grandchild", shape="none"];
+  "0x7fefeacea9c0" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
+  "0x7fefeaceaae0":tail -&gt; "0x7fefeaceaac0":head ["ol"="box"];
+  "0x7fefeaceaac0":head -&gt; "0x7fefeaceaaa0":head ["ol"="box"];
+  "0x7fefeaceaaa0":head -&gt; "0x7fefeaceaa20" ["ol"="box"];
+  "0x7fefeaceaa20" [label="right-child", shape="none"];
+  "0x7fefeaceaaa0" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
+  "0x7fefeaceaac0" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
+  "0x7fefeaceaae0" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
+  "0x7fefeaceab00" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
+  "0x7fefeaceab20" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
+  "0x7fefeaceab40" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
+  "0x7fefeaceaca0" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
+}
+</code></pre>
+
+<p>If you write the output to a file, you can render it with <code>dot(1)</code>:</p>
+
+<pre><code>$ dot -Tpng -ofoo.png foo.dot
+</code></pre>
+
+<h2>(:closure-source ...)</h2>
+
+<p>Returns the quoted source for a given closure.  Example:</p>
+
+<pre><code>mickey&gt; (define (sq x) (* x x))
+mickey&gt; (:closure-source sq)
+(lambda (x) (begin (* x x)))
+mickey&gt; ((eval (:closure-source sq)) 12)
+144
+</code></pre>
+
+<h2>(:version)</h2>
+
+<p>Displays version number for Mickey and libraries.</p>
+
+<pre><code>mickey&gt; (display (:version)) (newline)
+(Mickey Scheme (C) 2011 Christian Stigen Larsen
+ Using Readline 4.2
+  Compiler version: 4.2.1 (Based on Apple Inc. build 5658) (LLVM build
+  2336.9.00)
+  )
+</code></pre>
+
+<h2>(:exit <em>code</em>)</h2>
+
+<p>Exit Mickey, returning given code to the parent process.</p>
+
+<h2>Environments</h2>
+
+<p>Mickey Scheme has an experimental library for first-class environments.
+It bascially implements the API from MIT Scheme, with a few missing
+features.</p>
+
+<p>Here is an example on how to use it.</p>
+
+<p>First, let's start up mickey with an empty environment (the -z argument).
+An empty environment means that the REPL only has one definition, that of
+<code>import</code>.  We need <code>import</code> because to do anything, we need to be able to
+import libraries.</p>
+
+<pre><code>csl$ ./mickey -z
+#|                                                                 _
+   Mickey Scheme (C) 2011-2012 Christian Stigen Larsen              \
+   4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)   /\
+   Readline 4.2                                                    /  \_
+
+   To quit, hit CTRL+D or type (exit).  Use (help) for an
+   introduction.
+|#
+</code></pre>
+
+<p>Now, let's just make sure that we don't have any binding for <code>foo</code>.</p>
+
+<pre><code>#; mickey&gt; foo
+Unbound definition: foo
+</code></pre>
+
+<p>Let's import the <code>(mickey environment)</code> library and define <code>foo</code> in a new
+environment that is a child of the current one.</p>
+
+<pre><code>#; mickey&gt; (import (mickey environment))
+#; mickey&gt; (define sub-environment
+                     (make-environment
+                       (define foo 123)))
+</code></pre>
+
+<p>We still should not see <code>foo</code> in the current environment:</p>
+
+<pre><code>#; mickey&gt; foo
+Unbound definition: foo
+</code></pre>
+
+<p>But it should be available in the environment we have stored in the variable
+<code>sub-environment</code>.</p>
+
+<pre><code>#; mickey&gt; (environment-bindings sub-environment)
+((foo 123))
+</code></pre>
+
+<p>Let's import the <code>(scheme write)</code> library so we can call <code>display</code>, and then
+only the <code>newline</code> function from <code>(scheme base)</code>.</p>
+
+<pre><code>#; mickey&gt; (import (scheme write))
+#; mickey&gt; (import (only (scheme base) newline))
+</code></pre>
+
+<p>Now, let's evaluate an expression in the child environment to print the
+value of <code>foo</code>:</p>
+
+<pre><code>#; mickey&gt; (environment-eval 
+             (begin
+               (display foo)
+               (newline)) sub-environment)
+123
+#; mickey&gt; ^D
+</code></pre>
+
+<p>So, what's the point with first class environments?  You can use it do to
+stuff like implementing your own module system.  The reason they are not
+part of standard Scheme is because they make it very difficult to reason
+about what a program does just by reading the code.</p>
+
+<p>Therefore, implementations are allowed to implement them on their own.</p>
+
+<h2>C-libraries</h2>
+
+<p>It's possible to write libraries in C and call them from Mickey Scheme.</p>
+
+<p>Since Mickey does not use a build system yet, the process is a little bit
+cumbersome.</p>
+
+<p>First you write a small library in C.  Let's say we want to be able to call
+the <code>uname(3)</code> function from Mickey.  We'll just write some wrapper code in
+C:</p>
+
+<pre><code>#include &lt;sys/utsname.h&gt;
+#include "mickey.h"
+
+extern "C" cons_t* proc_uname(cons_t* args, environment_t* env)
+{
+  struct utsname p;
+
+  if ( uname(&amp;p) != 0 )
+    return boolean(false);
+
+  // Return utsname as an associative list
+  return
+    cons(cons(symbol("sysname",  NULL), cons(string(p.sysname))),
+    cons(cons(symbol("nodename", NULL), cons(string(p.nodename))),
+    cons(cons(symbol("release",  NULL), cons(string(p.release))),
+    cons(cons(symbol("version",  NULL), cons(string(p.version))),
+    cons(cons(symbol("machine",  NULL), cons(string(p.machine))))))));
+}
+</code></pre>
+
+<p>Note that if you use a C++ compiler with the above code, you must prefix the
+function with <code>extern "C"</code> to avoid the infamous C++ name-mangling.</p>
+
+<p>To compile this, do something à la</p>
+
+<pre><code>gcc -shared -fPIC -I&lt;mickey path&gt; mickey-uname.c \
+    -L&lt;mickey path&gt; -lmickey -o libmickey-uname.so
+</code></pre>
+
+<p>This should give you a libmickey-uname.so file.  To load this file from
+Mickey, we have to start mickey and then import the <code>(unix dlopen)</code> library.</p>
+
+<pre><code>csl$ ./mickey
+#|                                                                 _
+   Mickey Scheme (C) 2011-2012 Christian Stigen Larsen              \
+   4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)   /\
+   Readline 4.2                                                    /  \_
+
+   To quit, hit CTRL+D or type (exit).  Use (help) for an
+   introduction.
+|#
+
+#; mickey&gt; (import (unix dlopen))
+</code></pre>
+
+<p>Let's load the library using the dlopen options <code>RTLD_NOW</code> and <code>RTLD_LOCAL</code>.
+You can omit the options to use default dlopen mode.  I'm just showing you
+how to specify several options.</p>
+
+<pre><code>#; mickey&gt; (define lib-uname (dlopen "libmickey-uname.so" 'now 'local))
+</code></pre>
+
+<p>Now <code>lib-uname</code> contains a handle to the library.</p>
+
+<pre><code>#; mickey&gt; lib-uname
+#&lt;pointer 'dynamic-shared-library-handle' 0x7ffb63436460&gt;
+</code></pre>
+
+<p>Let's get a reference to the <code>proc_uname</code> function and bind that to the
+variable <code>uname</code>:</p>
+
+<pre><code>#; mickey&gt; (define uname (dlsym lib-uname "proc_uname"))
+</code></pre>
+
+<p>If <code>dlsym</code> fails, it will return <code>#f</code>.  Let's see if it worked:</p>
+
+<pre><code>#; mickey&gt; uname
+#&lt;closure 0x7ffb6343b550&gt;
+</code></pre>
+
+<p>It did!  Let's try executing it.</p>
+
+<pre><code>#; mickey&gt; (uname)
+ ((sysname "Darwin") (nodename "Christians-mac-8.local") (release "12.0.0")
+ (version "Darwin Kernel Version 12.0.0: Sun Jun 24 23:00:16 PDT 2012;
+ root:xnu-2050.7.9~1/RELEASE_X86_64") (machine "x86_64"))
+</code></pre>
+
+<p>It returns the struct as an a-list, so we can do</p>
+
+<pre><code>#; mickey&gt; (assv 'version (uname))
+(version "Darwin Kernel Version 12.0.0: Sun Jun 24 23:00:16 PDT 2012;
+root:xnu-2050.7.9~1/RELEASE_X86_64")
+</code></pre>
+
+<p>and</p>
+
+<pre><code>#; mickey&gt; (assv 'machine (uname))
+(machine "x86_64")
+</code></pre>
+
+<p>Easy!</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Mickey-scheme maintained by <a href="https://github.com/cslarsen">cslarsen</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
