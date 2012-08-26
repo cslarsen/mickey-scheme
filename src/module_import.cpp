@@ -9,11 +9,10 @@
  *
  */
 
-#include "cons.h" // to_s(cons_t*)
+#include "cons.h"
 #include "primitives.h"
 #include "module_import.h"
 #include "libraries/scheme-base.h"
-#include "libraries/unix-dlopen.h"
 #include "assertions.h"
 #include "exceptions.h"
 #include "print.h"
@@ -338,6 +337,7 @@ environment_t* import_library(const std::string& name)
      * scheme file.  But (TODO) we should load it dynamically from HERE via
      * dlopen.
      */
+    extern named_function_t exports_dlopen[]; // libraries/unix-dlopen.cpp
     import(r, exports_dlopen, name);
   }
 

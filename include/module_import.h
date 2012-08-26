@@ -16,13 +16,30 @@
 
 struct named_function_t {
   const char* name;
+
+  /*
+   * Pointer to native C function or call_lambda
+   */
   lambda_t function;
-  bool syntactic; // if true, eval will not eval this function's arguments
+
+  /*
+   * If true, eval will not evaluate this procedure's arguments before
+   * entering it.
+   */
+  bool syntactic;
+
+  /*
+   * TODO:
+   * - Add number of arguments here for quickly checking for errors
+   * - Add rest_args flag here instead of deciding at eval time
+   * - Add cons_t* body here and cons_t* args/signature instead of using
+   *   __ARGS__ and __BODY__.
+   */
 };
+
 extern "C" {
 
 extern named_function_t exports_import[];
-
 
 void import(environment_t*, named_function_t*, const std::string& lib_name = "");
 void import_defaults(environment_t*);

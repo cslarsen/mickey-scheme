@@ -12,6 +12,7 @@
 #include <dlfcn.h>
 #include <libgen.h>
 #include "mickey.h"
+#include "libraries/unix-dlopen.h"
 
 /*
  * Define an arbitrary type tag to use to discern
