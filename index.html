@@ -52,14 +52,14 @@ The name will change as the project matures.</p>
 <li>Most core scheme functions</li>
 <li>Supports 164 of 240 R7RS base library definitions</li>
 <li>Quotation and quasiquotation</li>
-<li>Most <code>let</code>-forms, including named let</li>
-<li>Rest arguments, also known as variadic functions</li>
-<li>A macro system via syntax-rules (though, it's incomplete)</li>
-<li>Lazy evaluation with memoization</li>
-<li>R7RS library system</li>
-<li>Experimental LLVM JIT compilation (for <em>one</em> function only, currently)</li>
-<li>Tail call eliminiation (yeah, neither the JVM nor Python has that,
-so that's at least <em>something</em> to be a little proud of!)</li>
+<li>Most <code>let</code>-forms (missing <code>letrec*</code> and <code>let-syntax</code>)</li>
+<li>Variadic functions</li>
+<li>Macros via <code>syntax-rules</code> (though, it's incomplete)</li>
+<li>Lazy evaluation with memoization in <code>(scheme lazy)</code>
+</li>
+<li>Full support for the R7RS library system <code>define-library</code>
+</li>
+<li>Tail call eliminiation</li>
 </ul><p>Some of these are demonstrated in the <a href="#examples">example code section</a>.</p>
 
 <h2>Extensions to standard Scheme and libraries</h2>
@@ -96,10 +96,10 @@ this.</p></li>
 <p>Run <code>make -j check</code> to perform a simple check, then <code>./mickey</code> to play with a REPL.</p>
 
 <p>The project is not really release-ready, so there is no use of autotools.
-The Makefile assumes you have llvm-g++ installed.  If you want to compile
-using gcc, do something like:</p>
+The Makefile assumes you have <code>c++</code> installed.  If you want to compile
+using <code>llvm-g++</code> or any other compiler, do something like:</p>
 
-<pre><code>CXX=g++ make -ej
+<pre><code>CXX=llvm-g++ make -ej
 </code></pre>
 
 <p>to compile using <code>g++</code> and in parallel.</p>
@@ -135,21 +135,32 @@ kind of soft introduction to Scheme.</p>
 <p>First, let's start <code>mickey</code>.</p>
 
 <pre><code>$ ./mickey
-                                                                _
-Mickey Scheme (C) 2011-2012 Christian Stigen Larsen              \
-4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.9.00)    /\
-Readline 4.2                                                    /  \_
+#|                                                                 _
+   Mickey Scheme (C) 2011-2012 Christian Stigen Larsen              \
+   4.2.1 Compatible Apple Clang 4.0 ((tags/Apple/clang-421.0.57))   /\
+   Readline 4.2                                                    /  \_
 
-Loaded 150 definitions
-Execute (exit [ code ]) to quit
-You can also (:run-test) and (list-globals)
+   To quit, hit CTRL+D or type (exit).  Use (help) for an introduction.
+   Distributed under the LGPL 2.1; see LICENSE
+|#
 
-mickey&gt; 
+#; mickey&gt; 
 </code></pre>
 
-<p>This is the REPL, or <em>read-evaluate-print loop</em>.  Now, let's type some code.</p>
+<p>This is the REPL, short for <em>read-evaluate-print loop</em>.</p>
 
-<pre><code>mickey&gt; (display "Hello, world!\n")
+<p>First, you should note two things:  The <code>#| banner inside a comment |#</code> and
+the <code>#;</code> symbol.  They make it possible to copy the code you see here and
+paste it directly into your own REPL, without needing to remove <code>mickey&gt;</code>
+and so on.</p>
+
+<p>The symbol <code>#;</code> means "ignore the next symbol"; so <code>#; mickey&gt; (+ 1 2 3)</code>
+means that Mickey Scheme will skip <code>mickey&gt;</code> and move on to <code>(+ 1 2 3)</code>,
+which it then will evaluate.  This is a known trick in scheme systems.</p>
+
+<p>Now, let's type some code.</p>
+
+<pre><code>#; mickey&gt; (display "Hello, world!\n")
 Hello, world!
 </code></pre>
 
@@ -158,16 +169,16 @@ Hello, world!
 <p>Let's play with lambdas.  First we'll create a lambda to square a
 number and execute it on the fly.</p>
 
-<pre><code>mickey&gt; ((lambda (x) (* x x)) 12)
+<pre><code>#; mickey&gt; ((lambda (x) (* x x)) 12)
 144
 </code></pre>
 
 <p>We can it to a variable as well.  Let's bind it to the variable <code>square</code>.</p>
 
-<pre><code>mickey&gt; (define square (lambda (x) (* x x)))
-mickey&gt; (square 12)
+<pre><code>#; mickey&gt; (define square (lambda (x) (* x x)))
+#; mickey&gt; (square 12)
 144
-mickey&gt; (square 3.1415)
+#; mickey&gt; (square 3.1415)
 9.86902
 </code></pre>
 
@@ -178,10 +189,10 @@ a function that creates other functions.</p>
 creates a function that can add a static number to another
 number.</p>
 
-<pre><code>mickey&gt; (define make-adder
-          (lambda (frozen-number)
-            (lambda (x)
-              (+ x frozen-number))))
+<pre><code>#; mickey&gt; (define make-adder
+             (lambda (frozen-number)
+               (lambda (x)
+                 (+ x frozen-number))))
 </code></pre>
 
 <p>As you can see, we give it a <code>frozen-number</code> and it returns
@@ -190,23 +201,23 @@ a lambda that takes a number <code>x</code> and adds the two together.</p>
 <p>So to make a function that adds 5 to its argument, we simply
 do</p>
 
-<pre><code>mickey&gt; (define add5 (make-adder 5))
-mickey&gt; (add5 10)
+<pre><code>#; mickey&gt; (define add5 (make-adder 5))
+#; mickey&gt; (add5 10)
 15
 </code></pre>
 
 <p>Likewise</p>
 
-<pre><code>mickey&gt; (define add17 (make-adder 17))
-mickey&gt; (add17 10)
+<pre><code>#; mickey&gt; (define add17 (make-adder 17))
+#; mickey&gt; (add17 10)
 27
 </code></pre>
 
 <p>Writing <code>(define (lambda (x) ...))</code> is tedious, so a
 shorter variant is available:</p>
 
-<pre><code>mickey&gt; (define (cube x) (* x x x))
-mickey&gt; (cube 101)
+<pre><code>#; mickey&gt; (define (cube x) (* x x x))
+#; mickey&gt; (cube 101)
 1030301
 </code></pre>
 
@@ -214,23 +225,23 @@ mickey&gt; (cube 101)
 it actually works, too.  Here we write <code>(ca</code> and hit <code>TAB</code> two times to see
 available definitions.</p>
 
-<pre><code>mickey&gt; (ca
+<pre><code>#; mickey&gt; (ca
 caaar  caadr  caar   cadr   car  
 </code></pre>
 
 <p>Here are <code>car</code> and <code>cdr</code>.  They extract the first and remaining items in a
 list.</p>
 
-<pre><code>mickey&gt; (car '(1 2 3))
+<pre><code>#; mickey&gt; (car '(1 2 3))
 1
-mickey&gt; (cdr '(1 2 3)))
+#; mickey&gt; (cdr '(1 2 3)))
 (2 3)
 </code></pre>
 
 <p>I like the old school "car" and "could-er" forms because you can compose them, so that you can extract the <code>car</code>
 of the <code>cdr</code> like so:</p>
 
-<pre><code>mickey&gt; (cadr '(1 2 3))
+<pre><code>#; mickey&gt; (cadr '(1 2 3))
 2
 </code></pre>
 
@@ -241,23 +252,23 @@ accessing trees.</p>
 
 <p>Here is some simple arithmetic.</p>
 
-<pre><code>mickey&gt; (+ 1 2 3 4 5 6 7 8 9 10)
+<pre><code>#; mickey&gt; (+ 1 2 3 4 5 6 7 8 9 10)
 55
 </code></pre>
 
 <p>Summation of sequences can be calculated more quickly with</p>
 
-<pre><code>mickey&gt; (define (seq-sum n)
+<pre><code>#; mickey&gt; (define (seq-sum n)
           (* n (/ (+ n 1) 2)))
 </code></pre>
 
 <p>which gives us</p>
 
-<pre><code>mickey&gt; (seq-sum 10)
+<pre><code>#; mickey&gt; (seq-sum 10)
 55
-mickey&gt; (seq-sum 100)
+#; mickey&gt; (seq-sum 100)
 5050
-mickey&gt; (seq-sum 127)
+#; mickey&gt; (seq-sum 127)
 8128
 </code></pre>
 
@@ -266,10 +277,10 @@ mickey&gt; (seq-sum 127)
 <p>Here is an example of the "let star" form.  It creates a local variable
 scope, and evaluates them in the given order.</p>
 
-<pre><code>mickey&gt; (let* ((x 2)
-               (y 3)
-               (z (* x y)))
-               (display z))
+<pre><code>#; mickey&gt; (let* ((x 2)
+                  (y 3)
+                  (z (* x y)))
+                  (display z))
 </code></pre>
 
 <p>This, of course, prints <code>6</code>.</p>
@@ -338,28 +349,28 @@ will let ut do exactly that.</p>
 
 <p>So let's implement <code>when</code> as a hygienic macro.</p>
 
-<pre><code>mickey&gt; (define-syntax when
-          (syntax-rules ()
-            ((when test expr ...)
-              (if test (begin expr ...)))))
+<pre><code>#; mickey&gt; (define-syntax when
+             (syntax-rules ()
+               ((when test expr ...)
+                 (if test (begin expr ...)))))
 </code></pre>
 
 <p>That's it.  To demonstrate that we control the evaluation, let's create a
 function with a side effect that prints to the console when it's evaluated.</p>
 
-<pre><code>mickey&gt; (define (say-hello) (display "Hello\n"))
-mickey&gt; (say-hello)
+<pre><code>#; mickey&gt; (define (say-hello) (display "Hello\n"))
+#; mickey&gt; (say-hello)
 Hello
 </code></pre>
 
 <p>Calling</p>
 
-<pre><code>mickey&gt; (when #f (say-hello))
+<pre><code>#; mickey&gt; (when #f (say-hello))
 </code></pre>
 
 <p>does not print anything, which is good.  In contrast,</p>
 
-<pre><code>mickey&gt; (when #t (say-hello))
+<pre><code>#; mickey&gt; (when #t (say-hello))
 Hello
 </code></pre>
 
@@ -375,8 +386,8 @@ with a comma.</p>
 
 <p>Here is an example of just that.</p>
 
-<pre><code>mickey&gt; (define (sql-get-user name)
-          `(select * from user where name = ,name))
+<pre><code>#; mickey&gt; (define (sql-get-user name)
+             `(select * from user where name = ,name))
 </code></pre>
 
 <p><em>Note</em>: <em>There is currently a bug in the mickey REPL, so that
@@ -385,17 +396,17 @@ This bug is not present if you run this example from a file, though.</em></p>
 
 <p>Running the function should be self-explanatory.</p>
 
-<pre><code>mickey&gt; (sql-get-user "foo")
+<pre><code>#; mickey&gt; (sql-get-user "foo")
 (select * from user where name = "foo")
 </code></pre>
 
 <p>Furthermore, sometimes we want to splice two lists together when we quote.
 We can do that by using unquote splice, or the <code>,@</code> prefix.</p>
 
-<pre><code>mickey&gt; (define date '(2012 05 17))
-mickey&gt; date
+<pre><code>#; mickey&gt; (define date '(2012 05 17))
+#; mickey&gt; date
 (2012 5 17)
-mickey&gt; `(here is a date: ,@date)
+#; mickey&gt; `(here is a date: ,@date)
 (here is a date: 2012 5 17)
 </code></pre>
 
@@ -429,113 +440,6 @@ print "One! Two! Three!":</p>
 
 <pre><code>One! Two! Three!
 </code></pre>
-
-<h1>Extensions</h1>
-
-<p>For debugging purposes, I've added some extension functions only available
-to Mickey Scheme.</p>
-
-<h2>(:syntax-expand <em>code</em>)</h2>
-
-<p>If you want to see how a macro is expanded, you can use
-<code>(:syntax-expand ...)</code>.  Below is an example.</p>
-
-<pre><code>mickey&gt; (define-syntax my-when
-          (syntax-rules ()
-              ((my-when test expr ...)
-                    (if test (begin expr ...)))))
-mickey&gt; (:syntax-expand '(my-when #t 123))
-(if #t (begin 123))
-mickey&gt; (:syntax-expand '(my-when #f 123))
-(if #f (begin 123))
-</code></pre>
-
-<h2>(:debug ...)</h2>
-
-<p>Returns string with printable debug information.</p>
-
-<pre><code>mickey&gt; (display (:debug "foo"))
-adr=0x7fe501536560 type=pair    car=0x7fe501536340 cdr=0x7fe501536540
-adr=0x7fe501536340 type=string  value='foo'
-adr=0x7fe501536540 type=nil   
-</code></pre>
-
-<h2>(:type-of ...)</h2>
-
-<p>Prints what type Mickey determines the expression to be.</p>
-
-<pre><code>mickey&gt; (:type-of 123)
-integer
-mickey&gt; (:type-of '())
-pair
-mickey&gt; (:type-of "hey")
-string
-</code></pre>
-
-<h2>(:list-&gt;dot ...)</h2>
-
-<p>Convert the given expressions to Graphviz dot(1) format, which will display
-a graph of the cons cells.</p>
-
-<pre><code>mickey&gt; (display (:list-&gt;dot '(root (left-child (left-grandchild) (right-child)))))
-digraph Scheme {
-  "0x7fefeaceaca0":head -&gt; "0x7fefeaceab40":head ["ol"="box"];
-  "0x7fefeaceab40":head -&gt; "0x7fefeace9cf0" ["ol"="box"];
-  "0x7fefeace9cf0" [label="root", shape="none"];
-  "0x7fefeaceab40":tail -&gt; "0x7fefeaceab20":head ["ol"="box"];
-  "0x7fefeaceab20":head -&gt; "0x7fefeaceab00":head ["ol"="box"];
-  "0x7fefeaceab00":head -&gt; "0x7fefeace9d50" ["ol"="box"];
-  "0x7fefeace9d50" [label="left-child", shape="none"];
-  "0x7fefeaceab00":tail -&gt; "0x7fefeaceaae0":head ["ol"="box"];
-  "0x7fefeaceaae0":head -&gt; "0x7fefeacea9c0":head ["ol"="box"];
-  "0x7fefeacea9c0":head -&gt; "0x7fefeacea020" ["ol"="box"];
-  "0x7fefeacea020" [label="left-grandchild", shape="none"];
-  "0x7fefeacea9c0" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
-  "0x7fefeaceaae0":tail -&gt; "0x7fefeaceaac0":head ["ol"="box"];
-  "0x7fefeaceaac0":head -&gt; "0x7fefeaceaaa0":head ["ol"="box"];
-  "0x7fefeaceaaa0":head -&gt; "0x7fefeaceaa20" ["ol"="box"];
-  "0x7fefeaceaa20" [label="right-child", shape="none"];
-  "0x7fefeaceaaa0" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
-  "0x7fefeaceaac0" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
-  "0x7fefeaceaae0" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
-  "0x7fefeaceab00" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
-  "0x7fefeaceab20" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
-  "0x7fefeaceab40" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
-  "0x7fefeaceaca0" [label="&lt;head&gt;|&lt;tail&gt;", shape="record"];
-}
-</code></pre>
-
-<p>If you write the output to a file, you can render it with <code>dot(1)</code>:</p>
-
-<pre><code>$ dot -Tpng -ofoo.png foo.dot
-</code></pre>
-
-<h2>(:closure-source ...)</h2>
-
-<p>Returns the quoted source for a given closure.  Example:</p>
-
-<pre><code>mickey&gt; (define (sq x) (* x x))
-mickey&gt; (:closure-source sq)
-(lambda (x) (begin (* x x)))
-mickey&gt; ((eval (:closure-source sq)) 12)
-144
-</code></pre>
-
-<h2>(:version)</h2>
-
-<p>Displays version number for Mickey and libraries.</p>
-
-<pre><code>mickey&gt; (display (:version)) (newline)
-(Mickey Scheme (C) 2011 Christian Stigen Larsen
- Using Readline 4.2
-  Compiler version: 4.2.1 (Based on Apple Inc. build 5658) (LLVM build
-  2336.9.00)
-  )
-</code></pre>
-
-<h2>(:exit <em>code</em>)</h2>
-
-<p>Exit Mickey, returning given code to the parent process.</p>
 
 <h2>Environments</h2>
 
@@ -717,6 +621,33 @@ root:xnu-2050.7.9~1/RELEASE_X86_64")
 </code></pre>
 
 <p>Easy!</p>
+
+<h2>Scheme-libraries in R7RS</h2>
+
+<p><em>NOTE:</em> Currently, for Mickey to load custom libraries you have to add load
+instructions to <code>import.cpp</code> so that <code>(your library name)</code> will be recognized.</p>
+
+<p>To create a small library, use the <code>define-library</code> form as described in the
+R7RS draft over at <a href="http://scheme-reports.org">http://scheme-reports.org</a></p>
+
+<p>As an example, put this in a file:</p>
+
+<pre><code>(define-library (foo bar)
+  (import (only (scheme base) car cdr define))
+  (export first last head tail)
+  (begin
+    (define (first x) (car x))
+    (define (last x) (cdr x))
+    (define (head x) (car x))
+    (define (tail x) (cdr x))
+    (define (rest x) (cdr x))))
+</code></pre>
+
+<p>There really isn't more to it.  You can take a look in the <code>lib/</code> directory
+for some ideas.  Note that you <em>have</em> to import primitive functions to be
+able to use them, even core forms such as <code>define</code>.  Also note that even
+though we define <code>rest</code> above, it is not exported, and thus not available
+<em>outside</em> of the library.</p>
       </section>
     </div>
 
