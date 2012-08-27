@@ -19,7 +19,6 @@ Distributed under the LGPL 2.1
     :closure-source
     :debug
     :list->dot
-    :llvm:gcd
     :syntax-expand
     :type-of
     :version)
@@ -32,7 +31,6 @@ Distributed under the LGPL 2.1
     (define :closure-source (bind-procedure "proc_closure_source"))
     (define :debug          (bind-procedure "proc_debug"))
     (define :list->dot      (bind-procedure "proc_list_to_dot"))
-    (define :llvm:gcd       (bind-procedure "proc_llvm_gcd"))
     (define :syntax-expand  (bind-procedure "proc_syntax_expand"))
     (define :type-of        (bind-procedure "proc_type_of"))
     (define :version        (bind-procedure "proc_version"))))

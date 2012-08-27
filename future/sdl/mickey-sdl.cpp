@@ -6,7 +6,7 @@
  *
  * Compile with
  *
- * llvm-g++ -shared -Iinclude mickey-uname.cpp
+ * c++ -shared -Iinclude mickey-uname.cpp
  *
  * To use it,
  *

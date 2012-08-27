@@ -25,7 +25,6 @@ Current Features
   * A macro system via syntax-rules (though, it's incomplete)
   * Lazy evaluation with memoization
   * R7RS library system
-  * Experimental LLVM JIT compilation (for _one_ function only, currently)
   * Tail call eliminiation (yeah, neither the JVM nor Python has that,
     so that's at least _something_ to be a little proud of!)
 
@@ -72,10 +71,10 @@ Compiling
 Run `make -j check` to perform a simple check, then `./mickey` to play with a REPL.
 
 The project is not really release-ready, so there is no use of autotools.
-The Makefile assumes you have llvm-g++ installed.  If you want to compile
-using gcc, do something like:
+The Makefile assumes you have `c++` installed.  If you want to compile
+using `llvm-g++` or any other compiler, do something like:
 
-    CXX=g++ make -ej
+    CXX=llvm-g++ make -ej
 
 to compile using `g++` and in parallel.
 

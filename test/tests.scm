@@ -557,13 +557,6 @@
 ;; Number system
 (test-eq '(real? 3) #t) ; from r7rs draft
 
-;; LLVM JIT
-(if (bound? ':llvm:gcd)
-  (begin
-    (test-eq '(:llvm:gcd (* 11 123) (* 2 11)) 11)
-    (test-eq '(:llvm:gcd (* 12 123) (* 2 12)) 12)
-    (test-eq '(:llvm:gcd 444 555) (gcd 444 555))))
-
 ;; Characters
 (test-eq '(string-length (make-string 0)) 0)
 (test-eq '(string-length (make-string 1)) 1)

@@ -1,8 +1,4 @@
-LLVM_CONFIG   = llvm-config
-LLVM_CXXFLAGS = ${shell $(LLVM_CONFIG) --cxxflags}
-LLVM_LDFLAGS  = ${shell $(LLVM_CONFIG) --ldflags --libs}
-
-CXX      = llvm-g++
+CXX      = c++
 CXXFLAGS = -g -W -Wall \
 					 -I../include \
 					 -DUSE_READLINE \
@@ -83,42 +79,8 @@ all: $(TARGETS)
 libmickey.so: $(LIB_DEPS)
 	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) $^ -L. -o $@
 
-libunix-uname.so: libraries/unix-uname.cpp libmickey.so
+lib%.so: libraries/%.cpp libmickey.so
 	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey $< -o $@
-
-libunix-dlopen.so: libraries/unix-dlopen.cpp libmickey.so
-	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey $< -o $@
-
-libmickey-environment.so: libraries/mickey-environment.cpp libmickey.so
-	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey $< -o $@
-
-libmickey-internals.so: libraries/mickey-internals.cpp libmickey.so
-	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey $< -o $@
-
-libmickey-misc.so: libraries/mickey-misc.cpp libmickey.so
-	$(CXX) -DUSE_LLVM $(CXXFLAGS) $(LLVM_CXXFLAGS) $(LLVM_LDFLAGS) \
-		$(LIB_FLAGS) $(LIB_DEPS) -L. -lmickey $< -o $@
-
-libscheme-char.so: libraries/scheme-char.cpp libmickey.so
-	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey  $< -o $@
-
-libscheme-base.so: libraries/scheme-base.cpp libmickey.so
-	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey  $< -o $@
-
-libscheme-load.so: libraries/scheme-load.cpp libmickey.so
-	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey  $< -o $@
-
-libscheme-math.so: libraries/scheme-math.cpp libmickey.so
-	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey  $< -o $@
-
-libscheme-write.so: libraries/scheme-write.cpp libmickey.so
-	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey  $< -o $@
-
-libscheme-repl.so: libraries/scheme-repl.cpp libmickey.so
-	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey  $< -o $@
-
-libscheme-process-context.so: libraries/scheme-process-context.cpp libmickey.so
-	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey  $< -o $@
 
 mickey: mickey.cpp libmickey.so repl.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) repl.o -L. -lmickey -lreadline $< -o $@

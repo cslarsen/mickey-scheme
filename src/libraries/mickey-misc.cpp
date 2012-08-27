@@ -12,23 +12,6 @@
 #include "mickey.h"
 
 /*
- * For llvm:gcd
- */
-#ifdef USE_LLVM
-# include "llvm/Module.h"
-# include "llvm/Function.h"
-# include "llvm/PassManager.h"
-# include "llvm/CallingConv.h"
-# include "llvm/Analysis/Verifier.h"
-# include "llvm/Assembly/PrintModulePass.h"
-# include "llvm/Support/IRBuilder.h"
-# include "llvm/Support/raw_ostream.h"
-# include "llvm/LLVMContext.h"
-# include "llvm/ExecutionEngine/JIT.h"
-# include "llvm/Target/TargetSelect.h"
-#endif
-
-/*
  * Avoid name mangling, so we can actually
  * find back our functions in the scheme code
  * that implements this library.
@@ -201,123 +184,12 @@ cons_t* proc_type_of(cons_t* p, environment_t* e)
   return symbol(to_s(type_of(car(p))).c_str(), e);
 }
 
-#ifdef USE_LLVM
-static llvm::Function *llvm_gcd = NULL; // Dirty, ugly hack
-
-llvm::Module* makeLLVMModule()
-{
-  using namespace llvm;
-  LLVMContext& ctx = getGlobalContext();
-
-  // Create module
-  Module* mod = new Module(StringRef("llvm_gcd"), ctx);
-
-  // Create function 
-  Constant* c = mod->getOrInsertFunction("gcd",
-                                         IntegerType::get(ctx, 32),
-                                         IntegerType::get(ctx, 32),
-                                         IntegerType::get(ctx, 32),
-                                         NULL);
-  llvm::Function* gcd = cast<llvm::Function>(c);
-
-  // For passing out; not very good code
-  llvm_gcd = gcd;
-
-  // Set up input args for function
-  llvm::Function::arg_iterator args = gcd->arg_begin();
-  Value* x = args++;
-  x->setName("x");
-  Value* y = args++;
-  y->setName("y");
-
-  // Code flow blocks
-  BasicBlock* entry = BasicBlock::Create(getGlobalContext(), "entry", gcd);
-  BasicBlock* ret = BasicBlock::Create(getGlobalContext(), "return", gcd);
-  BasicBlock* cond_false = BasicBlock::Create(getGlobalContext(), "cond_false", gcd);
-  BasicBlock* cond_true = BasicBlock::Create(getGlobalContext(), "cond_true", gcd);
-  BasicBlock* cond_false_2 = BasicBlock::Create(getGlobalContext(), "cond_false", gcd);
-
-  // Building up code
-  IRBuilder<> builder(entry);
-  Value* xEqualsY = builder.CreateICmpEQ(x, y, "tmp");
-  builder.CreateCondBr(xEqualsY, ret, cond_false);
-  builder.SetInsertPoint(ret);
-  builder.CreateRet(x);
-  builder.SetInsertPoint(cond_false);
-  Value* xLessThanY = builder.CreateICmpULT(x, y, "tmp");
-  builder.CreateCondBr(xLessThanY, cond_true, cond_false_2);
-  builder.SetInsertPoint(cond_true);
-  Value* yMinusX = builder.CreateSub(y, x, "tmp");
-  std::vector<Value*> args1;
-  args1.push_back(x);
-  args1.push_back(yMinusX);
-  Value* recur_1 = builder.CreateCall(gcd, args1.begin(), args1.end(), "tmp");
-  builder.CreateRet(recur_1);
-
-  builder.SetInsertPoint(cond_false_2);
-  Value* xMinusY = builder.CreateSub(x, y, "tmp");
-  std::vector<Value*> args2;
-  args2.push_back(xMinusY);
-  args2.push_back(y);
-  Value* recur_2 = builder.CreateCall(gcd, args2.begin(), args2.end(), "tmp");
-  builder.CreateRet(recur_2);
-
-  return mod;
-}
-
-/*
- * LLVM, JIT-compiled gcd!
- */
-cons_t* proc_llvm_gcd(cons_t* p, environment_t*)
-{
-  using namespace llvm;
-
-  static Module* Mod = NULL;
-  static ExecutionEngine* TheExecutionEngine;
-
-  typedef int (*gcd_fp)(int, int);
-  static gcd_fp myFunc = NULL;
-
-  // Params
-  assert_length(p, 2);
-  assert_type(INTEGER, car(p));
-  assert_type(INTEGER, cadr(p));
-
-  if ( Mod == NULL ) {
-    InitializeNativeTarget();
-
-    // Create function that contains gcd function
-    Mod = makeLLVMModule();
-    verifyModule(*Mod, PrintMessageAction);
-
-    std::string ErrStr;
-    TheExecutionEngine = EngineBuilder(Mod).setErrorStr(&ErrStr).create();
-
-    if ( TheExecutionEngine == NULL )
-      raise(runtime_exception(ErrStr));
-
-    // JIT compile function
-    llvm::Function *LF = llvm_gcd;
-    void *FPtr = TheExecutionEngine->getPointerToFunction(LF);
-
-    // Cast to correct function signature
-    myFunc = (gcd_fp)FPtr;
-  }
-
-  // Call native gcd function
-  return integer(myFunc(car(p)->integer, cadr(p)->integer));
-}
-#endif // USE_LLVM
-
 named_function_t exports_mickey_misc[] = {
   {":backtrace", proc_backtrace, false},
   {":circular?", proc_circularp, false},
   {":closure-source", proc_closure_source, false},
   {":debug", proc_debug, false},
   {":list->dot", proc_list_to_dot, false},
-#ifdef USE_LLVM
-  {":llvm:gcd", proc_llvm_gcd, false},
-#endif
   {":syntax-expand", proc_syntax_expand, false},
   {":type-of", proc_type_of, false},
   {":version", proc_version, false},
