@@ -172,7 +172,8 @@ number and execute it on the fly.
     #; mickey> ((lambda (x) (* x x)) 12)
     144
 
-We can it to a variable as well.  Let's bind it to the variable `square`.
+We can bind it to a variable as well.  Let's bind it to the variable
+`square`.
 
     #; mickey> (define square (lambda (x) (* x x)))
     #; mickey> (square 12)
@@ -180,23 +181,21 @@ We can it to a variable as well.  Let's bind it to the variable `square`.
     #; mickey> (square 3.1415)
     9.86902
 
-Let's have some fun with lambdas.  Let's create
-a function that creates other functions.
+Let's have some fun with lambdas.  Let's create a function that creates
+other functions.
 
-We'll create a general function `make-adder` that
-creates a function that can add a static number to another
-number.
+We'll create a general function `make-adder` that creates a function that
+can add a static number to another number.
 
     #; mickey> (define make-adder
                  (lambda (frozen-number)
                    (lambda (x)
                      (+ x frozen-number))))
 
-As you can see, we give it a `frozen-number` and it returns
-a lambda that takes a number `x` and adds the two together.
+As you can see, we give it a `frozen-number` and it returns a lambda that
+takes a number `x` and adds the two together.
 
-So to make a function that adds 5 to its argument, we simply
-do
+So to make a function that adds 5 to its argument, we simply do
 
     #; mickey> (define add5 (make-adder 5))
     #; mickey> (add5 10)
@@ -208,8 +207,8 @@ Likewise
     #; mickey> (add17 10)
     27
 
-Writing `(define (lambda (x) ...))` is tedious, so a
-shorter variant is available:
+Writing `(define (lambda (x) ...))` is tedious, so a shorter variant is
+available:
 
     #; mickey> (define (cube x) (* x x x))
     #; mickey> (cube 101)
@@ -230,8 +229,8 @@ list.
     #; mickey> (cdr '(1 2 3)))
     (2 3)
 
-I like the old school "car" and "could-er" forms because you can compose them, so that you can extract the `car`
-of the `cdr` like so:
+I like the old school "car" and "could-er" forms because you can compose
+them, so that you can extract the `car` of the `cdr` like so:
 
     #; mickey> (cadr '(1 2 3))
     2
@@ -282,7 +281,8 @@ each other:
 * A number is _odd_ if the preceding number is even
 
 Since our definition is going to be mutually recursive, we need to handle
-base cases of zero (negative values will make the code loop forever, though).
+base cases of zero (negative values will make the code loop forever,
+though).
 
 Let's write that out, along with a `check-number` function.
 
@@ -324,9 +324,9 @@ the code body.  As an example, let's say we have a boolean variable
 
     (when green-light (format-drive))
 
-If `when` was implemented as a function, it would always format the hard drive,
-because function parameters must be evaluated _before_ entering the function
-itself.
+If `when` was implemented as a function, it would always format the hard
+drive, because function parameters must be evaluated _before_ entering the
+function itself.
 
 It is clear that we need a way to _control evaluation_.  Scheme's macros
 will let ut do exactly that.
