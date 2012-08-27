@@ -17,7 +17,7 @@
 #include "print.h"
 #include "circular.h"
 #include "exceptions.h"
-#include "module_import.h"
+#include "import.h"
 
 cons_t* cons(const cons_t* h, const cons_t* t)
 {

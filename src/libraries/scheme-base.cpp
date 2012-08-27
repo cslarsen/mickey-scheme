@@ -10,7 +10,7 @@
  */
 
 #include <cmath>
-#include "mickey.h"
+#include "libraries/scheme-base.h"
 
 extern "C" {
 

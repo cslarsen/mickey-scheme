@@ -26,8 +26,7 @@
 #include "heap.h"
 #include "backtrace.h"
 #include "options.h"
-#include "libraries/scheme-base.h"
-#include "module_import.h"
+#include "import.h"
 #include "exceptions.h"
 #include "circular.h"
 

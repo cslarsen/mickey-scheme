@@ -12,8 +12,14 @@
  */
 
 #include "mickey.h"
+#include "core-transition.h"
 
 extern "C" {
+
+cons_t* proc_begin(cons_t* p, environment_t* e)
+{
+  return cons(symbol("begin", e), p);
+}
 
 /*
  * Utility function used internally in exported functions.
@@ -22,7 +28,6 @@ static cons_t* let(cons_t *bindings, cons_t *body, environment_t *e)
 {
   return cons(symbol("let", e), cons(bindings, cons(body)));
 }
-
 
 cons_t* proc_cond(cons_t* p, environment_t* e)
 {
@@ -319,11 +324,6 @@ cons_t* proc_let(cons_t* p, environment_t* e)
                cons(names,                    //        (name-1 .. name-n)
                cons(proc_begin(body, e))))))),//        (begin <body>))))
            cons(cons(name, values))));        //   (<name> value-1 .. value-n))
-}
-
-cons_t* proc_begin(cons_t* p, environment_t* e)
-{
-  return cons(symbol("begin", e), p);
 }
 
 cons_t* proc_letrec(cons_t* p, environment_t* e)

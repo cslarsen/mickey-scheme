@@ -9,11 +9,10 @@
  *                                                          
  */
 
-#ifndef INC_MICKEY_EVAL_H
-#define INC_MICKEY_EVAL_H
+#ifndef INC_MICKEY_CORE_TRANS_H
+#define INC_MICKEY_CORE_TRANS_H
 
 #include "cons.h"
-#include "parser.h"
 
 extern "C" {
 

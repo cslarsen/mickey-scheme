@@ -12,8 +12,7 @@
 #include <dlfcn.h>
 #include "cons.h"
 #include "primitives.h"
-#include "module_import.h"
-#include "libraries/scheme-base.h"
+#include "import.h"
 #include "assertions.h"
 #include "exceptions.h"
 #include "print.h"

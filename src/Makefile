@@ -22,8 +22,8 @@ TARGETS_O =  \
             exceptions.o \
             file-io.o \
             heap.o \
+            import.o \
             make-closure.o \
-            module_import.o \
             options.o \
             parse-string.o \
             parser.o \
@@ -35,7 +35,8 @@ TARGETS_O =  \
             types.o \
             util.o \
 
-LIB_DEPS =  apply.o \
+LIB_DEPS =  \
+            apply.o \
             arguments.o \
             assertions.o \
             backtrace.o \
@@ -47,8 +48,8 @@ LIB_DEPS =  apply.o \
             evlis.o \
             exceptions.o \
             file-io.o \
+            import.o \
             make-closure.o \
-            module_import.o \
             options.o \
             parse-string.o \
             parser.o \
