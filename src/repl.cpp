@@ -79,7 +79,7 @@ cons_t* proc_help(cons_t*, environment_t*)
 }
 
 named_function_t exports_repl[] = {
-  {":list-globals", proc_list_globals, false},
+  {"top-level", proc_list_globals, false},
   {"help", proc_help, false},
   {NULL, NULL, false}};
 
