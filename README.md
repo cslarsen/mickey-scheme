@@ -20,13 +20,12 @@ Current Features
   * Most core scheme functions
   * Supports 164 of 240 R7RS base library definitions
   * Quotation and quasiquotation
-  * Most `let`-forms, including named let
-  * Rest arguments, also known as variadic functions
-  * A macro system via syntax-rules (though, it's incomplete)
-  * Lazy evaluation with memoization
-  * R7RS library system
-  * Tail call eliminiation (yeah, neither the JVM nor Python has that,
-    so that's at least _something_ to be a little proud of!)
+  * Most `let`-forms (missing `letrec*` and `let-syntax`)
+  * Variadic functions
+  * Macros via `syntax-rules` (though, it's incomplete)
+  * Lazy evaluation with memoization in `(scheme lazy)`
+  * Full support for the R7RS library system `define-library`
+  * Tail call eliminiation
 
 Some of these are demonstrated in the [example code section](#examples).
 
