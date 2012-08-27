@@ -67,15 +67,37 @@ Current Shortcomings
 Compiling
 ---------
 
-Run `make -j check` to perform a simple check, then `./mickey` to play with a REPL.
+To install Mickey Scheme, you need a C++ compiler, dlopen et al. and
+readline.  If you don't have readline, remove `-DUSE_READLINE` from
+`src/Makefile`.
 
-The project is not really release-ready, so there is no use of autotools.
-The Makefile assumes you have `c++` installed.  If you want to compile
-using `llvm-g++` or any other compiler, do something like:
+If you have both and reside on OS X, just type
 
-    CXX=llvm-g++ make -ej
+    $ make -j run
 
-to compile using `g++` and in parallel.
+to fire up a REPL.  On Linux, you have to set `LD_LIBRARY_PATH` to be able to
+locate dynamic shared objects in your current directory:
+
+    $ CXX=c++ make -ej
+    ...
+    $ LD_LIBRARY_PATH=".:" ./mickey
+
+or, if you're feeling insecure, simply make it session-wide with
+
+    $ export LD_LIBRARY_PATH=".:"
+    $ ./mickey
+
+That's all there is to it!
+
+To run some test code, just type
+
+    $ make check
+
+or
+
+    $ make check-all
+
+That's all there is to it!
 
 Feature flags
 -------------
