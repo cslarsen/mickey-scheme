@@ -183,12 +183,19 @@ void init_readline()
   rl_readline_name = strdup("mickey");
 
   /*
-   * I think there is a bug in GNU Readline; the signature
-   * expected by the rl_completion_entry_function is a function
-   * returning int, but when it's used in completion_matches,
-   * it is a function returning char*.
+   * The advertised signature for rl_completion_entry_function has changed
+   * between versions.
+   *
+   * The current cut-off for choosing between the two signatures is version
+   * 0x0502.  If you find it works for your version, and your version is
+   * less than the one given below (0x0502), then please lower the required
+   * version number.
    */
+#if RL_READLINE_VERSION >= 0x0502
+  rl_completion_entry_function = readline_auto_completion;
+#else
   rl_completion_entry_function = (int(*)(const char*,int)) readline_auto_completion;
+#endif
 
   // hitting TAB will attempt auto completion
   rl_bind_key('\t', rl_complete);
