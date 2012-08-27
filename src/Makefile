@@ -16,12 +16,12 @@ TARGETS_O =  \
             call-lambda.o \
             circular.o \
             cons.o \
+            core-transition.o \
             eval.o \
             evlis.o \
             exceptions.o \
             file-io.o \
             heap.o \
-            libraries/scheme-base.o \
             make-closure.o \
             module_import.o \
             options.o \
@@ -42,11 +42,11 @@ LIB_DEPS =  apply.o \
             call-lambda.o \
             circular.o \
             cons.o \
+            core-transition.o \
             eval.o \
             evlis.o \
             exceptions.o \
             file-io.o \
-            libraries/scheme-base.o \
             make-closure.o \
             module_import.o \
             options.o \

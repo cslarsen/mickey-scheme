@@ -10,6 +10,7 @@
  */
 
 #include "mickey.h"
+#include "core-transition.h"
 
 extern "C" { // because I don't like name-mangling
 
