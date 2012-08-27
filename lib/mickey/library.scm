@@ -26,7 +26,7 @@ Distributed under the LGPL 2.1; see LICENSE
     ;; so we don't need to do anything about those yet.
 
     (define base
-      (dlopen-internal "libscheme-base.so" 'lazy))
+      (dlopen-internal "libscheme-base.so" 'lazy 'global))
 
     (define cons          (dlsym base "proc_cons"))
     (define error         (dlsym base "proc_error"))

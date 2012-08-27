@@ -14,7 +14,7 @@ Distributed under the LGPL 2.1; see LICENSE
           (mickey library))
 
   (begin
-    (open-internal-library "libunix-uname.so" 'lazy)
+    (open-internal-library "libunix-uname.so" 'lazy 'global)
 
     (define uname
       (bind-procedure "proc_uname"))))

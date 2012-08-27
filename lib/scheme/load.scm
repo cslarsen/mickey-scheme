@@ -16,7 +16,7 @@ Please post bugfixes and suggestions to the author.   /  \_
   (export load)
 
   (begin
-    (open-internal-library "libscheme-load.so" 'lazy)
+    (open-internal-library "libscheme-load.so" 'lazy 'global)
 
     (define load
       (bind-procedure "proc_load"))))
