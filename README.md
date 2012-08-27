@@ -143,6 +143,10 @@ First, let's start `mickey`.
 
     #; mickey> 
 
+If you're on Linux, you may have to set `LD_LIBRARY_PATH` to find the shared
+object files:
+
+    $ LD_LIBRARY_PATH=".:" ./mickey
 
 This is the REPL, short for _read-evaluate-print loop_.
 
