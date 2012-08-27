@@ -9,6 +9,7 @@
  *
  */
 
+#include <dlfcn.h>
 #include "cons.h"
 #include "primitives.h"
 #include "module_import.h"
@@ -334,11 +335,39 @@ environment_t* import_library(const std::string& name)
   else if ( name == "(unix dlopen)" ) {
     /*
      * This is the only library we don't need to load dynamically from a
-     * scheme file.  But (TODO) we should load it dynamically from HERE via
+     * scheme file.  But we should load it dynamically from HERE via
      * dlopen.
+     *
+     * Just ignore dlclose for now, the OS will take care of that as well
+     * when process exit (we'll deal with resource handling like that later)
+     * (TODO)
      */
-    extern named_function_t exports_dlopen[]; // libraries/unix-dlopen.cpp
-    import(r, exports_dlopen, name);
+    static void *lib = dlopen(library_file("libunix-dlopen.so").c_str(),
+                         RTLD_LAZY | RTLD_GLOBAL);
+
+    if ( lib == NULL )
+      raise(runtime_exception(format("(unix dlopen): %s", dlerror())));
+
+    /*
+     * Exported name on left, dlsym name on right
+     */
+    const char* sym[] = {
+      "dlclose", "proc_dlclose",
+      "dlerror", "proc_dlerror",
+      "dlopen", "proc_dlopen",
+      "dlopen-internal", "proc_dlopen_internal",
+      "dlsym", "proc_dlsym",
+      "dlsym-syntax", "proc_dlsym_syntax",
+      NULL};
+
+    for ( const char** s = sym; *s; s += 2 ) {
+      void *f = dlsym(lib, *(s+1));
+
+      if ( f == NULL )
+        raise(runtime_exception(format("(unix dlopen): %s", dlerror())));
+
+      r->define(*s, reinterpret_cast<lambda_t>(f));
+    }
   }
 
   else

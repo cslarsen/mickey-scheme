@@ -11,8 +11,10 @@
 
 #include <dlfcn.h>
 #include <libgen.h>
-#include "mickey.h"
+#include "cons.h"
 #include "libraries/unix-dlopen.h"
+
+extern "C" {
 
 /*
  * Define an arbitrary type tag to use to discern
@@ -27,6 +29,15 @@
 #define SYMBOL_RTLD_NOW    "now"
 #define SYMBOL_RTLD_GLOBAL "global"
 #define SYMBOL_RTLD_LOCAL  "local"
+
+named_function_t exports_dlopen[] = {
+  {"dlclose", proc_dlclose, false},
+  {"dlerror", proc_dlerror, false},
+  {"dlopen", proc_dlopen, false},
+  {"dlopen-internal", proc_dlopen_internal, false},
+  {"dlsym", proc_dlsym, false},
+  {"dlsym-syntax", proc_dlsym_syntax, false},
+  {NULL, NULL, false}};
 
 /*
  * ... and the function to parse it
@@ -53,15 +64,6 @@ static int parse_dlopen_mode(const cons_t* p)
 
   return mode;
 }
-
-named_function_t exports_dlopen[] = {
-  {"dlclose", proc_dlclose, false},
-  {"dlerror", proc_dlerror, false},
-  {"dlopen", proc_dlopen, false},
-  {"dlopen-internal", proc_dlopen_internal, false},
-  {"dlsym", proc_dlsym, false},
-  {"dlsym-syntax", proc_dlsym_syntax, false},
-  {NULL, NULL, false}};
 
 cons_t* proc_dlclose(cons_t* p, environment_t*)
 {
@@ -173,4 +175,6 @@ cons_t* proc_dlsym_syntax(cons_t* p, environment_t* current)
 
   lambda_t f = dlsym_helper(p);
   return f != NULL ? closure(f, e, true) : boolean(false);
+}
+
 }

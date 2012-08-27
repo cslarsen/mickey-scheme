@@ -11,6 +11,8 @@
 
 #include "mickey.h"
 
+extern "C" {
+
 extern named_function_t exports_dlopen[];
 
 cons_t* proc_dlclose(cons_t*, environment_t*);
@@ -19,3 +21,5 @@ cons_t* proc_dlopen(cons_t*, environment_t*);
 cons_t* proc_dlopen_internal(cons_t*, environment_t*);
 cons_t* proc_dlsym(cons_t*, environment_t*);
 cons_t* proc_dlsym_syntax(cons_t*, environment_t*);
+
+}

@@ -26,7 +26,6 @@ TARGETS_O =  \
             file-io.o \
             heap.o \
             libraries/scheme-base.o \
-            libraries/unix-dlopen.o \
             make-closure.o \
             module_import.o \
             options.o \
@@ -52,7 +51,6 @@ LIB_DEPS =  apply.o \
             exceptions.o \
             file-io.o \
             libraries/scheme-base.o \
-            libraries/unix-dlopen.o \
             make-closure.o \
             module_import.o \
             options.o \
@@ -66,6 +64,7 @@ LIB_DEPS =  apply.o \
             util.o
 
 TARGETS_SO = libunix-uname.so \
+						 libunix-dlopen.so \
 						 libmickey-misc.so \
 						 libmickey-environment.so \
 						 libmickey-internals.so \
@@ -85,6 +84,9 @@ libmickey.so: $(LIB_DEPS)
 	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) $^ -L. -o $@
 
 libunix-uname.so: libraries/unix-uname.cpp libmickey.so
+	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey $< -o $@
+
+libunix-dlopen.so: libraries/unix-dlopen.cpp libmickey.so
 	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey $< -o $@
 
 libmickey-environment.so: libraries/mickey-environment.cpp libmickey.so
