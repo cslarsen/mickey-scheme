@@ -267,7 +267,7 @@ scope, and evaluates them in the given order.
     #; mickey> (let* ((x 2)
                       (y 3)
                       (z (* x y)))
-                      (display z))
+                     (display z))
 
 This, of course, prints `6`.
 
