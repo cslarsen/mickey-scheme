@@ -110,7 +110,7 @@ char** auto_complete(const char *s, int, int)
 
   // Count number of hits
   for ( cons_t *p = all_commands; !nullp(p); p = cdr(p) )
-    count += (symbolp(car(p)) && isprefix(s, car(p)->symbol->name().c_str()));
+    count += (symbolp(car(p)) && isprefix(s, car(p)->symbol->c_str()));
 
   if ( count <= 1 ) {
     last_hit = 0;
@@ -123,10 +123,10 @@ char** auto_complete(const char *s, int, int)
 
   size_t hitno = 0;
   for ( cons_t *p = all_commands; !nullp(p); p = cdr(p) )
-    if ( symbolp(car(p)) && isprefix(s, car(p)->symbol->name().c_str()) ) {
+    if ( symbolp(car(p)) && isprefix(s, car(p)->symbol->c_str()) ) {
       ++hitno;
       if ( hitno >= last_hit )
-        *hit++ = strdup(car(p)->symbol->name().c_str());
+        *hit++ = strdup(car(p)->symbol->c_str());
     }
 
   last_hit = hitno % count;
@@ -153,7 +153,7 @@ char* readline_auto_completion(const char* s, int state)
     // count number of hits
     for ( cons_t *p = all_commands; !nullp(p); p = cdr(p) )
       count += (symbolp(car(p)) &&
-                 isprefix(s, car(p)->symbol->name().c_str()));
+                 isprefix(s, car(p)->symbol->c_str()));
   
     // build actual hits; readline will (hopefully!) free for us
     // (but TODO don't count on it)
@@ -161,8 +161,8 @@ char* readline_auto_completion(const char* s, int state)
     char** command = commands;
 
     for ( cons_t *p = all_commands; !nullp(p); p = cdr(p) ) {
-      if ( symbolp(car(p)) && isprefix(s, car(p)->symbol->name().c_str()) )
-          *command++ = strdup(car(p)->symbol->name().c_str());
+      if ( symbolp(car(p)) && isprefix(s, car(p)->symbol->c_str()) )
+          *command++ = strdup(car(p)->symbol->c_str());
     }
 
     *command = NULL;

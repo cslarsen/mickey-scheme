@@ -365,7 +365,7 @@ bool eqp(const cons_t* l, const cons_t* r)
  * See R7RS chapters 6 and 6.3.3.
  *
  * For pairs, vectors, bytevectors, records or
- * strings, eqv? denotes they shrae the same
+ * strings, eqv? denotes they share the same
  * locations in the store (section 3.4).
  *
  */
@@ -377,7 +377,7 @@ bool eqvp(const cons_t* l, const cons_t* r)
   switch ( type_of(l) ) {
   case NIL:           return true;
   case BOOLEAN:       return l->boolean == r->boolean;
-  case SYMBOL:        return l->symbol->name() == r->symbol->name();
+  case SYMBOL:        return l->symbol == r->symbol || *(l->symbol) == *(r->symbol);
   case INTEGER:       // Also make sure both are exact/both inexact (TODO)
                       return l->integer == r->integer; 
   case DECIMAL:       // Check both exact/both inexact
@@ -543,7 +543,7 @@ cons_t* nil_coalesce(cons_t* p)
 const std::string& symbol_name(const cons_t* p)
 {
   static const std::string empty("");
-  return !symbolp(p)? empty : p->symbol->name();
+  return !symbolp(p)? empty : *p->symbol;
 }
 
 bool emptylistp(const cons_t* p)

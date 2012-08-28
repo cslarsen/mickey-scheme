@@ -71,7 +71,7 @@ cons_t* proc_debug(cons_t *p, environment_t *env)
     s += format(" car->%p cdr->%p", p->car, p->cdr);
     break;
   case SYMBOL:
-    s += format(" name='%s'", p->symbol->name().c_str());
+    s += format(" name='%s'", p->symbol->c_str());
     break;
   case STRING:
     s += format(" value='%s'", p->string);
@@ -161,7 +161,7 @@ cons_t* proc_syntax_expand(cons_t* p, environment_t *e)
 
   cons_t *syntax_name = car(code);
   assert_type(SYMBOL, syntax_name);
-  cons_t *op = e->lookup_or_throw(syntax_name->symbol->name());
+  cons_t *op = e->lookup_or_throw(*syntax_name->symbol);
 
   assert_type(SYNTAX, op);
   return syntax_expand(op, code, e);

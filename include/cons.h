@@ -14,7 +14,6 @@ typedef double decimal_t;
 #ifndef INC_MICKEY_CONS_H
 #define INC_MICKEY_CONS_H
 
-#include <stdexcept>
 #include <string>
 #include <map>
 #include <vector>
@@ -167,25 +166,9 @@ struct bytevector_t {
 };
 
 /*
- * A symbol.
+ * A symbol is nothing else but a string.
  */
-class symbol_t {
-public:
-  const std::string *n;
-
-  symbol_t() : n(NULL)
-  {
-  }
-
-  symbol_t(const symbol_t& s) : n(s.n)
-  {
-  }
-
-  const std::string& name() const
-  {
-    return *n;
-  }
-};
+typedef std::string symbol_t;
 
 /*
  * Symbols are uniquely identified by their names, so all symbols with equal

@@ -59,10 +59,7 @@ static cons_t* invoke_with_trace(
     raise(runtime_exception(format(
       "Not a function: %s", sprint(op).c_str())));
 
-  if ( symbolp(op) )
-    func_name = op->symbol->name();
-  else
-    func_name = "<?>";
+  func_name = symbolp(op)? *op->symbol : "<?>";
 
   /*
    * If closure is syntactic, instead of a normal function,
@@ -120,7 +117,7 @@ cons_t* eval(cons_t* p, environment_t* e)
   for(;;) {
     if ( atomp(p) ) {
       if ( symbolp(p) )
-        return e->lookup_or_throw(p->symbol->name());
+        return e->lookup_or_throw(*p->symbol);
 
       if ( is_self_evaluating(p) )
         return p;
@@ -134,7 +131,7 @@ cons_t* eval(cons_t* p, environment_t* e)
     }
 
     if ( symbolp(car(p)) ) {
-      const std::string name = car(p)->symbol->name();
+      const std::string name = *car(p)->symbol;
 
       if ( name == "quote" ) {
         assert_length(cdr(p), 1);
@@ -215,7 +212,7 @@ cons_t* eval(cons_t* p, environment_t* e)
         cons_t *def_name = cadr(p);
         cons_t *def_body = cddr(p);
 
-        std::string name = def_name->symbol->name();
+        std::string name = *def_name->symbol;
         environment_t *i = e;
 
         // search for definition and set if found
@@ -343,13 +340,13 @@ cons_t* eval(cons_t* p, environment_t* e)
      *
      */
     if ( symbolp(car(p)) ) {
-      cons_t *op = e->lookup_or_throw(car(p)->symbol->name());
+      cons_t *op = e->lookup_or_throw(*car(p)->symbol);
 
       if ( closurep(op) ) {
         cons_t *body = op->closure->body;
 
         if ( !nullp(body) ) {
-          func_name = car(p)->symbol->name();
+          func_name = *car(p)->symbol;
           body_env_t r = expand_lambda(evlis(cdr(p), e),
                                        op->closure,
                                        op->closure->environment);

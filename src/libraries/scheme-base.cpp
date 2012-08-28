@@ -234,10 +234,10 @@ cons_t* proc_define(cons_t *p, environment_t *env)
   cons_t *name = car(p);
   cons_t *body = cadr(p);
 
-  if ( name->symbol->name().empty() )
+  if ( name->symbol->empty() )
     raise(runtime_exception("Cannot define with empty variable name")); // TODO: Even possible?
 
-  env->define(name->symbol->name(), body);
+  env->define(*name->symbol, body);
   return nil();
 }
 
@@ -248,10 +248,10 @@ cons_t* proc_define_syntax(cons_t *p, environment_t *env)
   cons_t *name = car(p);
   cons_t *syntax = cadr(p);
 
-  if ( name->symbol->name().empty() )
+  if ( name->symbol->empty() )
     raise(runtime_exception("Cannot define-syntax with empty name"));
 
-  env->define(name->symbol->name(), syntax);
+  env->define(*name->symbol, syntax);
   return nil();
 }
 
@@ -1218,13 +1218,13 @@ cons_t* proc_set_car(cons_t* p, environment_t* e)
   cons_t *source = cadr(p);
 
   if ( type_of(target) == SYMBOL )
-    target = e->lookup_or_throw(target->symbol->name());
+    target = e->lookup_or_throw(*target->symbol);
 
   if ( type_of(target) != PAIR )
     assert_type(PAIR, target); // raise error
 
   if ( type_of(source) == SYMBOL )
-    source = e->lookup_or_throw(source->symbol->name());
+    source = e->lookup_or_throw(*source->symbol);
   else // constant, or whatever
     source = eval(source, e);
 
@@ -1244,13 +1244,13 @@ cons_t* proc_set_cdr(cons_t* p, environment_t* e)
   cons_t *source = cadr(p);
 
   if ( type_of(target) == SYMBOL )
-    target = e->lookup_or_throw(target->symbol->name());
+    target = e->lookup_or_throw(*target->symbol);
 
   if ( type_of(target) != PAIR )
     assert_type(PAIR, target); // raise error
 
   if ( type_of(source) == SYMBOL )
-    source = e->lookup_or_throw(source->symbol->name());
+    source = e->lookup_or_throw(*source->symbol);
   else // constant, or whatever
     source = eval(source, e);
 

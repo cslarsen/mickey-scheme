@@ -217,7 +217,7 @@ cons_t* proc_boundp(cons_t* p, environment_t* e)
 {
   assert_length(p, 1);
   assert_type(SYMBOL, car(p));
-  return boolean(e->lookup(car(p)->symbol->name()) != NULL);
+  return boolean(e->lookup(*car(p)->symbol) != NULL);
 }
 
 cons_t* proc_env_eval(cons_t* p, environment_t* e)

@@ -60,7 +60,7 @@ cons_t* call_lambda(cons_t *p, closure_t* proc, environment_t* e)
         if ( nullp(value) )
           value = list(NULL);
 
-        e->define(name->symbol->name(), value);
+        e->define(*name->symbol, value);
         break;
       } else 
         raise(runtime_exception("Lambda argument not a symbol but type "
@@ -84,14 +84,14 @@ cons_t* call_lambda(cons_t *p, closure_t* proc, environment_t* e)
         value = list(NULL);
       }
 
-      e->define(cadr(name)->symbol->name(), value);
+      e->define(*cadr(name)->symbol, value);
       break;
     }
 
     if ( nullp(value) )
       break;
 
-    e->define(car(name)->symbol->name(), car(value));
+    e->define(*car(name)->symbol, car(value));
   }
 
   // now EXECUTE body with given definition
@@ -149,7 +149,7 @@ body_env_t expand_lambda(cons_t *p, closure_t* proc, environment_t* e)
         if ( nullp(value) )
           value = list(NULL);
 
-        e->define(name->symbol->name(), value);
+        e->define(*name->symbol, value);
         break;
       } else 
         raise(runtime_exception("Lambda argument not a symbol but type "
@@ -171,14 +171,14 @@ body_env_t expand_lambda(cons_t *p, closure_t* proc, environment_t* e)
         value = list(NULL);
       }
 
-      e->define(cadr(name)->symbol->name(), value);
+      e->define(*cadr(name)->symbol, value);
       break;
     }
 
     if ( nullp(value) )
       break;
 
-    e->define(car(name)->symbol->name(), car(value));
+    e->define(*car(name)->symbol, car(value));
   }
 
   body_env_t r;

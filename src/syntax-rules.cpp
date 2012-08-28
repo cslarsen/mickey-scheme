@@ -86,8 +86,8 @@ static cons_t* syntax_replace(dict_t &map, cons_t* p)
   while ( !nullp(p) ) {
     if ( listp(car(p)) )
       p->car = syntax_replace(map, car(p));
-    else if ( symbolp(car(p)) && map.count(car(p)->symbol->name()) ) {
-      const std::string& name = car(p)->symbol->name();
+    else if ( symbolp(car(p)) && map.count(*car(p)->symbol) ) {
+      const std::string name = *car(p)->symbol;
       cons_t *repl = map[name];
 
       /*
