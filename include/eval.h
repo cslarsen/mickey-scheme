@@ -23,8 +23,6 @@
  */
 extern "C" {
 
-extern const char ARGS[];
-extern const char BODY[];
 extern std::string func_name;
 
 struct body_env_t {
@@ -34,8 +32,8 @@ struct body_env_t {
 
 cons_t* eval(cons_t* p, environment_t* env);
 cons_t* make_closure(cons_t* args, cons_t* body, environment_t* e);
-cons_t* call_lambda(cons_t *p, environment_t* e);
-body_env_t expand_lambda(cons_t *p, environment_t* e);
+cons_t* call_lambda(cons_t *proc_args, closure_t* proc, environment_t* e);
+body_env_t expand_lambda(cons_t *p, closure_t* proc, environment_t* e);
 
 }
 

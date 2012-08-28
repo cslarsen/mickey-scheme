@@ -26,15 +26,6 @@ static bool is_self_evaluating(cons_t* p)
     environmentp(p) || emptylistp(p);
 }
 
-/*
- * Magic variables to hold lambda arguments
- * and code body.  Quite the hack, and should
- * be fixed later on.  Bad because they shouldn't
- * shadow any other definitions with these names.
- */
-const char ARGS[] = "__args__";
-const char BODY[] = "__body__";
-
 static cons_t* invoke(cons_t* fun, cons_t* args)
 {
   if ( !closurep(fun) )
@@ -43,7 +34,9 @@ static cons_t* invoke(cons_t* fun, cons_t* args)
   environment_t *env = fun->closure->environment;
   lambda_t lambda    = fun->closure->function;
 
-  return lambda(args, env);
+  return lambda!=NULL?
+    lambda(args, env):
+    call_lambda(args, fun->closure, fun->closure->environment);
 }
 
 /*
@@ -353,11 +346,13 @@ cons_t* eval(cons_t* p, environment_t* e)
       cons_t *op = e->lookup_or_throw(car(p)->symbol->name());
 
       if ( closurep(op) ) {
-        cons_t *body = op->closure->environment->symbols[BODY];
+        cons_t *body = op->closure->body;
 
         if ( !nullp(body) ) {
           func_name = car(p)->symbol->name();
-          body_env_t r = expand_lambda(evlis(cdr(p), e), op->closure->environment);
+          body_env_t r = expand_lambda(evlis(cdr(p), e),
+                                       op->closure,
+                                       op->closure->environment);
           func_name = "";
           p = r.body;
           e = r.env;

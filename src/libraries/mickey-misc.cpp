@@ -34,13 +34,8 @@ cons_t* proc_circularp(cons_t* p, environment_t*)
 cons_t* proc_closure_source(cons_t* p, environment_t* e)
 {
   assert_type(CLOSURE, car(p));
-
   closure_t *c = car(p)->closure;
-
-  cons_t *body = c->environment->symbols["__body__"]; // see eval.cpp
-  cons_t *args = c->environment->symbols["__args__"];
-
-  return cons(symbol("lambda", e), list(args, body));
+  return cons(symbol("lambda", e), list(c->args, c->body));
 }
 
 cons_t* proc_debug(cons_t *p, environment_t *env)

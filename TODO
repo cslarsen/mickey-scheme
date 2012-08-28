@@ -245,7 +245,6 @@ Should return (1 . 2) or the same as (cons 1 2).
 RANDOM STUFF
 
 NEXT STEPS, SHOULD BE ORDERED BY INCREASING DIFFICULTY
-- In closure_t, add "cons_t *args, *body" instead of using __args__ and __body__
 - Add module system (module, export, import, etc)
 - Put as many functions as possible into the base module
 - Add let-syntax

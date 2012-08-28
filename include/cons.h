@@ -95,11 +95,15 @@ struct continuation_t {
 /*
  * A closure consists of a function and an environment.  A syntax flag tells
  * whether to evaluate parameters before function invocation.
+ *
+ * lambda_t is a C function with a given signature.  For code stored as
+ * source code, we need to store the body and argument list.
  */
 struct closure_t {
   lambda_t function;
   environment_t* environment;
   bool syntactic;
+  cons_t *body, *args;
 };
 
 /*

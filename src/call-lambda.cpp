@@ -11,10 +11,10 @@
 
 #include "mickey.h"
 
-cons_t* call_lambda(cons_t *p, environment_t* e)
+cons_t* call_lambda(cons_t *p, closure_t* proc, environment_t* e)
 {
-  cons_t *args = e->symbols[ARGS];
-  cons_t *body = e->symbols[BODY];
+  cons_t *args = proc->args;
+  cons_t *body = proc->body;
 
   /*
    * We have to extend the environment
@@ -98,10 +98,10 @@ cons_t* call_lambda(cons_t *p, environment_t* e)
   return eval(body, e);
 }
 
-body_env_t expand_lambda(cons_t *p, environment_t* e)
+body_env_t expand_lambda(cons_t *p, closure_t* proc, environment_t* e)
 {
-  cons_t *args = e->symbols[ARGS];
-  cons_t *body = e->symbols[BODY];
+  cons_t *args = proc->args;
+  cons_t *body = proc->body;
 
   /*
    * We have to extend the environment
