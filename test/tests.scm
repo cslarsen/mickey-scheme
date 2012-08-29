@@ -624,6 +624,7 @@
 (test-eq '(pair? (cons 1 2)) #t)
 (test-eq '(pair? (quote (a . b))) #t)
 (test-eq (length (list '() '())) 2)
+(test-eq '(map * '(1 2 3 4 5)) 120)
 
 ; to fix below bugs, tokenizer should must return 3 tokens for "a""b""c"
 (test-eq (quote (length '(#;"a""b""c"))) 2)
