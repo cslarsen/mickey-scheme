@@ -87,8 +87,6 @@ or, if you're feeling insecure, simply make it session-wide with
     $ export LD_LIBRARY_PATH=".:"
     $ ./mickey
 
-That's all there is to it!
-
 To run some test code, just type
 
     $ make check
