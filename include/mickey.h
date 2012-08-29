@@ -30,6 +30,7 @@ const char VERSION[] = "Mickey Scheme (C) 2011-2012 Christian Stigen Larsen";
 #include "backtrace.h"
 #include "circular.h"
 #include "cons.h"
+#include "debug.h"
 #include "eval.h"
 #include "evlis.h"
 #include "exceptions.h"

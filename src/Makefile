@@ -1,6 +1,7 @@
 CXX      = c++
 CXXFLAGS = -g -W -Wall \
 					 -I../include \
+					 -DDEBUG \
 					 -DUSE_READLINE \
 					 -fno-exceptions \
 					 -fno-rtti
