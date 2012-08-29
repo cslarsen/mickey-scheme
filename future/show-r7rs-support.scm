@@ -144,7 +144,7 @@
   letrec*
   letrec-syntax
   list
-  list-string
+  list->string
   list->vector
   list-copy
   list-ref

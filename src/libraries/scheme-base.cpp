@@ -1673,6 +1673,29 @@ cons_t* proc_list_ref(cons_t* p, environment_t* e)
   return car(proc_list_tail(p, e));
 }
 
+cons_t* proc_list_set(cons_t* p, environment_t*)
+{
+  assert_length(p, 3);
+  assert_type(PAIR, car(p));
+  assert_type(INTEGER, cadr(p));
+
+  cons_t *l = car(p);
+  size_t k = cadr(p)->integer;
+  cons_t *obj = caddr(p);
+
+  if ( cadr(p)->integer < 0 || k >= length(l) )
+    raise(runtime_exception(format(
+      "Invalid list index: %d", cadr(p)->integer)));
+
+  // skip down to location
+  for ( size_t n=0; n<k; ++n )
+    l = cdr(l);
+
+  // insert new item
+  l->car = obj;
+  return nil();
+}
+
 /*
  * Used by member, memq and memv
  */

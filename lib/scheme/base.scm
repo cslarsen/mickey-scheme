@@ -98,6 +98,7 @@ The larger part of this library resides in libscheme-base.so.
     list->vector
     list-ref
     list-tail
+    list-set!
     list?
     make-bytevector
     make-string
@@ -249,6 +250,7 @@ The larger part of this library resides in libscheme-base.so.
     (define list->vector (bind-procedure "proc_list_to_vector"))
     (define list-ref (bind-procedure "proc_list_ref"))
     (define list-tail (bind-procedure "proc_list_tail"))
+    (define list-set! (bind-procedure "proc_list_set"))
     (define list?  (bind-procedure "proc_listp"))
     (define make-bytevector (bind-procedure "proc_make_bytevector"))
     (define make-string (bind-procedure "proc_make_string"))
