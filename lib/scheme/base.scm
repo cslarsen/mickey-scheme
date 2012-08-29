@@ -89,6 +89,7 @@ The larger part of this library resides in libscheme-base.so.
     let
     let*
     letrec
+    letrec*
     list
     list->string
     list->vector
@@ -237,6 +238,7 @@ The larger part of this library resides in libscheme-base.so.
     (define let (bind-syntax "proc_let"))
     (define let* (bind-syntax "proc_letstar"))
     (define letrec (bind-syntax "proc_letrec"))
+    (define letrec* (bind-syntax "proc_letrec"))
     (define list (bind-procedure "proc_list"))
     (define list->string (bind-procedure "proc_list_to_string"))
     (define list->vector (bind-procedure "proc_list_to_vector"))
