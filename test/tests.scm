@@ -636,6 +636,8 @@
 (test-eq '(string-length "a\x42;c") 3)
 (test-eq "a\x42;c" "aBc")
 
+(test-eq '(map (lambda (x) (* x x)) '(0 1 2 3 4 5)) '(0 1 4 9 16 25))
+
 (display "\nResults\n")
 (newline)
 (results)
