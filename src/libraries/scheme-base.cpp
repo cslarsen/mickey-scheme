@@ -297,7 +297,7 @@ cons_t* proc_map(cons_t *p, environment_t*)
 
     // eval (<proc> <head of list1> <head of list 2> ...)
     result = append(result, cons(
-               apply(proc->closure->function, args, proc->closure->environment)));
+               apply(proc->closure, args, proc->closure->environment)));
   }
 
   return result;
