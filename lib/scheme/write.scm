@@ -14,10 +14,11 @@ Please post bugfixes and suggestions to the author.   /  \_
   (import (only (scheme base) define)
           (mickey library))
 
-  (export display)
+  (export display
+          flush-output-port)
 
   (begin
     (open-internal-library "libscheme-write.so")
 
-    (define display
-      (bind-procedure "proc_display"))))
+    (define flush-output-port (bind-procedure "flush_output_port"))
+    (define display           (bind-procedure "proc_display"))))

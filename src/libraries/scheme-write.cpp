@@ -11,7 +11,9 @@
 
 #include "mickey.h"
 
-extern "C" cons_t* proc_display(cons_t *p, environment_t*)
+extern "C" {
+  
+cons_t* proc_display(cons_t *p, environment_t*)
 {
   assert_length(p, 1, 2);
 
@@ -37,4 +39,20 @@ extern "C" cons_t* proc_display(cons_t *p, environment_t*)
   fwrite(s.c_str(), s.length(), 1, port->file());
 
   return nil();
+}
+
+cons_t* flush_output_port(cons_t* p, environment_t*)
+{
+  assert_length(p, 0, 1);
+  FILE *f = global_opts.current_output_device.file();
+
+  if ( length(p) == 1 ) {
+    assert_type(PORT, car(p));
+    f = car(p)->port->file();
+  }
+
+  fflush(f);
+  return nil();
+}
+
 }
