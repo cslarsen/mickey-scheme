@@ -401,6 +401,40 @@ cons_t* proc_close_port(cons_t* p, environment_t*)
   return nil();
 }
 
+cons_t* proc_close_input_port(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_type(PORT, car(p));
+
+  if ( !car(p)->port->isreadable() )
+    raise(runtime_exception("Can only close input ports"));
+
+  /*
+   * TODO: Update port_t to support both input and output,
+   *       or update it to support sockets and then see
+   *       how it should be done.
+   */
+  car(p)->port->close();
+  return nil();
+}
+
+cons_t* proc_close_output_port(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_type(PORT, car(p));
+
+  if ( !car(p)->port->iswritable() )
+    raise(runtime_exception("Can only close output ports"));
+
+  /*
+   * TODO: Update port_t to support both input and output,
+   *       or update it to support sockets and then see
+   *       how it should be done.
+   */
+  car(p)->port->close();
+  return nil();
+}
+
 cons_t* proc_portp(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
@@ -2070,6 +2104,8 @@ named_function_t exports_base[] = {
   {"char>=?", proc_char_gtep, false},
   {"char>?", proc_char_gtp, false},
   {"char?", proc_charp, false},
+  {"close-input-port", proc_close_input_port, false},
+  {"close-output-port", proc_close_output_port, false},
   {"close-port", proc_close_port, false},
   {"cons", proc_cons, false},
   {"current-error-port", proc_current_error_port, false},

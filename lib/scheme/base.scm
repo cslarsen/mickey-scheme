@@ -57,6 +57,8 @@ The larger part of this library resides in libscheme-base.so.
     char>=?
     char>?
     char?
+    close-input-port
+    close-output-port
     close-port
     cond
     cons
@@ -204,6 +206,8 @@ The larger part of this library resides in libscheme-base.so.
     (define char>=?  (bind-procedure "proc_char_gtep"))
     (define char>?  (bind-procedure "proc_char_gtp"))
     (define char?  (bind-procedure "proc_charp"))
+    (define close-input-port (bind-procedure "proc_close_input_port"))
+    (define close-output-port (bind-procedure "proc_close_output_port"))
     (define close-port (bind-procedure "proc_close_port"))
     (define cond (bind-syntax "proc_cond"))
     (define cons (bind-procedure "proc_cons"))
