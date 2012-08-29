@@ -1,5 +1,12 @@
 ;; Show which R7RS definitions are available in Mickey Scheme.
 (import (scheme base)
+        (scheme char)
+        (scheme cxr)
+        (scheme lazy)
+        (scheme load)
+        (scheme math)
+        (scheme process-context)
+        (scheme repl)
         (scheme write)
         (mickey environment))
 
