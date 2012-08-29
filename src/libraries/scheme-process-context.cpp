@@ -81,6 +81,8 @@ cons_t* proc_exit(cons_t* p, environment_t*)
   if ( length(p) == 1 ) {
     if ( integerp(car(p)) )
       code = car(p)->integer;
+    else if ( decimalp(car(p)) )
+      code = static_cast<int>(car(p)->decimal);
     else
       code = !boolean_false(car(p))? EXIT_SUCCESS : EXIT_FAILURE;
   }
@@ -88,13 +90,5 @@ cons_t* proc_exit(cons_t* p, environment_t*)
   ::exit(code);
   return nil();
 }
-
-named_function_t exports_process_context[] = {
-  {"command-line", proc_command_line, false},
-  {"exit", proc_exit, false},
-  {"get-environment-variable", proc_get_environment_variable, false},
-  {"get-environment-variables", proc_get_environment_variables, false},
-  {NULL, NULL, false} /* terminate with null */
-};
 
 }

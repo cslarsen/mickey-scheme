@@ -28,7 +28,7 @@ Please post bugfixes and suggestions to the author.   /  \_
       (bind-procedure "proc_command_line"))
 
     (define exit
-      (bind-procedure "exit"))
+      (bind-procedure "proc_exit"))
 
     (define get-environment-variable
       (bind-procedure "proc_get_environment_variable"))

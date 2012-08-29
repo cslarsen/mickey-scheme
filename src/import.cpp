@@ -75,6 +75,7 @@ void import_defaults(environment_t *e)
     merge(e, import_library("(scheme write)"));
     merge(e, import_library("(scheme char)"));
     merge(e, import_library("(scheme load)"));
+    merge(e, import_library("(scheme process-context)"));
     merge(e, import_library("(scheme repl)"));
   }
 }

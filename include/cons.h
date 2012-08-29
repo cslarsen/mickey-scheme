@@ -9,14 +9,14 @@
  *
  */
 
-typedef double decimal_t;
-
 #ifndef INC_MICKEY_CONS_H
 #define INC_MICKEY_CONS_H
 
 #include <string>
 #include <map>
 #include <vector>
+
+typedef double decimal_t;
 
 /*
  * Function signatures for all C procedures; they all take a cons_t* and an
