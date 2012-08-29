@@ -638,6 +638,17 @@
 
 (test-eq '(map (lambda (x) (* x x)) '(0 1 2 3 4 5)) '(0 1 4 9 16 25))
 
+;; Exactness
+(test-eq '(exact? 3.4) #f)
+(test-eq '(exact? 10.0) #f)
+(test-eq '(exact? (* 2 2)) #t)
+(test-eq '(exact? (* 2 2.0)) #f)
+(test-eq '(exact? (+ 1 2 3)) #t)
+(test-eq '(exact? (+ 1 2 3 (* 10 20))) #t)
+(test-eq '(exact? (+ 1 2 3 (* 10 20 4))) #t)
+(test-eq '(exact? (+ 1 2 3 (* 10 20 4 1))) #t)
+(test-eq '(exact? (+ 1 2 3 (* 10 20 4 1.0))) #f)
+
 (display "\nResults\n")
 (newline)
 (results)

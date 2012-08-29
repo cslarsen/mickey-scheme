@@ -21,7 +21,7 @@ cons_t* type_convert(const char* token, environment_t* env)
     return decimal(to_f(token));
 
   if ( isinteger(token) )
-    return integer(to_i(token));
+    return integer(to_i(token), true);
 
   if ( isstring(token) )
     return parse_string(token);

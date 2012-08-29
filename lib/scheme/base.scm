@@ -73,11 +73,14 @@ The larger part of this library resides in libscheme-base.so.
     eqv?
     error
     even?
+    exact-integer?
+    exact?
     expt
     file-exists?
     finite?
     for-each
     gcd
+    inexact?
     if
     infinite?
     input-port?
@@ -223,11 +226,13 @@ The larger part of this library resides in libscheme-base.so.
     (define eqv?  (bind-procedure "proc_eqvp"))
     (define error (bind-procedure "proc_error"))
     (define even?  (bind-procedure "proc_evenp"))
+    (define exact? (bind-procedure "proc_exactp"))
     (define expt (bind-procedure "proc_expt"))
     (define file-exists?  (bind-procedure "proc_file_existsp"))
     (define finite?  (bind-procedure "proc_finitep"))
     (define gcd (bind-procedure "proc_gcd"))
     (define if (bind-syntax "proc_dummy_placeholder"))
+    (define inexact? (bind-procedure "proc_inexactp"))
     (define infinite?  (bind-procedure "proc_infinitep"))
     (define input-port?  (bind-procedure "proc_input_portp"))
     (define integer->char (bind-procedure "proc_integer_to_char"))
@@ -401,6 +406,9 @@ The larger part of this library resides in libscheme-base.so.
               ;; ... and keep going
               (loop (map car remaining)
                     (map cdr remaining)))))))
+
+    (define (exact-integer? z)
+      (and (integer? z) (exact? z)))
 
     ;; Code taken from R7RS draft
     (define (values . things)

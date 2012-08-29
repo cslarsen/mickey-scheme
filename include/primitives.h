@@ -30,7 +30,7 @@ cons_t* splice(cons_t*, cons_t*);
 cons_t* splice_into(cons_t *from, cons_t *to);
 
 cons_t* symbol(const char*, environment_t*);
-cons_t* integer(int);
+cons_t* integer(int, bool exact = false);
 cons_t* boolean(bool);
 cons_t* character(char);
 cons_t* decimal(decimal_t);

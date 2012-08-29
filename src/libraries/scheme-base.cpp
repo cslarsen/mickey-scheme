@@ -104,37 +104,48 @@ cons_t* proc_add(cons_t *p, environment_t* env)
    * return that.
    */
   int sum = 0;
+  bool exact = true;
 
   for ( ; !nullp(p); p = cdr(p) ) {
     cons_t *i = listp(p)? car(p) : p;
 
-    if ( integerp(i) )
+    if ( integerp(i) ) {
+      if ( !i->exact ) exact = false;
       sum += i->integer;
-    else if ( decimalp(i) )
+    } else if ( decimalp(i) ) {
       // automatically convert; perform rest of computation in floats
+      exact = false;
       return proc_addf(cons(decimal(sum), p), env);
-    else
+    } else
       raise(runtime_exception("Cannot add integer with " + to_s(type_of(i)) + ": " + sprint(i)));
   }
 
-  return integer(sum);
+  return integer(sum, exact);
 }
 
 cons_t* proc_sub(cons_t *p, environment_t*)
 {
+  bool exact = true;
+
   if ( length(p) == 0 )
     raise(runtime_exception("No arguments to -"));
 
   decimal_t d = number_to_float(car(p));
 
+  if ( !car(p)->exact )
+    exact = false;
+
   // (- x) => -x, instead of +x
   if ( nullp(cdr(p)) )
     d = -d;
 
-  while ( !nullp(p = cdr(p)) )
+  while ( !nullp(p = cdr(p)) ) {
+    if ( !car(p)->exact )
+      exact = false;
     d -= number_to_float(car(p));
+  }
 
-  return iswhole(d) ? integer((int)d) : decimal(d);
+  return iswhole(d) ? integer((int)d, exact) : decimal(d);
 }
 
 cons_t* proc_divf(cons_t *p, environment_t*)
@@ -155,6 +166,7 @@ cons_t* proc_divf(cons_t *p, environment_t*)
 cons_t* proc_div(cons_t *p, environment_t *e)
 {
   assert_length(p, 2);
+  bool exact = true;
 
   cons_t *a = car(p);
   cons_t *b = cadr(p);
@@ -165,7 +177,11 @@ cons_t* proc_div(cons_t *p, environment_t *e)
   if ( integerp(a) && integerp(b) ) {
     if ( b->integer == 0 )
       raise(runtime_exception("Division by zero"));
-    return integer(a->integer / b->integer);
+
+    if ( !(a->exact && b->exact && gcd(a->integer, b->integer)==0) )
+      exact = false;
+
+    return integer(a->integer / b->integer, exact);
   } else
     return proc_divf(p, e);
 }
@@ -192,20 +208,23 @@ cons_t* proc_mulf(cons_t *p, environment_t*)
 cons_t* proc_mul(cons_t *p, environment_t *env)
 {
   int product = 1;
+  bool exact = true;
 
   for ( ; !nullp(p); p = cdr(p) ) {
     cons_t *i = listp(p)? car(p) : p;
 
-    if ( integerp(i) )
+    if ( integerp(i) ) {
       product *= i->integer;
-    else if ( decimalp(i) )
+      if ( !i->exact ) exact = false;
+    } else if ( decimalp(i) ) {
       // automatically convert; perform rest of computation in floats
+      exact = false;
       return proc_mulf(cons(decimal(product), p), env);
-    else
+    } else
       raise(runtime_exception("Cannot multiply integer with " + to_s(type_of(i)) + ": " + sprint(i)));
   }
 
-  return integer(product);
+  return integer(product, exact);
 }
 
 cons_t* proc_to_string(cons_t* p, environment_t*)
@@ -2060,6 +2079,20 @@ cons_t* proc_gcd(cons_t* p, environment_t* e)
 
     return integer(r->integer);
   } }
+}
+
+cons_t* proc_exactp(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_number(car(p));
+  return boolean(car(p)->exact == true);
+}
+
+cons_t* proc_inexactp(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_number(car(p));
+  return boolean(car(p)->exact == false);
 }
 
 } // extern "C"

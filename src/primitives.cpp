@@ -48,11 +48,12 @@ cons_t* nil()
   return p;
 }
 
-cons_t* integer(int n)
+cons_t* integer(int n, bool exact)
 {
   cons_t *p = new cons_t();
   p->type = INTEGER;
   p->integer = n;
+  p->exact = exact;
   return p;
 }
 

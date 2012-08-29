@@ -341,6 +341,7 @@ struct pointer_t {
  */
 struct cons_t {
   type_t type;
+  bool exact; // TODO: Move into own number type, or something
   union {
     bool boolean;
     char character;
