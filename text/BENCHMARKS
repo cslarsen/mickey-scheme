@@ -22,3 +22,17 @@ csi -bq     0.136s    1.8x
 csc -O5     0.074s    1.0x
 
 Anyway, at this point, it's more important to build a *correct* scheme.
+
+== 2012-08-29 ==
+
+Program     User     Time/fastest
+---------------------------------
+mickey -g   3.354    45.32x (llvm-g++ 4.2.1)
+mickey -O6  1.358    18.35x (llvm-g++ 4.2.1)
+mickey -O3  1.234    16.67x (clang c++ 4.0)
+mickey -O3  1.158    15.65x (clang c++ 4.0)
+csi -bq     0.140     1.89x (csi 4.7.0.6)
+csc -O5     0.074     1.00x (csc 4.7.0.6)
+
+Mickey has grown; it now contains library modules that must be dynamically
+loaded and linked, more definitions to parse.  This creates some overhead.
