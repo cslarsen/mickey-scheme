@@ -128,6 +128,7 @@ The larger part of this library resides in libscheme-base.so.
     quasiquote
     quote
     real?
+    read-line
     reverse
     round
     set!
@@ -280,6 +281,7 @@ The larger part of this library resides in libscheme-base.so.
     (define quasiquote (bind-syntax "proc_dummy_placeholder"))
     (define quote (bind-syntax "proc_dummy_placeholder"))
     (define real?  (bind-procedure "proc_realp"))
+    (define read-line  (bind-procedure "proc_read_line"))
     (define reverse (bind-procedure "proc_reverse"))
     (define round (bind-procedure "proc_round"))
     (define set!  (bind-syntax "proc_dummy_placeholder"))

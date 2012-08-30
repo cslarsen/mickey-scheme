@@ -186,6 +186,11 @@ enum porttype_t {
 
 /*
  * An input or output port to either files or strings.
+ *
+ * TODO: Remove constructor methods, add a pointer to current read/write
+ * position in string to enable reading/writing strings.
+ *
+ * Check necessary options when performing a read/write.
  */
 class port_t
 {

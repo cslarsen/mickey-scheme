@@ -2118,4 +2118,30 @@ cons_t* proc_inexactp(cons_t* p, environment_t*)
   return boolean(car(p)->exact == false);
 }
 
+cons_t* proc_read_line(cons_t* p, environment_t*)
+{
+  assert_length(p, 0, 1);
+
+  FILE *f = global_opts.current_input_device.file();
+
+  if ( length(p) == 1 ) {
+    assert_type(PORT, car(p));
+    port_t* po = car(p)->port;
+    f = po->file();
+
+    if ( !po->isreadable() )
+      raise(runtime_exception("Output port is not writable"));
+
+    if ( !po->fileport() )
+      raise(runtime_exception("Only file ports are supported currently"));
+  }
+
+  std::string r;
+
+  for ( int ch; (ch = fgetc(f)) != EOF && ch != '\n'; )
+    r += static_cast<char>(ch);
+
+  return string(r.c_str());
+}
+
 } // extern "C"
