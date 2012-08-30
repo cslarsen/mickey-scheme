@@ -41,6 +41,7 @@ cons_t* bytevector(const std::vector<uint8_t>& p);
 cons_t* port(port_t*);
 cons_t* environment(environment_t*);
 cons_t* pointer(pointer_t*);
+cons_t* pointer(const char* tag, void* value);
 cons_t* closure(lambda_t, environment_t*, bool syntactic = false);
 cons_t* nil();
 

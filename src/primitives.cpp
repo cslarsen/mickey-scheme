@@ -81,6 +81,14 @@ cons_t* pointer(pointer_t* p)
   return r;
 }
 
+cons_t* pointer(const char* tag, void* value)
+{
+  cons_t *r = new cons_t();
+  r->type = POINTER;
+  r->pointer = new pointer_t(tag, value);
+  return r;
+}
+
 cons_t* decimal(decimal_t n)
 {
   cons_t *p = new cons_t();
