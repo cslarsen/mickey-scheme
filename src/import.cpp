@@ -326,6 +326,9 @@ environment_t* import_library(const std::string& name)
   else if ( name == "(unix uname)" )
     import_scheme_file(r, "unix/uname.scm");
 
+  else if ( name == "(c stdio)" )
+    import_scheme_file(r, "c/stdio.scm");
+
   else if ( name == "(mickey misc)" )
     import_scheme_file(r, "mickey/misc.scm");
 

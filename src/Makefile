@@ -61,18 +61,20 @@ LIB_DEPS =  \
             types.o \
             util.o
 
-TARGETS_SO = libunix-uname.so \
-						 libunix-dlopen.so \
-						 libmickey-misc.so \
+TARGETS_SO = \
+						 libc-stdio.so \
 						 libmickey-environment.so \
 						 libmickey-internals.so \
-						 libscheme-char.so \
+						 libmickey-misc.so \
 						 libscheme-base.so \
+						 libscheme-char.so \
 						 libscheme-load.so \
-						 libscheme-write.so \
-						 libscheme-repl.so \
 						 libscheme-math.so \
-						 libscheme-process-context.so
+						 libscheme-process-context.so \
+						 libscheme-repl.so \
+						 libscheme-write.so \
+						 libunix-dlopen.so \
+						 libunix-uname.so \
 
 TARGETS = $(TARGETS_O) $(TARGETS_SO) libmickey.so mickey
 
