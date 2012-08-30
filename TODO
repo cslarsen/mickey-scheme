@@ -1,3 +1,6 @@
+- Complete (c stdio) and use it to implement various procedures in (scheme
+  base) and other (scheme) libraries.
+
 - In define-library export list, check that we actually DO have definitions
   for those that are listed.
 
