@@ -2144,4 +2144,47 @@ cons_t* proc_read_line(cons_t* p, environment_t*)
   return string(r.c_str());
 }
 
+cons_t* proc_eof_object(cons_t* p, environment_t*)
+{
+  assert_length(p, 0);
+  return pointer(new pointer_t("eof-object", NULL));
+}
+
+cons_t* proc_eof_objectp(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  return boolean(type_of(car(p)) == POINTER &&
+      !strcmp(car(p)->pointer->tag, "eof-object"));
+}
+
+cons_t* proc_peek_char(cons_t* p, environment_t*)
+{
+  assert_length(p, 0, 1);
+
+  FILE *f = global_opts.current_input_device.file();
+
+  if ( length(p) == 1 ) {
+    assert_type(PORT, car(p));
+    port_t* po = car(p)->port;
+    f = po->file();
+
+    if ( !po->isreadable() )
+      raise(runtime_exception("Output port is not writable"));
+
+    if ( !po->fileport() )
+      raise(runtime_exception("Only file ports are supported currently"));
+  }
+
+  /*
+   * Peek
+   */
+  int ch = fgetc(f);
+
+  if ( ch == EOF )
+    return proc_eof_object(nil(), NULL);
+
+  ungetc(ch, f);
+  return character(static_cast<char>(ch));
+}
+
 } // extern "C"

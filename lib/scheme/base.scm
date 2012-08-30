@@ -32,6 +32,9 @@ The larger part of this library resides in libscheme-base.so.
     assq
     assv
     begin
+    eof-object?
+    eof-object
+    peek-char
     binary-port?
     boolean->string
     boolean?
@@ -191,6 +194,9 @@ The larger part of this library resides in libscheme-base.so.
     (define assq (bind-procedure "proc_assq"))
     (define assv (bind-procedure "proc_assv"))
     (define begin (bind-syntax "proc_begin"))
+    (define eof-object? (bind-procedure "proc_eof_objectp"))
+    (define eof-object (bind-procedure "proc_eof_object"))
+    (define peek-char (bind-procedure "proc_peek_char"))
     (define binary-port?  (bind-procedure "proc_binary_portp"))
     (define boolean->string (bind-procedure "proc_boolean_to_string"))
     (define boolean?  (bind-procedure "proc_booleanp"))
