@@ -8,7 +8,7 @@
  * Please post bugfixes and suggestions to the author.   /  \_
  *
  * This file contains procedures that will eventually be in
- * libraries/scheme-base.cpp but who cannot be loaded dynamically yet.
+ * library/scheme-base.cpp but who cannot be loaded dynamically yet.
  */
 
 #include "mickey.h"

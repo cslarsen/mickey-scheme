@@ -81,7 +81,7 @@ all: $(TARGETS)
 libmickey.so: $(LIB_DEPS)
 	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) $^ -L. -o $@
 
-lib%.so: libraries/%.cpp libmickey.so
+lib%.so: library/%.cpp libmickey.so
 	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey $< -o $@
 
 mickey: mickey.cpp libmickey.so repl.o
