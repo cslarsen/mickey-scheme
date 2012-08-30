@@ -105,6 +105,7 @@
   dynamic-wind
 ; else ; literal
   eof-object?
+  eof-object
   eq?
   equal?
   eqv?
