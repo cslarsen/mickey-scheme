@@ -2118,6 +2118,20 @@ cons_t* proc_inexactp(cons_t* p, environment_t*)
   return boolean(car(p)->exact == false);
 }
 
+cons_t* proc_exact_to_inexact(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+
+  cons_t *q = car(p);
+  assert_number(q);
+  assert_exact(q);
+
+  cons_t *r = new cons_t();
+  *r = *q;
+  r->exact = false;
+  return r;
+}
+
 cons_t* proc_read_line(cons_t* p, environment_t*)
 {
   assert_length(p, 0, 1);

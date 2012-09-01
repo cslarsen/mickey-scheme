@@ -76,6 +76,7 @@ The larger part of this library resides in libscheme-base.so.
     eqv?
     error
     even?
+    exact->inexact
     exact-integer?
     exact?
     expt
@@ -83,8 +84,8 @@ The larger part of this library resides in libscheme-base.so.
     finite?
     for-each
     gcd
-    inexact?
     if
+    inexact?
     infinite?
     input-port?
     integer->char
@@ -194,9 +195,6 @@ The larger part of this library resides in libscheme-base.so.
     (define assq (bind-procedure "proc_assq"))
     (define assv (bind-procedure "proc_assv"))
     (define begin (bind-syntax "proc_begin"))
-    (define eof-object? (bind-procedure "proc_eof_objectp"))
-    (define eof-object (bind-procedure "proc_eof_object"))
-    (define peek-char (bind-procedure "proc_peek_char"))
     (define binary-port?  (bind-procedure "proc_binary_portp"))
     (define boolean->string (bind-procedure "proc_boolean_to_string"))
     (define boolean?  (bind-procedure "proc_booleanp"))
@@ -229,11 +227,14 @@ The larger part of this library resides in libscheme-base.so.
     (define define (bind-syntax "proc_define"))
     (define define-syntax (bind-syntax "proc_define_syntax"))
     (define do (bind-syntax "proc_do"))
+    (define eof-object (bind-procedure "proc_eof_object"))
+    (define eof-object? (bind-procedure "proc_eof_objectp"))
     (define eq?  (bind-procedure "proc_eqp"))
     (define equal?  (bind-procedure "proc_equalp"))
     (define eqv?  (bind-procedure "proc_eqvp"))
     (define error (bind-procedure "proc_error"))
     (define even?  (bind-procedure "proc_evenp"))
+    (define exact->inexact (bind-procedure "proc_exact_to_inexact"))
     (define exact? (bind-procedure "proc_exactp"))
     (define expt (bind-procedure "proc_expt"))
     (define file-exists?  (bind-procedure "proc_file_existsp"))
@@ -256,8 +257,8 @@ The larger part of this library resides in libscheme-base.so.
     (define list->string (bind-procedure "proc_list_to_string"))
     (define list->vector (bind-procedure "proc_list_to_vector"))
     (define list-ref (bind-procedure "proc_list_ref"))
-    (define list-tail (bind-procedure "proc_list_tail"))
     (define list-set! (bind-procedure "proc_list_set"))
+    (define list-tail (bind-procedure "proc_list_tail"))
     (define list?  (bind-procedure "proc_listp"))
     (define make-bytevector (bind-procedure "proc_make_bytevector"))
     (define make-string (bind-procedure "proc_make_string"))
@@ -280,14 +281,15 @@ The larger part of this library resides in libscheme-base.so.
     (define or (bind-procedure "proc_or"))
     (define output-port?  (bind-procedure "proc_output_portp"))
     (define pair?  (bind-procedure "proc_pairp"))
+    (define peek-char (bind-procedure "proc_peek_char"))
     (define port-open?  (bind-procedure "proc_port_openp"))
     (define port?  (bind-procedure "proc_portp"))
     (define positive?  (bind-procedure "proc_positivep"))
     (define procedure?  (bind-procedure "proc_procedurep"))
     (define quasiquote (bind-syntax "proc_dummy_placeholder"))
     (define quote (bind-syntax "proc_dummy_placeholder"))
-    (define real?  (bind-procedure "proc_realp"))
     (define read-line  (bind-procedure "proc_read_line"))
+    (define real?  (bind-procedure "proc_realp"))
     (define reverse (bind-procedure "proc_reverse"))
     (define round (bind-procedure "proc_round"))
     (define set!  (bind-syntax "proc_dummy_placeholder"))

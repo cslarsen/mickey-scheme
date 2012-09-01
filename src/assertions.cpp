@@ -96,6 +96,20 @@ void assert_proper_list(const cons_t* p)
       format("Not a proper list: %s", sprint(p).c_str())));
 }
 
+void assert_exact(const cons_t* p)
+{
+  if ( p->exact == false )
+    raise(runtime_exception(format(
+      "Not exact: %s", sprint(p).c_str())));
+}
+
+void assert_inexact(const cons_t* p)
+{
+  if ( p->exact == true )
+    raise(runtime_exception(format(
+      "Not inexact: %s", sprint(p).c_str())));
+}
+
 void assert_pointer(const char* tag, const cons_t* p)
 {
   if ( type_of(p) != POINTER )
