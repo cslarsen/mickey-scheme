@@ -18,6 +18,7 @@ TARGETS_O =  \
             circular.o \
             cons.o \
             core-transition.o \
+            environment.o \
             eval.o \
             evlis.o \
             exceptions.o \
@@ -45,6 +46,7 @@ LIB_DEPS =  \
             circular.o \
             cons.o \
             core-transition.o \
+            environment.o \
             eval.o \
             evlis.o \
             exceptions.o \

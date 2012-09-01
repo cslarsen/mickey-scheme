@@ -9,8 +9,12 @@
  *
  */
 
+#ifndef INC_MICKEY_ENVIRONMENT_H
+#define INC_MICKEY_ENVIRONMENT_H
+
 #include <string>
 #include "dict_t.h"
+#include "lambda_t.h"
 
 /*
  * Environment holds a symbol table and points to an optional outer (or
@@ -50,3 +54,5 @@ private:
  * Returns number of symbols copied.
  */
 int merge(environment_t *to, const environment_t *from);
+
+#endif
