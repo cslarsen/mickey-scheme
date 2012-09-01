@@ -36,6 +36,7 @@ cons_t* character(char);
 cons_t* decimal(decimal_t);
 cons_t* string(const char*);
 cons_t* vector(cons_t*, size_t size=0, cons_t* fill=NULL);
+cons_t* bytevector(cons_t*);
 cons_t* bytevector(size_t size=0, const uint8_t *fill=NULL);
 cons_t* bytevector(const std::vector<uint8_t>& p);
 cons_t* port(port_t*);

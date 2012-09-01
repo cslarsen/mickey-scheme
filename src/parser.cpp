@@ -47,6 +47,7 @@ static cons_t* parse_quasiquote(environment_t* e);
 static cons_t* parse_unquote(environment_t* e);
 static cons_t* parse_unquote_splicing(environment_t* e);
 static cons_t* parse_vector(environment_t* e);
+static cons_t* parse_bytevector(environment_t* e);
 
 static long int parens = 0;
 
@@ -70,9 +71,9 @@ static cons_t* parse_list(environment_t *env, bool quoting = false)
   while ( (t = get_token()) != NULL && *t != ')' ) {
     /*
      * Detect all tokens that require a matching closing
-     * parenthesis, such as "(" and "#(", etc.
+     * parenthesis, such as "(" and "#(", "#u8("etc.
      */
-    bool paren = (*t == '(' || isvector(t) );
+    bool paren = (*t == '(' || isvector(t) || isbytevector(t) );
 
     // Track matching of parens
     if ( paren )
@@ -93,6 +94,8 @@ static cons_t* parse_list(environment_t *env, bool quoting = false)
       add = parse_unquote_splicing(env);
     else if ( isvector(t) )
       add = parse_vector(env);
+    else if ( isbytevector(t) )
+      add = parse_bytevector(env);
     else
       add = paren? parse_list(env) : type_convert(t, env);
 
@@ -155,6 +158,15 @@ static cons_t* parse_vector(environment_t* e)
    * Replace #(<expr>) with (vector <expr>)
    */
   return cons(symbol("vector", e),
+              parse_list(e, false));
+}
+
+static cons_t* parse_bytevector(environment_t* e)
+{
+  /*
+   * Replace #u8(<expr>) with (vector <expr>)
+   */
+  return cons(symbol("bytevector", e),
               parse_list(e, false));
 }
 

@@ -536,6 +536,11 @@ cons_t* proc_vector(cons_t* p, environment_t*)
   return vector(p);
 }
 
+cons_t* proc_bytevector(cons_t* p, environment_t*)
+{
+  return bytevector(p);
+}
+
 cons_t* proc_make_vector(cons_t* p, environment_t*)
 {
   assert_length(p, 1, 2);

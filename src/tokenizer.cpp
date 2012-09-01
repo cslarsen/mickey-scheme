@@ -28,8 +28,10 @@ void set_source(const char* program)
 static bool string_or_non_delimiter(const char* s)
 {
   char ch = *s;
-  bool open_paren = (ch=='(' /* normal paren, or ... */
-      || (s[0]=='#' && s[1]=='(')); /* vector form #( ... ) */
+  bool open_paren = (ch=='('        /* normal paren */
+      || (s[0]=='#' && s[1]=='(')   /* vector form #( ... ) */
+      || (s[0]=='#' && s[1]=='u' && /* bytevector form #u8( ... ) */
+          s[2]=='8' && s[3]=='('));
 
   if ( ch == '\"' )
     inside_string = !inside_string;
@@ -67,6 +69,7 @@ const char* get_token()
     // hash-bang or similar? skip to end of line
     // TODO: Properly handle reader directives like case-folding, etc.
     if ( source[0]=='#' && source[1]=='!' ) {
+      // skip to end of line
       while ( *source != '\n' ) ++source;
       continue;
     }
@@ -86,6 +89,15 @@ const char* get_token()
     if ( source[0]=='#' && source[1]=='(' ) {
       strcpy(token, "#(");
       source += 2;
+      return token;
+    }
+
+    // bytevector form "#u8( ... )"
+    if ( source[0]=='#' && source[1]=='u' &&
+         source[2]=='8' && source[3]=='(' )
+    {
+      strcpy(token, "#u8(");
+      source += 4;
       return token;
     }
 

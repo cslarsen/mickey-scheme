@@ -32,12 +32,10 @@ The larger part of this library resides in libscheme-base.so.
     assq
     assv
     begin
-    eof-object?
-    eof-object
-    peek-char
     binary-port?
     boolean->string
     boolean?
+    bytevector
     bytevector-copy
     bytevector-copy!
     bytevector-copy-partial
@@ -71,6 +69,8 @@ The larger part of this library resides in libscheme-base.so.
     define
     define-syntax
     do
+    eof-object
+    eof-object?
     eq?
     equal?
     eqv?
@@ -101,8 +101,8 @@ The larger part of this library resides in libscheme-base.so.
     list->string
     list->vector
     list-ref
-    list-tail
     list-set!
+    list-tail
     list?
     make-bytevector
     make-string
@@ -125,14 +125,15 @@ The larger part of this library resides in libscheme-base.so.
     or
     output-port?
     pair?
+    peek-char
     port-open?
     port?
     positive?
     procedure?
     quasiquote
     quote
-    real?
     read-line
+    real?
     reverse
     round
     set!
@@ -198,6 +199,7 @@ The larger part of this library resides in libscheme-base.so.
     (define binary-port?  (bind-procedure "proc_binary_portp"))
     (define boolean->string (bind-procedure "proc_boolean_to_string"))
     (define boolean?  (bind-procedure "proc_booleanp"))
+    (define bytevector (bind-procedure "proc_bytevector"))
     (define bytevector-copy (bind-procedure "proc_bytevector_copy"))
     (define bytevector-copy!  (bind-procedure "proc_bytevector_copy_bang"))
     (define bytevector-copy-partial (bind-procedure "proc_bytevector_copy_partial"))

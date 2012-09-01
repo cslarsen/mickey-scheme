@@ -159,6 +159,12 @@ bool isvector(const char* s)
   return s[0]=='#' && s[1]=='(';
 }
 
+bool isbytevector(const char* s)
+{
+  return s[0]=='#' && s[1]=='u'
+      && s[2]=='8' && s[3]=='(';
+}
+
 decimal_t to_f(const char* s)
 {
   return static_cast<decimal_t>(atof(s));

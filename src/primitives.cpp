@@ -165,6 +165,26 @@ cons_t* bytevector(const std::vector<uint8_t>& p)
   return r;
 }
 
+cons_t* bytevector(cons_t* p)
+{
+  uint8_t init = 0;
+  cons_t* v = bytevector(length(p), &init);
+  std::vector<uint8_t>& vec = v->bytevector->bytevector;
+
+  for ( int i=0; !nullp(p); p = cdr(p), ++i ) {
+    assert_type(INTEGER, car(p));
+
+    int n = car(p)->integer;
+    if ( n<0 || n>255 )
+      raise(runtime_exception(
+        "Bytevector elements must be integers in the range [0..255]"));
+
+    vec[i] = static_cast<uint8_t>(n);
+  }
+
+  return v;
+}
+
 cons_t* car(const cons_t* p)
 {
   return ( p != NULL && p->type == PAIR ) ? p->car : NULL;
