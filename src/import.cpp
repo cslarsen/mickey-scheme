@@ -306,65 +306,73 @@ static void import_scheme_file(environment_t *r, const char* file)
   import(r, library_file(file));
 }
 
+static void import_unix_dlopen(environment_t* r)
+{
+  /*
+   * This is the only library we don't load dynamically from a scheme
+   * file.  But we should load it dynamically from HERE via dlopen.
+   *
+   * Just ignore dlclose for now, the OS will take care of that as well
+   * when process exit (we'll deal with resource handling like that later)
+   * (TODO)
+   */
+  static void *lib = dlopen(library_file("libunix-dlopen.so").c_str(),
+                       RTLD_LAZY | RTLD_GLOBAL);
+
+  if ( lib == NULL )
+    raise(runtime_exception(format("(unix dlopen): %s", dlerror())));
+
+  /*
+   * Exported name on left, dlsym name on right
+   */
+  const char* sym[] = {
+    "dlclose",         "proc_dlclose",
+    "dlerror",         "proc_dlerror",
+    "dlopen",          "proc_dlopen",
+    "dlopen-internal", "proc_dlopen_internal",
+    "dlsym",           "proc_dlsym",
+    "dlsym-syntax",    "proc_dlsym_syntax",
+    NULL};
+
+  for ( const char** s = sym; *s; s += 2 ) {
+    void *f = dlsym(lib, *(s+1));
+
+    if ( f == NULL )
+      raise(runtime_exception(format("(unix dlopen): %s", dlerror())));
+
+    r->define(*s, reinterpret_cast<lambda_t>(f));
+  }
+}
+
 environment_t* import_library(const std::string& name)
 {
   environment_t* r = null_environment();
 
-  if ( name != "(unix dlopen)" ) {
-    /*
-     * TODO: This lookup is O(n^2)-slow, but it will run so seldomly that it really
-     * doesn't matter.  Can be done in O(n log n) or O(1) time, but at a cost
-     * of algorithmic complexity.
-     */
-    for ( size_t n=0; n < sizeof(library_map)/sizeof(library_map_t); ++n ) {
-      if ( library_map[n].library_name == NULL )
-        break;
+  /*
+   * This library needs special treatment; all other libraries depend on it
+   * to load dynamic shared object files.
+   */
+  if ( name == "(unix dlopen)" ) {
+    import_unix_dlopen(r);
+    return r;
+  }
 
-      if ( name == library_map[n].library_name ) {
-        import_scheme_file(r, library_map[n].source_file);
-        return r;
-      }
-    }
-
-    raise(runtime_exception("Unknown library: " + name));
-  } else {
-    /*
-     * This is the only library we don't load dynamically from a scheme
-     * file.  But we should load it dynamically from HERE via dlopen.
-     *
-     * Just ignore dlclose for now, the OS will take care of that as well
-     * when process exit (we'll deal with resource handling like that later)
-     * (TODO)
-     */
-    static void *lib = dlopen(library_file("libunix-dlopen.so").c_str(),
-                         RTLD_LAZY | RTLD_GLOBAL);
-
-    if ( lib == NULL )
-      raise(runtime_exception(format("(unix dlopen): %s", dlerror())));
-
-    /*
-     * Exported name on left, dlsym name on right
-     */
-    const char* sym[] = {
-      "dlclose",         "proc_dlclose",
-      "dlerror",         "proc_dlerror",
-      "dlopen",          "proc_dlopen",
-      "dlopen-internal", "proc_dlopen_internal",
-      "dlsym",           "proc_dlsym",
-      "dlsym-syntax",    "proc_dlsym_syntax",
-      NULL};
-
-    for ( const char** s = sym; *s; s += 2 ) {
-      void *f = dlsym(lib, *(s+1));
-
-      if ( f == NULL )
-        raise(runtime_exception(format("(unix dlopen): %s", dlerror())));
-
-      r->define(*s, reinterpret_cast<lambda_t>(f));
+  /*
+   * TODO: This lookup is O(n^2)-slow, but it will run so seldomly that it really
+   * doesn't matter.  Can be done in O(n log n) or O(1) time, but at a cost
+   * of algorithmic complexity.
+   */
+  for ( library_map_t* lib = library_map;
+        lib->library_name != NULL; ++lib )
+  {
+    if ( name == lib->library_name ) {
+      import_scheme_file(r, lib->source_file);
+      return r;
     }
   }
 
-  return r;
+  raise(runtime_exception("Unknown library: " + name));
+  return NULL;
 }
 
 static environment_t* rename(environment_t* e, cons_t* ids)
