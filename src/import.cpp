@@ -20,6 +20,36 @@
 #include "eval.h"
 #include "file-io.h"
 
+struct library_map_t {
+  const char* library_name;
+  const char* source_file;
+};
+
+/*
+ * TODO: Create a small module that recurses lib-directory and adds all
+ * libraries to a list of known libraries.  Use that to lookup library
+ * names, and report errors (double library names, e.g.).
+ */
+static library_map_t library_map[] = {
+  {"(c stdio)",            "c/stdio.scm"},
+  {"(mickey environment)", "mickey/environment.scm"},
+  {"(mickey internals)",   "mickey/internals.scm"},
+  {"(mickey library)",     "mickey/library.scm"},
+  {"(mickey misc)",        "mickey/misc.scm"},
+  {"(scheme base)",        "scheme/base.scm"},
+  {"(scheme char)",        "scheme/char.scm"},
+  {"(scheme cxr)",         "scheme/cxr.scm"},
+  {"(scheme lazy)",        "scheme/lazy.scm"},
+  {"(scheme load)",        "scheme/load.scm"},
+  {"(scheme math)",        "scheme/math.scm"},
+  {"(scheme process-context)", "scheme/process-context.scm"},
+  {"(scheme repl)",        "scheme/repl.scm"},
+  {"(scheme write)",       "scheme/write.scm"},
+  {"(unix dlopen)",        "unix/dlopen.scm"},
+  {"(unix uname)",         NULL},
+  {NULL, NULL}
+};
+
 /*
  * Library exports
  */
@@ -280,66 +310,27 @@ environment_t* import_library(const std::string& name)
 {
   environment_t* r = null_environment();
 
-  if ( global_opts.verbose )
-    fprintf(stderr, "Import library %s\n", name.c_str());
-
-  /*
-   * TODO: Create a small module that recurses lib-directory and
-   *       adds all libraries to a list of known libraries.
-   *       Use that to lookup library names, and report errors
-   *       (double library names, e.g.).
-   */
-
-  if ( name == "(scheme base)" )
-    import(r, library_file("scheme/base.scm")); // Scheme source code
-
-  else if ( name == "(scheme math)" )
-    import_scheme_file(r, "scheme/math.scm");
-
-  else if ( name == "(scheme char)" )
-    import_scheme_file(r, "scheme/char.scm");
-
-  else if ( name == "(scheme cxr)" )
-    import_scheme_file(r, "scheme/cxr.scm");
-
-  else if ( name == "(scheme lazy)" )
-    import_scheme_file(r, "scheme/lazy.scm");
-
-  else if ( name == "(scheme write)" )
-    import_scheme_file(r, "scheme/write.scm");
-
-  else if ( name == "(scheme load)" )
-    import_scheme_file(r, "scheme/load.scm");
-
-  else if ( name == "(scheme repl)" )
-    import_scheme_file(r, "scheme/repl.scm");
-
-  else if ( name == "(scheme process-context)" )
-    import_scheme_file(r, "scheme/process-context.scm");
-
-  else if ( name == "(mickey environment)" )
-    import_scheme_file(r, "mickey/environment.scm");
-
-  else if ( name == "(mickey internals)" )
-    import_scheme_file(r, "mickey/internals.scm");
-
-  else if ( name == "(unix uname)" )
-    import_scheme_file(r, "unix/uname.scm");
-
-  else if ( name == "(c stdio)" )
-    import_scheme_file(r, "c/stdio.scm");
-
-  else if ( name == "(mickey misc)" )
-    import_scheme_file(r, "mickey/misc.scm");
-
-  else if ( name == "(mickey library)" )
-    import_scheme_file(r, "mickey/library.scm");
-
-  else if ( name == "(unix dlopen)" ) {
+  if ( name != "(unix dlopen)" ) {
     /*
-     * This is the only library we don't need to load dynamically from a
-     * scheme file.  But we should load it dynamically from HERE via
-     * dlopen.
+     * TODO: This lookup is O(n^2)-slow, but it will run so seldomly that it really
+     * doesn't matter.  Can be done in O(n log n) or O(1) time, but at a cost
+     * of algorithmic complexity.
+     */
+    for ( size_t n=0; n < sizeof(library_map)/sizeof(library_map_t); ++n ) {
+      if ( library_map[n].library_name == NULL )
+        break;
+
+      if ( name == library_map[n].library_name ) {
+        import_scheme_file(r, library_map[n].source_file);
+        return r;
+      }
+    }
+
+    raise(runtime_exception("Unknown library: " + name));
+  } else {
+    /*
+     * This is the only library we don't load dynamically from a scheme
+     * file.  But we should load it dynamically from HERE via dlopen.
      *
      * Just ignore dlclose for now, the OS will take care of that as well
      * when process exit (we'll deal with resource handling like that later)
@@ -355,12 +346,12 @@ environment_t* import_library(const std::string& name)
      * Exported name on left, dlsym name on right
      */
     const char* sym[] = {
-      "dlclose", "proc_dlclose",
-      "dlerror", "proc_dlerror",
-      "dlopen", "proc_dlopen",
+      "dlclose",         "proc_dlclose",
+      "dlerror",         "proc_dlerror",
+      "dlopen",          "proc_dlopen",
       "dlopen-internal", "proc_dlopen_internal",
-      "dlsym", "proc_dlsym",
-      "dlsym-syntax", "proc_dlsym_syntax",
+      "dlsym",           "proc_dlsym",
+      "dlsym-syntax",    "proc_dlsym_syntax",
       NULL};
 
     for ( const char** s = sym; *s; s += 2 ) {
@@ -372,9 +363,6 @@ environment_t* import_library(const std::string& name)
       r->define(*s, reinterpret_cast<lambda_t>(f));
     }
   }
-
-  else
-    raise(runtime_exception("Unknown library: " + name));
 
   return r;
 }
