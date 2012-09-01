@@ -6,9 +6,13 @@ PORTABLE_TESTS = test/hello.scm \
                  test/strings.scm
 
 all:
-	cd src ; make all
-	cp src/mickey src/libmickey.so .
-	cp src/lib*.so lib/
+	@cd src ; make all
+	@cp src/mickey src/libmickey.so .
+	@cp src/lib*.so lib/
+	@echo ""
+	@echo "To run mickey on Linux, be sure to do"
+	@echo '$ LD_LIBRARY_PATH=".:" ./mickey'
+	@echo ""
 
 mickey:
 	cd src ; make mickey
