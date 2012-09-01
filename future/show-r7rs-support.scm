@@ -231,7 +231,7 @@
   syntax-error
   syntax-rules
   textual-port?
-  t4runcate
+  truncate
   u8-ready?
   unless
   unquote

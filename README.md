@@ -18,7 +18,7 @@ Current Features
 ----------------
 
   * Most core scheme functions
-  * Supports 179 of 241 R7RS base library definitions
+  * Supports 180 of 241 R7RS base library definitions
   * Quotation and quasiquotation
   * All non-syntactic, single-valued `let`-forms
   * Variadic functions
