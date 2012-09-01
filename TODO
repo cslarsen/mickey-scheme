@@ -1,5 +1,26 @@
+PARSER TODO
+
+- Exact numbers: #e3.3 -> 33/10
+- Rational numbers: 12/15 -> rational(12, 15)
+- Literals: (define (|square number| x) (* x x)) --> (|square number| 12) ==> 144
+- make sure |\t\t| and |\x9;\x9;| are the same
+- Inf: +inf0.0 -inf0.0 etc.
+
+BYTEVECTOR NOTATION
+
+- Add support fo #u8(1 2 3)
+
+CASE-FOLDING
+
+- Add #!fold-case and #!no-fold-case:
+  - When #!fold-case is active, all create_symbols() will simply have their
+    case folded.
+
+SCHEME BASE
+
 - Complete (c stdio) and use it to implement various procedures in (scheme
   base) and other (scheme) libraries.
+  ==> move stuff out of scheme-base.cpp to scheme/base.scm
 
 - In define-library export list, check that we actually DO have definitions
   for those that are listed.
@@ -7,6 +28,8 @@
 - libscheme-base.so is both loaded dynamically and statically linked in via
 object files.  Moved all eval-internal procs to this module and make it 100%
 dynamically loaded.
+
+QUASIQUOTATION
 
 - This does not work:
 #; mickey> (define a '(1 2 3))
@@ -17,7 +40,8 @@ Should return (+ 1 2 3 10)
 
 It works by doing it literally, `(+ ,@(list 1 2 3) 10) gives (+ 1 2 3 10)
 
-Random stuff:
+RANDOM STUFF
+
 - Funker i chibi men ikke i mickey
 > (define a (list 1 2 3))
 > (set-cdr! (cdr a) 99)
