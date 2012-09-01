@@ -12,19 +12,19 @@
 #ifndef INC_MICKEY_CONS_H
 #define INC_MICKEY_CONS_H
 
-#include "bytevector_t.h"
-#include "closure_t.h"
-#include "continuation_t.h"
-#include "decimal_t.h"
-#include "dict_t.h"
-#include "environment_t.h"
-#include "lambda_t.h"
-#include "pointer_t.h"
-#include "port_t.h"
-#include "symbol_t.h"
-#include "syntax_t.h"
-#include "type_t.h"
-#include "vector_t.h"
+#include "type/bytevector_t.h"
+#include "type/closure_t.h"
+#include "type/continuation_t.h"
+#include "type/decimal_t.h"
+#include "type/dict_t.h"
+#include "type/environment_t.h"
+#include "type/lambda_t.h"
+#include "type/pointer_t.h"
+#include "type/port_t.h"
+#include "type/symbol_t.h"
+#include "type/syntax_t.h"
+#include "type/type_t.h"
+#include "type/vector_t.h"
 
 /*
  * A variant variable.  Called a cons-cell, but that's incorrect.
