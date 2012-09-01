@@ -15,7 +15,7 @@
 #include "print.h"
 #include "exceptions.h"
 
-cons_t* type_convert(const char* token, environment_t* env)
+cons_t* type_convert(const char* token)
 {
   if ( isfloat(token) )
     return decimal(to_f(token));
@@ -27,7 +27,7 @@ cons_t* type_convert(const char* token, environment_t* env)
     return parse_string(token);
 
   if ( isatom(token) )
-    return symbol(token, env);
+    return symbol(token);
 
   if ( isbool(token) )
     return boolean(to_b(token));
@@ -39,7 +39,7 @@ cons_t* type_convert(const char* token, environment_t* env)
     return nil();
 
   // probably a function called "+" or something
-  return symbol(token, env);
+  return symbol(token);
 }
 
 static cons_t* parse_quote(environment_t* e);
@@ -97,7 +97,7 @@ static cons_t* parse_list(environment_t *env, bool quoting = false)
     else if ( isbytevector(t) )
       add = parse_bytevector(env);
     else
-      add = paren? parse_list(env) : type_convert(t, env);
+      add = paren? parse_list(env) : type_convert(t);
 
     if ( !prev_dot )
       p = nullp(p)? cons(add) : append(p, cons(add));
@@ -147,9 +147,9 @@ static cons_t* parse_quote(environment_t* e)
    * Special handling of the empty list, or '().
    */
   if ( nullp(expr) )
-    return cons(symbol("list", e));
+    return cons(symbol("list"));
 
-  return cons(symbol("quote", e), expr);
+  return cons(symbol("quote"), expr);
 }
 
 static cons_t* parse_vector(environment_t* e)
@@ -157,8 +157,7 @@ static cons_t* parse_vector(environment_t* e)
   /*
    * Replace #(<expr>) with (vector <expr>)
    */
-  return cons(symbol("vector", e),
-              parse_list(e, false));
+  return cons(symbol("vector"), parse_list(e, false));
 }
 
 static cons_t* parse_bytevector(environment_t* e)
@@ -166,8 +165,7 @@ static cons_t* parse_bytevector(environment_t* e)
   /*
    * Replace #u8(<expr>) with (vector <expr>)
    */
-  return cons(symbol("bytevector", e),
-              parse_list(e, false));
+  return cons(symbol("bytevector"), parse_list(e, false));
 }
 
 static cons_t* parse_quasiquote(environment_t* e)
@@ -181,9 +179,9 @@ static cons_t* parse_quasiquote(environment_t* e)
    * Special handling of the empty list, or `()
    */
   if ( nullp(expr) )
-    return cons(symbol("list", e));
+    return cons(symbol("list"));
 
-  return cons(symbol("quasiquote", e), expr);
+  return cons(symbol("quasiquote"), expr);
 }
 
 static cons_t* parse_unquote(environment_t* e)
@@ -194,8 +192,7 @@ static cons_t* parse_unquote(environment_t* e)
    * TODO: It is an error to perform this outside of
    *       quasiquotation.
    */
-  return cons(symbol("unquote", e),
-              parse_list(e, true));
+  return cons(symbol("unquote"), parse_list(e, true));
 }
 
 static cons_t* parse_unquote_splicing(environment_t* e)
@@ -206,8 +203,7 @@ static cons_t* parse_unquote_splicing(environment_t* e)
    * TODO: It is an error to perform this outside of
    *       quasiquotation.
    */
-  return cons(symbol("unquote-splicing", e),
-              parse_list(e, true));
+  return cons(symbol("unquote-splicing"), parse_list(e, true));
 }
 
 program_t* parse(const std::string& program, environment_t *env)

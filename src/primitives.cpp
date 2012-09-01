@@ -33,7 +33,7 @@ cons_t* list(const cons_t* h, const cons_t* t)
   return cons(h, t? cons(t) : NULL);
 }
 
-cons_t* symbol(const char* s, environment_t*)
+cons_t* symbol(const char* s)
 {
   cons_t *p = new cons_t();
   p->type = SYMBOL;

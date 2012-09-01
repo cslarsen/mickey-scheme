@@ -35,7 +35,7 @@ cons_t* proc_list_globals(cons_t*, environment_t *env)
 
     while ( i != env->symbols.end() ) {
       std::string n = (*i).first;
-      r = append(r, cons(symbol(n.c_str(), env)));
+      r = append(r, cons(symbol(n.c_str())));
       ++i;
     }
   }
@@ -317,7 +317,7 @@ int repl()
             result = cdr(result);
           }
 
-          end->car = symbol("...etc", null_environment());
+          end->car = symbol("...etc");
           end->cdr = cons(nil());
           printf("%s\n", sprint(l).c_str());
         } else {

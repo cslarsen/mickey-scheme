@@ -31,11 +31,11 @@ cons_t* proc_circularp(cons_t* p, environment_t*)
   return boolean(circularp(car(p)));
 }
 
-cons_t* proc_closure_source(cons_t* p, environment_t* e)
+cons_t* proc_closure_source(cons_t* p, environment_t*)
 {
   assert_type(CLOSURE, car(p));
   closure_t *c = car(p)->closure;
-  return cons(symbol("lambda", e), list(c->args, c->body));
+  return cons(symbol("lambda"), list(c->args, c->body));
 }
 
 cons_t* proc_debug(cons_t *p, environment_t *env)
@@ -174,9 +174,9 @@ cons_t* proc_version(cons_t*, environment_t*)
     string(format("Compiler version: %s", __VERSION__).c_str()));
 }
 
-cons_t* proc_type_of(cons_t* p, environment_t* e)
+cons_t* proc_type_of(cons_t* p, environment_t*)
 {
-  return symbol(to_s(type_of(car(p))).c_str(), e);
+  return symbol(to_s(type_of(car(p))).c_str());
 }
 
 named_function_t exports_mickey_misc[] = {

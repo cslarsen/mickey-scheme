@@ -22,31 +22,31 @@ cons_t* global_options(cons_t* p, environment_t*)
    * (scheme command-line) can do that for you.
    */
   return
-    cons(list(symbol("be-verbose", NULL),
+    cons(list(symbol("be-verbose"),
               boolean(global_opts.verbose)),
 
-    cons(list(symbol("current-output-device", NULL),
+    cons(list(symbol("current-output-device"),
               port(&global_opts.current_output_device)),
 
-    cons(list(symbol("current-input-device", NULL),
+    cons(list(symbol("current-input-device"),
               port(&global_opts.current_input_device)),
 
-    cons(list(symbol("current-error-device", NULL),
+    cons(list(symbol("current-error-device"),
               port(&global_opts.current_error_device)),
 
-    cons(list(symbol("current-filename", NULL),
+    cons(list(symbol("current-filename"),
               string(global_opts.current_filename)),
 
-    cons(list(symbol("include-path", NULL),
+    cons(list(symbol("include-path"),
               string(global_opts.include_path)),
 
-    cons(list(symbol("library-path", NULL),
+    cons(list(symbol("library-path"),
               string(global_opts.lib_path)),
 
-    cons(list(symbol("startup-path", NULL),
+    cons(list(symbol("startup-path"),
               string(global_opts.startup_path)),
 
-    cons(list(symbol("print-warnings", NULL),
+    cons(list(symbol("print-warnings"),
               boolean(global_opts.warn)))))))))));
 }
 

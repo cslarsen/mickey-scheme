@@ -50,7 +50,7 @@ cons_t* proc_load(cons_t *args, environment_t *env)
 
   // Parse and evaluate file.
   program_t *p = parse(slurp(open_file(file)), env);
-  eval(cons(symbol("begin", p->globals), p->root), p->globals);
+  eval(cons(symbol("begin"), p->root), p->globals);
 
   // Restore filename.
   global_opts.current_filename = prev;

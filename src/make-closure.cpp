@@ -17,7 +17,7 @@ cons_t* make_closure(cons_t* args, cons_t* body, environment_t* e)
   c->function = NULL;
   c->environment = e;
   c->args = args;
-  c->body = cons(symbol("begin", e), body);
+  c->body = cons(symbol("begin"), body);
 
   cons_t* r = new cons_t();
   r->type = CLOSURE;

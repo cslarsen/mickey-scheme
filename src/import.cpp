@@ -89,8 +89,7 @@ void load(const std::string& file, environment_t* target)
     fprintf(stderr, "Loading file %s\n", file.c_str());
 
   program_t *p = parse(slurp(open_file(file)), target);
-  eval(cons(symbol("begin", p->globals),
-            p->root), p->globals);
+  eval(cons(symbol("begin"), p->root), p->globals);
 }
 
 /*

@@ -82,7 +82,7 @@ cons_t* proc_env_bound_names(cons_t* p, environment_t*)
         i != e->symbols.end(); ++i )
   {
     // append name only
-    end->car = symbol((*i).first.c_str(), NULL);
+    end->car = symbol((*i).first.c_str());
     end->cdr = cons(NULL);
     end = end->cdr;
   }
@@ -101,7 +101,7 @@ cons_t* proc_env_bindings(cons_t* p, environment_t*)
   for ( dict_t::const_iterator i = e->symbols.begin();
         i != e->symbols.end(); ++i )
   {
-    cons_t *name = symbol((*i).first.c_str(), NULL);
+    cons_t *name = symbol((*i).first.c_str());
     cons_t *value = (*i).second;
 
     // if no value, add only name, else (name value)
@@ -201,7 +201,7 @@ cons_t* proc_make_environment(cons_t* p, environment_t* e)
    *       does not extend environments for special forms.
    */
   e = e->extend();
-  eval(cons(symbol("begin", NULL), p), e);
+  eval(cons(symbol("begin"), p), e);
   return environment(e);
 }
 

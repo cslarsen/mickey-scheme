@@ -56,7 +56,7 @@ void execute_string(const char* s)
     reset_for_programs(&global_opts, NULL);
 
     program_t *p = parse(s, env);
-    p->root = cons(symbol("begin", p->globals), p->root);
+    p->root = cons(symbol("begin"), p->root);
     printf("%s\n", sprint(eval(p->root, env)).c_str());
   }
   CATCH (const exception_t& e) {

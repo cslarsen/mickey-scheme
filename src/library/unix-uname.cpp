@@ -27,11 +27,13 @@ extern "C" cons_t* proc_uname(cons_t*, environment_t*)
   if ( uname(&p) != 0 ) // could use errno as well
     return boolean(false);
 
-  // return values as an a-list
+  /*
+   * Present values as a (sorted) a-list
+   */
   return
-    cons(cons(symbol("sysname", NULL), cons(string(p.sysname))),
-    cons(cons(symbol("nodename", NULL), cons(string(p.nodename))),
-    cons(cons(symbol("release", NULL), cons(string(p.release))),
-    cons(cons(symbol("version", NULL), cons(string(p.version))),
-    cons(cons(symbol("machine", NULL), cons(string(p.machine))))))));
+    cons(cons(symbol("machine"), cons(string(p.machine))),
+    cons(cons(symbol("nodename"), cons(string(p.nodename))),
+    cons(cons(symbol("release"), cons(string(p.release))),
+    cons(cons(symbol("sysname"), cons(string(p.sysname))),
+    cons(cons(symbol("version"), cons(string(p.version))))))));
 }

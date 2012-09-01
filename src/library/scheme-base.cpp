@@ -1062,15 +1062,15 @@ cons_t* proc_let(cons_t* p, environment_t* e)
    *
    */
   if ( !name )
-    return cons(cons(symbol("lambda", e),
+    return cons(cons(symbol("lambda"),
            cons(names, cons(proc_begin(body, e)))), values);
 
   /*
    * Transform named let to letrec.
    */
-  return cons(symbol("letrec", e),            // (letrec
+  return cons(symbol("letrec"),            // (letrec
            cons(cons(cons(name,               //   ((<name>
-             cons(cons(symbol("lambda", e),   //      (lambda
+             cons(cons(symbol("lambda"),   //      (lambda
                cons(names,                    //        (name-1 .. name-n)
                cons(proc_begin(body, e))))))),//        (begin <body>))))
            cons(cons(name, values))));        //   (<name> value-1 .. value-n))
@@ -1108,7 +1108,7 @@ cons_t* proc_letstar(cons_t* p, environment_t* e)
   cons_t *inner = proc_begin(body, e);
 
   while ( !nullp(names) && !nullp(values) ) {
-    inner = cons(cons(symbol("lambda", e),
+    inner = cons(cons(symbol("lambda"),
       cons(cons(car(names)), cons(inner))), cons(car(values)));
 
      names = cdr(names);
@@ -1118,7 +1118,7 @@ cons_t* proc_letstar(cons_t* p, environment_t* e)
   return inner;
 }
 
-cons_t* proc_letrec(cons_t* p, environment_t* e)
+cons_t* proc_letrec(cons_t* p, environment_t*)
 {
   /*
    * Transform to begin-define with dummy initial values
@@ -1157,7 +1157,7 @@ cons_t* proc_letrec(cons_t* p, environment_t* e)
                        cons(boolean(false)))));
 
   // wrap in: (let ((key value) ...))
-  r = cons(symbol("let", e), list(r));
+  r = cons(symbol("let"), list(r));
 
   // (set! name-N value-N)
   for ( cons_t *n=names,
@@ -1165,7 +1165,7 @@ cons_t* proc_letrec(cons_t* p, environment_t* e)
         !nullp(n) && !nullp(v);
         n=cdr(n), v=cdr(v) )
   {
-    r = append(r, cons(cons(symbol("set!", e),
+    r = append(r, cons(cons(symbol("set!"),
                               cons(car(n),
                               cons(car(v))))));
   }
@@ -1179,9 +1179,9 @@ cons_t* proc_letrec(cons_t* p, environment_t* e)
 /*
  * Utility function used internally in exported functions.
  */
-static cons_t* let(cons_t *bindings, cons_t *body, environment_t *e)
+static cons_t* let(cons_t *bindings, cons_t *body, environment_t*)
 {
-  return cons(symbol("let", e), cons(bindings, cons(body)));
+  return cons(symbol("let"), cons(bindings, cons(body)));
 }
 
 cons_t* proc_cond(cons_t* p, environment_t* e)
@@ -1225,15 +1225,15 @@ cons_t* proc_cond(cons_t* p, environment_t* e)
          *action = car(cdar(p));
 
   if ( symbol_name(action) == "=>" )
-    action = cons(cadr(cdar(p)), cons(symbol("result", e)));
+    action = cons(cadr(cdar(p)), cons(symbol("result")));
 
   cons_t *otherwise = proc_cond(p, e);
 
   return (symbol_name(test) == "else")? action :
-    let(list(list(symbol("result", e), test)), // (let ((result <test>))
-      cons(symbol("if", e),                    //   (if result
-        cons(symbol("result", e),              //     (begin <action>)
-          cons(cons(symbol("begin", e),        //       <otherwise>))
+    let(list(list(symbol("result"), test)), // (let ((result <test>))
+      cons(symbol("if"),                    //   (if result
+        cons(symbol("result"),              //     (begin <action>)
+          cons(cons(symbol("begin"),        //       <otherwise>))
             cons(action)),
               cons(otherwise)))), e);
 }
@@ -1321,9 +1321,9 @@ cons_t* proc_file_existsp(cons_t* p, environment_t*)
   return boolean(file_exists(car(p)->string));
 }
 
-cons_t* proc_begin(cons_t* p, environment_t* e)
+cons_t* proc_begin(cons_t* p, environment_t*)
 {
-  return cons(symbol("begin", e), p);
+  return cons(symbol("begin"), p);
 }
 
 cons_t* proc_gteq(cons_t* p, environment_t* e)
@@ -1786,11 +1786,11 @@ cons_t* proc_string_to_list(cons_t* p, environment_t*)
   return r;
 }
 
-cons_t* proc_string_to_symbol(cons_t* p, environment_t* e)
+cons_t* proc_string_to_symbol(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   assert_type(STRING, car(p));
-  return symbol(car(p)->string, e);
+  return symbol(car(p)->string);
 }
 
 cons_t* proc_string_to_number(cons_t* p, environment_t*)
@@ -1925,7 +1925,7 @@ cons_t* proc_finitep(cons_t* p, environment_t*)
   return boolean(std::isfinite(car(p)->decimal));
 }
 
-cons_t* proc_do(cons_t* p, environment_t* e)
+cons_t* proc_do(cons_t* p, environment_t*)
 {
   /*
    * Expand according to r7rs, pp. 56:
@@ -1944,8 +1944,8 @@ cons_t* proc_do(cons_t* p, environment_t* e)
 
   cons_t *vars = cadr(p),
          *test = caaddr(p),
-         *test_body = cons(symbol("begin",e), cdaddr(p)),
-         *body = cons(symbol("begin",e), cdddr(p));
+         *test_body = cons(symbol("begin"), cdaddr(p)),
+         *body = cons(symbol("begin"), cdddr(p));
 
   // find variable names, initial values and stgeps
   cons_t *names = list(NULL),
@@ -1959,7 +1959,7 @@ cons_t* proc_do(cons_t* p, environment_t* e)
   }
 
   // (loop <step1> <step2> <stepN>)
-  cons_t* loop = cons(symbol("loop", e));
+  cons_t* loop = cons(symbol("loop"));
   for ( cons_t *n = step; !nullp(n); n = cdr(n) )
     loop = append(loop, cons(car(n)));
 
@@ -1968,37 +1968,37 @@ cons_t* proc_do(cons_t* p, environment_t* e)
 
   // (if <test> <test_body> (begin <body> (loop ...))
   cons_t *if_expr =
-    cons(symbol("if", e),
+    cons(symbol("if"),
       cons(test,
         cons(test_body,
           cons(body))));
 
   // (lambda (<var1> <var2> <varN>) <if_expr>)
   cons_t *lambda =
-    cons(symbol("lambda", e),
+    cons(symbol("lambda"),
       cons(names,
         cons(if_expr)));
 
   // (loop <lambda>)
   loop =
-    cons(symbol("loop", e),
+    cons(symbol("loop"),
       cons(lambda));
 
   // (loop <init1> <init2> <initN>)
   cons_t *loop_init =
-    cons(symbol("loop", e),
+    cons(symbol("loop"),
       init);
 
   // (letrec ((loop <loop_body)) (loop <init1> ...))
   cons_t *letrec =
-    cons(symbol("letrec", e),
+    cons(symbol("letrec"),
       cons(list(loop),
        cons(loop_init)));
 
   return letrec;
 }
 
-cons_t* proc_case(cons_t *p, environment_t* e)
+cons_t* proc_case(cons_t *p, environment_t*)
 {
   /*
    * Transforms
@@ -2033,9 +2033,9 @@ cons_t* proc_case(cons_t *p, environment_t* e)
       if ( symbol_name(cadar(c)) == "=>" ) {
         // produces: (else (<expression / procedure> <key>))
         clauses = append(clauses,
-                      cons(cons(symbol("else", e),
+                      cons(cons(symbol("else"),
                         cons(cons(cadr(cdar(c)),
-                          cons(symbol("value", e)))))));
+                          cons(symbol("value")))))));
       } else
         clauses = append(clauses, c);
 
@@ -2045,29 +2045,21 @@ cons_t* proc_case(cons_t *p, environment_t* e)
 
     if ( symbol_name(cadar(c)) == "=>" )
       // produces: (<expression / procedure> <key>)
-      exprs = list(cons(car(cdr(cdar(c))), cons(symbol("value", e))));
+      exprs = list(cons(car(cdr(cdar(c))), cons(symbol("value"))));
 
     cons_t *clause =
-      cons(symbol("memv", e),
-        cons(symbol("value", e),
-          cons(cons(symbol("quote", e), cons(datum)))));
+      cons(symbol("memv"),
+        cons(symbol("value"),
+          cons(cons(symbol("quote"), cons(datum)))));
 
     clause = splice(cons(clause), exprs);
     clauses = append(clauses, cons(clause));
   }
 
-  /*
-  if ( !has_else ) {
-    // insert unspecified return value
-    clauses = append(clauses,
-        cons(cons(symbol("else", e), cons(unspecified()))));
-  }
-  */
-
   cons_t *let = append(
-    cons(symbol("let", e),
-      cons(cons(cons(symbol("value", e), cons(key))))),
-    cons(cons(symbol("cond", e), clauses)));
+    cons(symbol("let"),
+      cons(cons(cons(symbol("value"), cons(key))))),
+    cons(cons(symbol("cond"), clauses)));
 
   return let;
 }
