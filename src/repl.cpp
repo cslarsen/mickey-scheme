@@ -17,18 +17,6 @@
 #endif
 
 #include "mickey.h"
-#include "cons.h"
-#include "util.h"
-#include "repl.h"
-#include "parser.h"
-#include "print.h"
-#include "eval.h"
-#include "heap.h"
-#include "backtrace.h"
-#include "options.h"
-#include "import.h"
-#include "exceptions.h"
-#include "circular.h"
 
 /*
  * Max items to display in REPL for circular lists.

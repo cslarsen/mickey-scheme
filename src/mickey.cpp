@@ -10,18 +10,12 @@
  */
 
 #include <libgen.h> // dirname
-#include "options.h"
-#include "repl.h"
-#include "parser.h"
-#include "eval.h"
-#include "print.h"
-#include "heap.h"
-#include "backtrace.h"
-#include "import.h"
-#include "exceptions.h"
 #include "mickey.h"
-#include "options.h"
+#include "repl.h"
 
+/*
+ * Environment variables:
+ */
 #define MICKEY_LIB "MICKEY_LIB"
 
 void version();

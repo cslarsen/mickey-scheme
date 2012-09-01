@@ -23,7 +23,6 @@ TARGETS_O =  \
             evlis.o \
             exceptions.o \
             file-io.o \
-            heap.o \
             import.o \
             make-closure.o \
             options.o \
