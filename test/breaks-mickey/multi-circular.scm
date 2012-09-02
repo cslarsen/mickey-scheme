@@ -7,6 +7,8 @@
 ;;
 ;; Mickey Scheme's sprint() is not iterative and therefore
 ;; breaks badly when trying to display x.
+(import (scheme base)
+        (scheme write))
 
 (define y (list 'a 'b))
 (define x (list 1 2 y 3))
