@@ -35,6 +35,7 @@ named_function_t exports_dlopen[] = {
   {"dlerror", proc_dlerror, false},
   {"dlopen", proc_dlopen, false},
   {"dlopen-internal", proc_dlopen_internal, false},
+  {"dlopen-self", proc_dlopen_self, false},
   {"dlsym", proc_dlsym, false},
   {"dlsym-syntax", proc_dlsym_syntax, false},
   {NULL, NULL, false}};
@@ -94,6 +95,20 @@ cons_t* proc_dlopen(cons_t* p, environment_t*)
   assert_type(STRING, car(p));
 
   void *h = dlopen(car(p)->string, parse_dlopen_mode(cdr(p)));
+
+  return h!=NULL?
+    pointer(new pointer_t(TYPE_TAG, h)) :
+    boolean(false);
+}
+
+/*
+ * Signature: (dlopen <mode options> ...)
+ *
+ * Opens the currently running code.
+ */
+cons_t* proc_dlopen_self(cons_t* p, environment_t*)
+{
+  void *h = dlopen(NULL, length(p)==0? NULL : parse_dlopen_mode(cdr(p)));
 
   return h!=NULL?
     pointer(new pointer_t(TYPE_TAG, h)) :

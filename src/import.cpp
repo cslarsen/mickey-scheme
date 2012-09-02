@@ -34,6 +34,7 @@ static library_map_t library_map[] = {
   {"(c stdio)",            "c/stdio.scm"},
   {"(cross-platform sdl)", "cross-platform/sdl.scm"},
   {"(mickey environment)", "mickey/environment.scm"},
+  {"(mickey features)",    "mickey/features.scm"},
   {"(mickey internals)",   "mickey/internals.scm"},
   {"(mickey library)",     "mickey/library.scm"},
   {"(mickey misc)",        "mickey/misc.scm"},
@@ -47,8 +48,8 @@ static library_map_t library_map[] = {
   {"(scheme repl)",        "scheme/repl.scm"},
   {"(scheme write)",       "scheme/write.scm"},
   {"(test unit-test)",     "test/unit-test.scm"},
-  {"(unix dlopen)",        "unix/dlopen.scm"},
-  {"(unix uname)",         NULL},
+  {"(unix dlopen)",        NULL},
+  {"(unix uname)",         "unix/uname.scm"},
   {NULL, NULL}
 };
 
@@ -331,6 +332,7 @@ static void import_unix_dlopen(environment_t* r)
     "dlerror",         "proc_dlerror",
     "dlopen",          "proc_dlopen",
     "dlopen-internal", "proc_dlopen_internal",
+    "dlopen-self",     "proc_dlopen_self",
     "dlsym",           "proc_dlsym",
     "dlsym-syntax",    "proc_dlsym_syntax",
     NULL};

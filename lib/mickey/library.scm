@@ -11,11 +11,12 @@ Distributed under the LGPL 2.1; see LICENSE
   (import (unix dlopen))
 
   (export
-    open-library
-    open-internal-library
     bind-procedure
     bind-syntax
-    current-handle)
+    current-handle
+    open-internal-library
+    open-library
+    open-self)
 
   (begin
 
@@ -52,6 +53,17 @@ Distributed under the LGPL 2.1; see LICENSE
       (if (not *handle*)
         (error (string-append
           "Could not dlopen " *file* ": " (dlerror)))))
+
+    ;; Usage: (open-self . options) where `options` are the same as
+    ;; for (dlopen) in (unix dlopen).
+    ;;
+    (define (open-self . options)
+      (set! *file* "")
+      (set! *handle* (apply dlopen-self options))
+
+      (if (not *handle*)
+        (error (string-append
+          "Could not dlopen-self: " (dlerror)))))
 
     ;; Same as open-library above, but opens file from Mickey Scheme's
     ;; library location.

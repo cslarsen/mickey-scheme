@@ -16,6 +16,7 @@
 #include "options.h"
 #include "cons.h"
 #include "parser.h"
+#include "features.h"
 
 options_t global_opts;
 
@@ -40,6 +41,11 @@ void set_default(struct options_t* p, int argc, char** argv)
    */
   static char t[1+MAXPATHLEN];
   p->mickey_absolute_path = dirname(realpath(argv[0], t));
+
+  /*
+   * Set up feature environment
+   */
+  detect_features();
 
   reset_for_programs(p);
 }
