@@ -105,7 +105,7 @@ cons_t* boolean(bool f)
   return p;
 }
 
-cons_t* character(char c)
+cons_t* character(character_t c)
 {
   cons_t *p = new cons_t();
   p->type = CHAR;

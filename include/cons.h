@@ -13,6 +13,7 @@
 #define INC_MICKEY_CONS_H
 
 #include "type/bytevector_t.h"
+#include "type/character_t.h"
 #include "type/closure_t.h"
 #include "type/continuation_t.h"
 #include "type/decimal_t.h"
@@ -36,7 +37,7 @@ struct cons_t {
   bool exact; // TODO: Move into own number type, or something
   union {
     bool boolean;
-    char character;
+    character_t character;
     int integer;
     decimal_t decimal;
     struct { cons_t *car, *cdr; }; // pair

@@ -32,7 +32,7 @@ cons_t* splice_into(cons_t *from, cons_t *to);
 cons_t* symbol(const char*);
 cons_t* integer(int, bool exact = false);
 cons_t* boolean(bool);
-cons_t* character(char);
+cons_t* character(character_t);
 cons_t* decimal(decimal_t);
 cons_t* string(const char*);
 cons_t* vector(cons_t*, size_t size=0, cons_t* fill=NULL);

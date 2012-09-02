@@ -9,9 +9,6 @@
  *
  */
 
-#include "type/character_t.h"
+#include <stdint.h>
 
-/*
- * We've only got 8-bit ASCII character support, yet.
- */
-const character_t MAX_UNICODE_CHAR = 255;
+typedef uint8_t character_t;
