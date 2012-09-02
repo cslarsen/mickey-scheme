@@ -69,7 +69,6 @@ TARGETS_SO = \
 						 libmickey-environment.so \
 						 libmickey-internals.so \
 						 libmickey-misc.so \
-						 libcross-platform-sdl.so \
 						 libscheme-base.so \
 						 libscheme-char.so \
 						 libscheme-load.so \
