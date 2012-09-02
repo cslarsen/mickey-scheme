@@ -406,7 +406,8 @@ bool eqvp(const cons_t* l, const cons_t* r)
   switch ( type_of(l) ) {
   case NIL:           return true;
   case BOOLEAN:       return l->boolean == r->boolean;
-  case SYMBOL:        return l->symbol == r->symbol || *(l->symbol) == *(r->symbol);
+  case SYMBOL:        return l->symbol == r->symbol
+                             || *(l->symbol) == *(r->symbol);
   case INTEGER:       // Also make sure both are exact/both inexact (TODO)
                       return l->integer == r->integer; 
   case DECIMAL:       // Check both exact/both inexact
@@ -415,14 +416,19 @@ bool eqvp(const cons_t* l, const cons_t* r)
   case PAIR:          return nullp(l) && nullp(r)? true : l == r;
   case VECTOR:        return l == r;
   case BYTEVECTOR:    return l == r;
-  case STRING:        return !strcmp(l->string, r->string);
+
+                      // fast pointer comparison first
+  case STRING:        return (l->string == r->string ||
+                          !strcmp(l->string, r->string));
   case SYNTAX:        return l == r;
   case CLOSURE:       // double-check with section 6.1 and 4.1.4 (TODO)
                       return l->closure == r->closure;
   case CONTINUATION:  return l->continuation == r->continuation;
-  case PORT:          return *l->port == *r->port;
+  case PORT:          return l->port == r->port ||
+                             *l->port == *r->port;
   case ENVIRONMENT:   return l->environment == r->environment;
-  case POINTER:       return *l->pointer == *r->pointer;
+  case POINTER:       return l->pointer == r->pointer ||
+                             *l->pointer == *r->pointer;
   }
 
   return false;
