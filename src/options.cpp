@@ -16,7 +16,7 @@
 #include "options.h"
 #include "cons.h"
 #include "parser.h"
-#include "features.h"
+#include "system-features.h"
 
 options_t global_opts;
 

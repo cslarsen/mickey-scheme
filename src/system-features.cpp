@@ -14,7 +14,7 @@
  */
 
 #include <set>
-#include "features.h"
+#include "system-features.h"
 #include "mickey.h"
 
 #ifdef __APPLE__

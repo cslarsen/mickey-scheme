@@ -22,7 +22,7 @@ TARGETS_O =  \
             eval.o \
             evlis.o \
             exceptions.o \
-            features.o \
+            system-features.o \
             file-io.o \
             import.o \
             make-closure.o \
@@ -50,7 +50,7 @@ LIB_DEPS =  \
             eval.o \
             evlis.o \
             exceptions.o \
-            features.o \
+            system-features.o \
             file-io.o \
             import.o \
             make-closure.o \
