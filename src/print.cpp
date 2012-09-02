@@ -11,6 +11,7 @@
 
 #include "print.h"
 #include "util.h"
+#include "primitives.h"
 
 std::string sprint(const vector_t*, std::string&, bool);
 std::string sprint(const bytevector_t*, std::string&, bool);
@@ -60,20 +61,10 @@ std::string sprint(const cons_t* p)
   return sprint(pairp(p) ? cons(p) : p, s, true);
 }
 
-std::string sprint(const program_t* p)
-{
-  return sprint(p->root);
-}
-
 std::string print(const cons_t* p)
 {
   std::string s;
   return sprint(list(p) ? cons(p) : p, s, false);
-}
-
-std::string print(const program_t* p)
-{
-  return print(p->root);
 }
 
 std::string sprint(const vector_t* v, std::string& r, bool)

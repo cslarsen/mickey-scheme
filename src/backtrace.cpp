@@ -12,6 +12,7 @@
 #include <stack>
 #include "cons.h"
 #include "print.h"
+#include "primitives.h"
 
 // instruction stack for backtraces
 static std::stack<cons_t*> is;
