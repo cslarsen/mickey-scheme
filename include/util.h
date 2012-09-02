@@ -24,7 +24,6 @@ std::string toupper(const std::string& s);
 
 char* copy_str(const char* s);
 char* trimr(char* s);
-const char* skip_space(const char* s);
 
 int empty(const char*);
 bool char_in(char ch, const char* s);

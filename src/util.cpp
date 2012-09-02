@@ -77,12 +77,6 @@ int empty(const char* s)
   return s==NULL || *s=='\0';
 }
 
-const char* skip_space(const char* s)
-{
-  while ( isspace(*s) ) ++s;
-  return s;
-}
-
 bool char_in(char ch, const char* s)
 {
   while ( *s )

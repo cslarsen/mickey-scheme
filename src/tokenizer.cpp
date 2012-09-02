@@ -41,6 +41,12 @@ static bool string_or_non_delimiter(const char* s)
           !open_paren && ch!=')' && !isspace(ch));
 }
 
+static const char* skip_space(const char* s)
+{
+  while ( isspace(*s) ) ++s;
+  return s;
+}
+
 static const char* copy_while(
     char *dest, const char* src, bool (*while_expr)(const char*))
 {
