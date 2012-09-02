@@ -12,7 +12,7 @@
 #include "type/environment_t.h"
 #include "exceptions.h"
 #include "primitives.h"
-#include "util.h"
+#include "print.h"
 
 cons_t* environment_t::lookup_or_throw(const std::string& name) const
 {
