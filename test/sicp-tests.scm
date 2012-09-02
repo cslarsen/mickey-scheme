@@ -5,88 +5,84 @@
 
 (import (scheme base)
         (scheme write)
-        (scheme load))
-
-(load "test.scm")
+        (scheme load)
+        (test unit-test))
 
 (display "Tests from\n")
 (display "Structure and Interpretation of Comptuter Programs (SICP)\n\n")
 
-
 (display "SICP SECTION 1.1.1\n")
 
-(test-eq (quote 486) 486)
-(test-eq (quote (+ 137 349)) 486)
-(test-eq (quote (- 1000 334)) 666)
-(test-eq (quote (* 5 99)) 495)
-(test-eq (quote (/ 10 5)) 2)
-(test-eq (quote (+ 2.7 10)) 12.7)
-(test-eq (quote (+ 21 35 12 7)) 75)
-(test-eq (quote (* 25 4 12)) 1200)
-(test-eq (quote (+ (* 3 5) (- 10 6))) 19)
-(test-eq (quote (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))) 57)
-(test-eq (quote 
+(test 486 486)
+(test (+ 137 349) 486)
+(test (- 1000 334) 666)
+(test (* 5 99) 495)
+(test (/ 10 5) 2)
+(test (+ 2.7 10) 12.7)
+(test (+ 21 35 12 7) 75)
+(test (* 25 4 12) 1200)
+(test (+ (* 3 5) (- 10 6)) 19)
+(test (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6)) 57)
+(test
  (+ (* 3
        (+ (* 2 4)
           (+ 3 5)))
     (+ (- 10 7)
-       6)))
+       6))
   57) ; expected
 
 
 (display "\nSICP SECTION 1.1.2\n")
 
 (define size 2)
-(test-eq (quote size) 2)
-(test-eq (quote (* 5 size)) 10)
+(test size 2)
+(test (* 5 size) 10)
 
 (define pi 3.14159)
 (define radius 10)
-(test-eq (quote (* pi (* radius radius))) 314.158997)
+(test (* pi (* radius radius)) 314.158997)
 
 (define circumference (* 2 pi radius))
-(test-eq (quote circumference) 62.831802)
+(test circumference 62.831802)
 
 
 (display "\nSICP SECTION 1.1.3\n")
 
-(test-eq (quote (* (+ 2 (* 4 6)))) 26)
-(test-eq (quote (+ 3 5 7)) 15)
+(test (* (+ 2 (* 4 6))) 26)
+(test (+ 3 5 7) 15)
 
 
 (display "\nSICP SECTION 1.1.4\n")
 
 (define (square x) (* x x))
-(test-eq (quote (square 21)) 441)
-(test-eq (quote (square (+ 2 5))) 49)
-(test-eq (quote (square (square 3))) 81)
+(test (square 21) 441)
+(test (square (+ 2 5)) 49)
+(test (square (square 3)) 81)
 
 (define (sum-of-squares x y)
   (+ (square x) (square y)))
-(test-eq (quote (sum-of-squares 3 4)) 25)
+(test (sum-of-squares 3 4) 25)
 
 (define (f a)
   (sum-of-squares (+ a 1) (* a 2)))
-(test-eq (quote (f 5)) 136)
+(test (f 5) 136)
 
 
 (display "\nSICP SECTION 1.1.5\n")
 
-(test-eq (quote (f 5)) 136)
-(test-eq (quote (sum-of-squares (+ 5 1) (* 5 2))) 136)
-(test-eq (quote (+ (square 6) (square 10))) 136)
-(test-eq (quote (+ (* 6 6) (* 10 10))) 136)
-(test-eq (quote (+ 36 100)) 136)
+(test (f 5) 136)
+(test (sum-of-squares (+ 5 1) (* 5 2)) 136)
+(test (+ (square 6) (square 10)) 136)
+(test (+ (* 6 6) (* 10 10)) 136)
+(test (+ 36 100) 136)
 
-(test-eq (quote (f 5)) 136)
-(test-eq (quote (sum-of-squares (+ 5 1) (* 5 2))) 136)
-(test-eq (quote (+    (square (+ 5 1))      (square (* 5 2))  )) 136)
-(test-eq (quote (+    (* (+ 5 1) (+ 5 1))   (* (* 5 2) (* 5 2)))) 136)
-(test-eq (quote (+         (* 6 6)             (* 10 10))) 136)
-(test-eq (quote (+           36                   100)) 136)
-(test-eq (quote                     136) 136)
-
-(results)
+(test (f 5) 136)
+(test (sum-of-squares (+ 5 1) (* 5 2)) 136)
+(test (+    (square (+ 5 1))      (square (* 5 2))  ) 136)
+(test (+    (* (+ 5 1) (+ 5 1))   (* (* 5 2) (* 5 2))) 136)
+(test (+         (* 6 6)             (* 10 10)) 136)
+(test (+           36                   100) 136)
+(test 136 136)
 
 (display "\nSICP SECTION 1.1.6\n")
 
@@ -95,33 +91,33 @@
         ((= x 0) 0)
         ((< x 0) (- x))))
 
-(test-eq (quote (abs  1)) 1)
-(test-eq (quote (abs -1)) 1)
-(test-eq (quote (abs  0)) 0)
+(test (abs  1) 1)
+(test (abs -1) 1)
+(test (abs  0) 0)
 
 (define (abs x)
   (cond ((< x 0) (- x))
         (else x)))
 
-(test-eq (quote (abs  1)) 1)
-(test-eq (quote (abs -1)) 1)
-(test-eq (quote (abs  0)) 0)
+(test (abs  1) 1)
+(test (abs -1) 1)
+(test (abs  0) 0)
 
 (define (abs x)
   (if (< x 0)
       (- x)
       x))
 
-(test-eq (quote (abs  1)) 1)
-(test-eq (quote (abs -1)) 1)
-(test-eq (quote (abs  0)) 0)
+(test (abs  1) 1)
+(test (abs -1) 1)
+(test (abs  0) 0)
 
-(test-eq (quote ((lambda (x) (and (> x 5) (< x 10))) 4)) #f)
-(test-eq (quote ((lambda (x) (and (> x 5) (< x 10))) 5)) #f)
-(test-eq (quote ((lambda (x) (and (> x 5) (< x 10))) 6)) #t)
-(test-eq (quote ((lambda (x) (and (> x 5) (< x 10))) 9)) #t)
-(test-eq (quote ((lambda (x) (and (> x 5) (< x 10))) 10)) #f)
-(test-eq (quote ((lambda (x) (and (> x 5) (< x 10))) 11)) #f)
+(test ((lambda (x) (and (> x 5) (< x 10))) 4) #f)
+(test ((lambda (x) (and (> x 5) (< x 10))) 5) #f)
+(test ((lambda (x) (and (> x 5) (< x 10))) 6) #t)
+(test ((lambda (x) (and (> x 5) (< x 10))) 9) #t)
+(test ((lambda (x) (and (> x 5) (< x 10))) 10) #f)
+(test ((lambda (x) (and (> x 5) (< x 10))) 11) #f)
 
 (display "\nSICP SECTION 1.1.7\n")
 
@@ -143,10 +139,10 @@
 (define (sqrt x)
   (sqrt-iter 1.0 x))
 
-(test-eq (quote (number->string (sqrt 9))) "3.000092")
-(test-eq (quote (sqrt (+ 100 37))) 11.704700)
-(test-eq (quote (number->string (sqrt (+ (sqrt 2) (sqrt 3))))) "1.773928")
-(test-eq (quote (square (sqrt 1000))) 1000.000427)
+(test (number->string (sqrt 9)) "3.00009")
+(test (sqrt (+ 100 37)) 11.704700)
+(test (number->string (sqrt (+ (sqrt 2) (sqrt 3)))) "1.77393")
+(test (square (sqrt 1000)) 1000.000427)
 
 (display "\nSICP SECTION 1.1.8\n")
 
@@ -289,7 +285,7 @@
         ((= kinds-of-coins 4) 25)
         ((= kinds-of-coins 5) 50)))
 
-(test-eq (quote (count-change 100)) 292)
+(test (count-change 100) 292)
 
 ;;;SECTION 1.2.3
 
@@ -471,7 +467,7 @@
 (define (sum-cubes a b)
   (sum cube a inc b))
 
-;(test-eq (quote (sum-cubes 1 10)) 1)
+;(test (sum-cubes 1 10) 1)
 
 
 (define (identity x) x)
@@ -720,4 +716,5 @@
 
 
 (display "\nRESULTS\n")
-(results)
+(display (result))
+(newline)
