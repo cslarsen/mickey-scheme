@@ -18,9 +18,7 @@
  */
 
 #include <SDL/SDL.h>
-#include <stdint.h>
-#include "mickey-api.h"
-#include "print.h"
+#include "mickey.h"
 
 template<typename K, typename V>
 struct key_value_t {
@@ -44,6 +42,9 @@ static key_value_t<std::string, uint32_t> sdl_flags[] = {
   {"resizable",  SDL_RESIZABLE},
   {"noframe",    SDL_NOFRAME}
 };
+
+static size_t num_sdl_flags =
+  sizeof(sdl_flags) / sizeof(key_value_t<std::string, uint32_t>);
 
 // to avoid name mangling
 extern "C" {
@@ -91,51 +92,43 @@ cons_t* set_video_mode(cons_t* p, environment_t*)
   int bits = 32;
   uint32_t mode = 0;
 
-///////////////////
-  raise(runtime_exception("Testing"));
-///////////////////
-
   // bits per pixel
-  if ( integerp(caddr(p)) )
+  if ( length(p) > 2 && integerp(caddr(p)) )
     bits = caddr(p)->integer;
 
-  // options
-  cons_t *opts = symbolp(caddr(p))? cddr(p) :
-                 symbolp(cadddr(p))? cdddr(p) : nil();;
+  // mode options
+  if ( length(p) > 3 ) {
+    cons_t *opts = symbolp(caddr(p))? cddr(p) :
+                   symbolp(cadddr(p))? cdddr(p) : nil();;
 
-  for ( cons_t *s = opts; !nullp(s); s = cdr(s) ) {
-    assert_type(SYMBOL, car(s));
+    DPRINT(opts);
 
-    std::string sym = symbol_name(s);
-    int size = sizeof(sdl_flags) / sizeof(key_value_t<std::string, uint32_t>);
+    for ( cons_t *s = opts; !nullp(s); s = cdr(s) ) {
+      assert_type(SYMBOL, car(s));
 
-    for ( int n=0; n < size; ++n )
-      if ( sym == sdl_flags[n].key ) {
-///////////////////
-printf("flag %s\n", sym.c_str());
-printf("value %d and %d\n", sdl_flags[n].value, SDL_HWSURFACE);
-///////////////////
-        mode |= sdl_flags[n].value;
-        goto NEXT_FLAG;
-      }
+      std::string sym = symbol_name(car(s));
 
-    raise(runtime_exception("Unknown SDL video mode flag: " + sym));
+      for ( size_t n=0; n < num_sdl_flags; ++n )
+        if ( sym == sdl_flags[n].key ) {
+          mode |= sdl_flags[n].value;
+          goto NEXT_FLAG;
+        }
 
-NEXT_FLAG:
-    continue;
+      raise(runtime_exception("Unknown SDL video mode flag: " + sym));
+
+  NEXT_FLAG:
+      continue;
+    }
   }
-
-  mode = SDL_HWSURFACE;
-///////////////////
-  printf("video mode\n"); fflush(stdout);
-///////////////////
 
   SDL_Surface *screen = SDL_SetVideoMode(x, y, bits, mode);
 
   if ( screen == NULL )
     raise(runtime_exception(SDL_GetError()));
 
-  return pointer(new pointer_t("sdl-surface", (void*)screen));
+  return pointer(
+    new pointer_t("sdl-surface",
+                  reinterpret_cast<void*>(screen)));
 }
 
 };

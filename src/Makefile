@@ -7,7 +7,7 @@ CXXFLAGS = -g -W -Wall \
 					 -fno-rtti
 
 LDFLAGS  =
-LIB_FLAGS = -shared -fPIC $(LDFLAGS)
+LIB_FLAGS = -shared -fpic $(LDFLAGS)
 
 TARGETS_O =  \
             apply.o \
@@ -67,6 +67,7 @@ TARGETS_SO = \
 						 libmickey-environment.so \
 						 libmickey-internals.so \
 						 libmickey-misc.so \
+						 libcross-platform-sdl.so \
 						 libscheme-base.so \
 						 libscheme-char.so \
 						 libscheme-load.so \
@@ -86,6 +87,9 @@ libmickey.so: $(LIB_DEPS)
 
 lib%.so: library/%.cpp libmickey.so
 	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey $< -o $@
+
+libcross-platform-sdl.so: library/cross-platform-sdl.cpp libmickey.so
+	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) $(shell sdl-config --cflags --libs) -L. -lmickey $< -o $@
 
 mickey: mickey.cpp libmickey.so repl.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) repl.o -L. -lmickey -lreadline $< -o $@

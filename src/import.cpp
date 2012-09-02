@@ -32,6 +32,7 @@ struct library_map_t {
  */
 static library_map_t library_map[] = {
   {"(c stdio)",            "c/stdio.scm"},
+  {"(cross-platform sdl)", "cross-platform/sdl.scm"},
   {"(mickey environment)", "mickey/environment.scm"},
   {"(mickey internals)",   "mickey/internals.scm"},
   {"(mickey library)",     "mickey/library.scm"},
