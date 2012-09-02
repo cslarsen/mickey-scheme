@@ -9,13 +9,16 @@
  *
  */
 
-#include <string>
-#include <set>
+#ifndef INC_MICKEY_FEATURES_H
+#define INC_MICKEY_FEATURES_H
+
 #include "cons.h"
 
-bool supports_feature(const char*);
 extern "C" cons_t* proc_list_features(cons_t*, environment_t*);
-std::set<std::string> get_features();
+
+bool supports_feature(const char*);
 void add_feature(const char*);
 void detect_features();
 void remove_feature(const char*);
+
+#endif

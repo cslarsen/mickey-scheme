@@ -45,11 +45,6 @@ extern "C" cons_t* proc_list_features(cons_t* p, environment_t*)
   return r;
 }
 
-std::set<std::string> get_features()
-{
-  return features;
-}
-
 bool supports_feature(const char* s)
 {
   return features.count(s);
