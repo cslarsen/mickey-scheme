@@ -37,7 +37,7 @@ extern "C" cons_t* proc_list_features(cons_t* p, environment_t*)
   for ( std::set<std::string>::iterator i = features.begin();
         i != features.end(); ++i )
   {
-    e->car = string((*i).c_str());
+    e->car = symbol((*i).c_str());
     e->cdr = cons(NULL);
     e = e->cdr;
   }

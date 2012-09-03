@@ -84,6 +84,7 @@ The larger part of this library resides in libscheme-base.so.
     finite?
     for-each
     gcd
+    get-features
     if
     inexact?
     infinite?
@@ -427,4 +428,8 @@ The larger part of this library resides in libscheme-base.so.
     ;; Code taken from R7RS draft
     (define (values . things)
       (call-with-current-continuation
-        (lambda (cont) (apply cont things)))))
+        (lambda (cont) (apply cont things))))
+
+    ;; open libmickey.so
+    (open-self 'global)
+    (define get-features (bind-procedure "proc_list_features"))))
