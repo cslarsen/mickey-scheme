@@ -10,9 +10,10 @@
  */
 
 #include <map>
-#include <string>
+#include "cons.h"
+#include "type/symbol_t.h"
 
 /*
  * Symbol tables maps strings to values.
  */
-typedef std::map<std::string, struct cons_t*> dict_t;
+typedef std::map<symbol_t, cons_t*> dict_t;

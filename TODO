@@ -1,6 +1,3 @@
-- dict_t boer vaere map<symbol_t, cons_t> eller
-  helst map<symbol_t, value_t>
-
 - boer ha en ny cons_t type som er cons_t-pointer,
   saa kan man slaa opp symbol i environment og sette
   den til aa peke paa cons_t-en som staar i mappen, men
