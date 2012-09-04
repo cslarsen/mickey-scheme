@@ -8,6 +8,7 @@
   som peker rett inn i symbol-table.
   (trenger vel ikke endre symboltable, den er som den er, men
   looked-up saker er cons_t** som peker til symbol table.
+
 - lookup_symbols(program_t*) for aa slaa opp saant, kjoeres foer
   hvert program og bruker lexical scoping rules..
   merk (define a 123) (display a) (set! a 456) funker fortsatt

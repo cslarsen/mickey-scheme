@@ -18,12 +18,16 @@ std::string func_name;
 
 static bool is_self_evaluating(cons_t* p)
 {
-  // TODO: Implement as switch(type_of(p)) ...
-  return
-    numberp(p) || stringp(p) || charp(p) ||
-    booleanp(p) || vectorp(p) || decimalp(p) ||
-    closurep(p) || syntaxp(p) || portp(p) ||
-    environmentp(p) || emptylistp(p);
+  return booleanp(p)
+      || charp(p)
+      || closurep(p)
+      || emptylistp(p);
+      || environmentp(p)
+      || numberp(p)
+      || portp(p)
+      || stringp(p)
+      || syntaxp(p)
+      || vectorp(p);
 }
 
 static cons_t* invoke(cons_t* fun, cons_t* args)
