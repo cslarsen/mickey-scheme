@@ -14,7 +14,7 @@
 #include <stdarg.h>
 #include "util.h"
 #include "primitives.h"
-#include "types.h"
+#include "parser.h"
 #include "platform-limits.h"
 #include "print.h"
 

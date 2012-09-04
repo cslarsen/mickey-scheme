@@ -43,8 +43,6 @@
   <body> to env->outer, altsaa env->outer peker til foerste let og
   env->outer->outer peker til toplevel.
 
-- fjern types.h, den har misvisende navn.. den brukes av parseren.
-
 PARSER TODO
 
 - Exact numbers: #e3.3 -> 33/10

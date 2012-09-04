@@ -42,7 +42,6 @@ const char VERSION[] = "Mickey Scheme (C) 2011-2012 Christian Stigen Larsen";
 #include "print.h"
 #include "syntax-rules.h"
 #include "tokenizer.h"
-#include "types.h"
 #include "util.h"
 
 #endif

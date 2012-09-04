@@ -22,19 +22,20 @@ TARGETS_O =  \
             eval.o \
             evlis.o \
             exceptions.o \
-            system-features.o \
             file-io.o \
             import.o \
             make-closure.o \
             options.o \
             parse-string.o \
+            parser-converters.o \
+            parser-predicates.o \
             parser.o \
             primitives.o \
             print.o \
             repl.o \
             syntax-rules.o \
+            system-features.o \
             tokenizer.o \
-            types.o \
             util.o \
 
 LIB_DEPS =  \
@@ -50,18 +51,19 @@ LIB_DEPS =  \
             eval.o \
             evlis.o \
             exceptions.o \
-            system-features.o \
             file-io.o \
             import.o \
             make-closure.o \
             options.o \
             parse-string.o \
+            parser-converters.o \
+            parser-predicates.o \
             parser.o \
             primitives.o \
             print.o \
             syntax-rules.o \
+            system-features.o \
             tokenizer.o \
-            types.o \
             util.o
 
 TARGETS_SO = \

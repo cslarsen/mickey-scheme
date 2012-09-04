@@ -9,11 +9,12 @@
  *
  */
 
-#include "util.h"
-#include "parser.h"
-#include "print.h"
 #include "exceptions.h"
+#include "parser.h"
 #include "platform-limits.h"
+#include "primitives.h"
+#include "print.h"
+#include "util.h"
 
 /*
  * Get next character in string, if any left, and advance pointer.

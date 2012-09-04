@@ -9,11 +9,11 @@
  *
  */
 
-#include "parser.h"
-#include "types.h"
-#include "util.h"
-#include "print.h"
 #include "exceptions.h"
+#include "parser.h"
+#include "primitives.h"
+#include "print.h"
+#include "util.h"
 
 cons_t* type_convert(const char* token)
 {
