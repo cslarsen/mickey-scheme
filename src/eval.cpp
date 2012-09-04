@@ -21,7 +21,7 @@ static bool is_self_evaluating(cons_t* p)
   return booleanp(p)
       || charp(p)
       || closurep(p)
-      || emptylistp(p);
+      || emptylistp(p)
       || environmentp(p)
       || numberp(p)
       || portp(p)
