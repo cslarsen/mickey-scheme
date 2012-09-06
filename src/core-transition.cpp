@@ -160,7 +160,7 @@ cons_t* proc_define(cons_t *p, environment_t *env)
     raise(runtime_exception("Cannot define with empty variable name")); // TODO: Even possible?
 
   env->define(*name->symbol, body);
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_define_syntax(cons_t *p, environment_t *env)
@@ -174,7 +174,7 @@ cons_t* proc_define_syntax(cons_t *p, environment_t *env)
     raise(runtime_exception("Cannot define-syntax with empty name"));
 
   env->define(*name->symbol, syntax);
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_do(cons_t* p, environment_t*)
@@ -438,7 +438,7 @@ cons_t* proc_set_car(cons_t* p, environment_t* e)
     source = eval(source, e);
 
   target->car = source;
-  return nil();
+  return unspecified();
 }
 
 /*
@@ -464,7 +464,7 @@ cons_t* proc_set_cdr(cons_t* p, environment_t* e)
     source = eval(source, e);
 
   target->cdr = source;
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_vector(cons_t* p, environment_t*)

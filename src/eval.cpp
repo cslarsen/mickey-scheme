@@ -166,7 +166,7 @@ cons_t* eval(cons_t* p, environment_t* e)
           p = cadddr(p);
           continue;
         } else
-          return nil();                      // case [2]
+          return unspecified();              // case [2]
       }
 
       if ( name == "cond" )
@@ -223,7 +223,7 @@ cons_t* eval(cons_t* p, environment_t* e)
         for ( ; i != NULL; i = i->outer ) {
           if ( i->symbols.find(name) != i->symbols.end() ) {
             i->symbols[name] = car(evlis(def_body, e));
-            return nil();
+            return unspecified();
           }
         }
 
@@ -231,7 +231,7 @@ cons_t* eval(cons_t* p, environment_t* e)
         if ( i == NULL )
           return proc_define(cons(def_name, evlis(def_body, e)), e);
 
-        return nil();
+        return unspecified();
       }
 
       if ( name == "lambda" ) {
@@ -266,7 +266,7 @@ cons_t* eval(cons_t* p, environment_t* e)
           }
         }
 
-        return nil();
+        return unspecified();
       }
 
       if ( name == "vector" )

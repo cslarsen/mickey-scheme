@@ -63,7 +63,7 @@ cons_t* proc_help(cons_t*, environment_t*)
   "\n"
   );
 
-  return nil();
+  return unspecified();
 }
 
 named_function_t exports_repl[] = {

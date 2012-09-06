@@ -32,7 +32,9 @@ TARGETS_O =  \
             parser.o \
             primitives.o \
             print.o \
+            rational_t.o \
             repl.o \
+            strings.o \
             syntax-rules.o \
             system-features.o \
             tokenizer.o \
@@ -61,6 +63,8 @@ LIB_DEPS =  \
             parser.o \
             primitives.o \
             print.o \
+            rational_t.o \
+            strings.o \
             syntax-rules.o \
             system-features.o \
             tokenizer.o \

@@ -54,7 +54,7 @@ cons_t* proc_load(cons_t *args, environment_t *env)
 
   // Restore filename.
   global_opts.current_filename = prev;
-  return nil();
+  return unspecified();
 }
 
 named_function_t exports_load[] = {

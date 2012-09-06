@@ -19,6 +19,14 @@
 #include "exceptions.h"
 #include "import.h"
 
+/*
+ * Marks that return-value is unspecified.
+ */
+cons_t* unspecified(cons_t* p)
+{
+  return p;
+}
+
 cons_t* cons(const cons_t* h, const cons_t* t)
 {
   cons_t *p = new cons_t();
@@ -48,12 +56,33 @@ cons_t* nil()
   return p;
 }
 
-cons_t* integer(int n, bool exact)
+cons_t* integer(integer_t n, bool exact)
 {
   cons_t *p = new cons_t();
   p->type = INTEGER;
   p->integer = n;
   p->exact = exact;
+  return p;
+}
+
+cons_t* rational(rational_t r, bool exact)
+{
+  if ( r.denominator == 0 )
+    raise(runtime_exception("Cannot divide by zero: " + to_s(r)));
+
+  cons_t *p = new cons_t();
+  p->type = RATIONAL;
+  p->rational = simplify(r);
+  p->exact = exact;
+
+  /*
+   * Can we promote to an integer?
+   */
+  if ( p->rational.denominator == 1 ) {
+    p->type = INTEGER;
+    p->integer = r.numerator;
+  }
+
   return p;
 }
 
@@ -94,6 +123,15 @@ cons_t* decimal(decimal_t n)
   cons_t *p = new cons_t();
   p->type = DECIMAL;
   p->decimal = n;
+  return p;
+}
+
+cons_t* decimal(rational_t r)
+{
+  cons_t *p = new cons_t();
+  p->type = DECIMAL;
+  p->decimal = static_cast<double>(r.numerator) / 
+               static_cast<double>(r.denominator);
   return p;
 }
 
@@ -290,6 +328,11 @@ bool integerp(const cons_t* p)
   return type_of(p) == INTEGER;
 }
 
+bool rationalp(const cons_t* p)
+{
+  return type_of(p) == RATIONAL;
+}
+
 bool decimalp(const cons_t* p)
 {
   return type_of(p) == DECIMAL;
@@ -327,7 +370,7 @@ bool booleanp(const cons_t* p)
 
 bool numberp(const cons_t* p)
 {
-  return integerp(p) || decimalp(p);
+  return integerp(p) || decimalp(p) || rationalp(p);
 }
 
 bool stringp(const cons_t* p)
@@ -408,18 +451,23 @@ bool eqvp(const cons_t* l, const cons_t* r)
   case BOOLEAN:       return l->boolean == r->boolean;
   case SYMBOL:        return l->symbol == r->symbol
                              || *(l->symbol) == *(r->symbol);
-  case INTEGER:       // Also make sure both are exact/both inexact (TODO)
-                      return l->integer == r->integer; 
+                      // TODO: Above, do we need *(l->symbol) check?
+  case INTEGER:       return l->integer == r->integer;
+                      // TODO: Should we also check exactness?
+                         //    && l->exact == r->exact;
+
   case DECIMAL:       // Check both exact/both inexact
                       return l->decimal == r->decimal;
   case CHAR:          return l->character == r->character;
   case PAIR:          return nullp(l) && nullp(r)? true : l == r;
   case VECTOR:        return l == r;
   case BYTEVECTOR:    return l == r;
+  case RATIONAL:      return l == r;
 
                       // fast pointer comparison first
   case STRING:        return (l->string == r->string ||
                           !strcmp(l->string, r->string));
+                      // TODO: I thought eqv? only compared pointers?
   case SYNTAX:        return l == r;
   case CLOSURE:       // double-check with section 6.1 and 4.1.4 (TODO)
                       return l->closure == r->closure;
@@ -531,7 +579,11 @@ double number_to_double(const cons_t* p)
     raise(runtime_exception("Unsupported number->double conversion: " + sprint(p)));
   case INTEGER: return static_cast<double>(p->integer);
   case DECIMAL: return static_cast<double>(p->decimal);
-  }
+  case RATIONAL: {
+    double n = p->rational.numerator;
+    double d = p->rational.denominator;
+    return n / d;
+  }}
 }
 
 decimal_t number_to_float(const cons_t* p)
@@ -551,6 +603,9 @@ bool iswhole(decimal_t n)
 
 int gcd(int a, int b)
 {
+  a = a<0? -a : a;
+  b = b<0? -b : b;
+
   if ( a == 0 )
     return b;
 
@@ -615,5 +670,17 @@ environment_t* null_import_environment()
 {
   environment_t *r = new environment_t();
   import(r, exports_import);
+  return r;
+}
+
+int decimals_in(decimal_t n)
+{
+  int r = 0;
+
+  while ( (n - static_cast<int>(n)) != 0.0 ) {
+    ++r;
+    n *= 10.0;
+  }
+
   return r;
 }

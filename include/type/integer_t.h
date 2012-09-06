@@ -9,25 +9,4 @@
  *
  */
 
-/*
- * Basic and extended Scheme types.
- */
-enum type_t {
-  NIL,
-  BOOLEAN,
-  CHAR,
-  INTEGER,
-  RATIONAL,
-  DECIMAL,
-  CLOSURE,
-  PAIR,
-  SYMBOL,
-  STRING,
-  VECTOR,
-  CONTINUATION,
-  BYTEVECTOR,
-  SYNTAX,
-  PORT,
-  ENVIRONMENT,
-  POINTER
-};
+typedef int integer_t;

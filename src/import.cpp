@@ -238,10 +238,8 @@ static bool eval_feature_req(cons_t* p)
   std::string op = symbol_name(car(p));
   bool r = eval_feature_req(cadr(p));
 
-  if ( op == "else" ) {
-    printf("----------> got else\n");
+  if ( op == "else" )
     return true;
-  }
   else if ( op == "and" ) {
     for ( p = cddr(p); !nullp(p); p = cdr(p) )
       r &= eval_feature_req(car(p));
@@ -296,7 +294,7 @@ static cons_t* include(cons_t* p, environment_t* e)
 static cons_t* include_ci(cons_t*, environment_t*)
 {
   raise(unsupported_error("include-ci is unsupported"));
-  return nil();
+  return unspecified();
 }
 
 /*
@@ -701,8 +699,9 @@ cons_t* proc_import(cons_t* p, environment_t* e)
   }
 
   /*
-   * TODO: Should we return the final environment,
-   *       so we can easily run cond-expand on it?
+   * TODO: Should we return the final environment, so we can easily run
+   * cond-expand on it from outside define-library?  E.g., (cond-expand
+   * (import (foo bar)))
    */
-  return nil();
+  return unspecified(nil());
 }

@@ -25,6 +25,7 @@ std::string sprint(const cons_t* p, std::string& s, bool escape)
   case CHAR:         return s + to_s(p->character, escape);
   case DECIMAL:      return s + to_s(p->decimal);
   case INTEGER:      return s + to_s(p->integer);
+  case RATIONAL:     return s + to_s(p->rational);
   case CLOSURE:      return s + (escape? to_s(p->closure) : "");
   case SYMBOL:       return s + *p->symbol;
   case STRING:       return s + (escape? "\"" + encode_str(p->string) + "\"" : p->string);
@@ -120,10 +121,17 @@ std::string sprint(const pointer_t* p, std::string&, bool)
   return format("#<pointer '%s' %p>", p->tag, p->value);
 }
 
-std::string to_s(int n)
+std::string to_s(integer_t n)
 {
   char buf[64];
   sprintf(buf, "%d", n);
+  return std::string(buf);
+}
+
+std::string to_s(rational_t n)
+{
+  char buf[64];
+  sprintf(buf, "%d/%d", n.numerator, n.denominator);
   return std::string(buf);
 }
 
@@ -157,6 +165,7 @@ std::string to_s(enum type_t type)
   case CHAR:         return "char";         break;
   case DECIMAL:      return "decimal";      break;
   case INTEGER:      return "integer";      break;
+  case RATIONAL:     return "rational";     break;
   case CLOSURE:      return "closure";      break;
   case PAIR:         return "pair";         break;
   case SYMBOL:       return "symbol";       break;
@@ -181,6 +190,7 @@ std::string to_s(cons_t *p)
   case CHAR:     return to_s(p->character, false);
   case DECIMAL:  return to_s(p->decimal);
   case INTEGER:  return to_s(p->integer);
+  case RATIONAL: return to_s(p->rational);
   case CLOSURE:  return format("#<closure %p>", p->closure);
   case PAIR:     return to_s(car(p)) + " . " + to_s(cdr(p));
   case SYMBOL:   return *p->symbol;

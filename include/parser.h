@@ -36,6 +36,7 @@ bool ischar(const char*);
 bool isfloat(const char*);
 bool ishex(const char*);
 bool isinteger(const char*);
+bool isrational(const char*);
 bool isquasiquote(const char*);
 bool issinglequote(const char*);
 bool isstring(const char*);
@@ -55,6 +56,7 @@ char to_char(const char*);
 decimal_t to_f(const char*);
 enum type_t to_type_t(const char*);
 int to_i(const char*);
+rational_t to_r(const char*);
 
 /*
  * Pattern matchers

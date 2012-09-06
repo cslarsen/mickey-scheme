@@ -38,7 +38,7 @@ cons_t* proc_display(cons_t *p, environment_t*)
   std::string s = print(car(p));
   fwrite(s.c_str(), s.length(), 1, port->file());
 
-  return nil();
+  return unspecified();
 }
 
 cons_t* flush_output_port(cons_t* p, environment_t*)
@@ -52,7 +52,7 @@ cons_t* flush_output_port(cons_t* p, environment_t*)
   }
 
   fflush(f);
-  return nil();
+  return unspecified();
 }
 
 }

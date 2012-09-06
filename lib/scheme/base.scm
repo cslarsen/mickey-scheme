@@ -76,6 +76,7 @@ The larger part of this library resides in libscheme-base.so.
     eqv?
     error
     even?
+    exact
     exact->inexact
     exact-integer?
     exact?
@@ -133,6 +134,7 @@ The larger part of this library resides in libscheme-base.so.
     procedure?
     quasiquote
     quote
+    rational?
     read-line
     real?
     reverse
@@ -186,7 +188,7 @@ The larger part of this library resides in libscheme-base.so.
     (define / (bind-procedure "proc_divf"))
     (define < (bind-procedure "proc_less"))
     (define <= (bind-procedure "proc_lteq"))
-    (define = (bind-procedure "proc_eqintp"))
+    (define = (bind-procedure "proc_eqnump"))
     (define > (bind-procedure "proc_greater"))
     (define >= (bind-procedure "proc_gteq"))
     (define abs (bind-procedure "proc_abs"))
@@ -237,6 +239,7 @@ The larger part of this library resides in libscheme-base.so.
     (define eqv?  (bind-procedure "proc_eqvp"))
     (define error (bind-procedure "proc_error"))
     (define even?  (bind-procedure "proc_evenp"))
+    (define exact (bind-procedure "proc_exact"))
     (define exact->inexact (bind-procedure "proc_exact_to_inexact"))
     (define exact? (bind-procedure "proc_exactp"))
     (define expt (bind-procedure "proc_expt"))
@@ -279,7 +282,6 @@ The larger part of this library resides in libscheme-base.so.
     (define not (bind-procedure "proc_not"))
     (define null?  (bind-procedure "proc_nullp"))
     (define number->string (bind-procedure "proc_number_to_string"))
-    (define number?  (bind-procedure "proc_numberp"))
     (define odd?  (bind-procedure "proc_oddp"))
     (define or (bind-procedure "proc_or"))
     (define output-port?  (bind-procedure "proc_output_portp"))
@@ -291,6 +293,7 @@ The larger part of this library resides in libscheme-base.so.
     (define procedure?  (bind-procedure "proc_procedurep"))
     (define quasiquote (bind-syntax "proc_dummy_placeholder"))
     (define quote (bind-syntax "proc_dummy_placeholder"))
+    (define rational?  (bind-procedure "proc_rationalp"))
     (define read-line  (bind-procedure "proc_read_line"))
     (define real?  (bind-procedure "proc_realp"))
     (define reverse (bind-procedure "proc_reverse"))
@@ -429,6 +432,10 @@ The larger part of this library resides in libscheme-base.so.
     (define (values . things)
       (call-with-current-continuation
         (lambda (cont) (apply cont things))))
+
+    ;; TODO: Add (complex?)
+    (define (number? n)
+      (or (real? n) (integer? n) (rational? n)))
 
     ;; open libmickey.so
     (open-self 'global)

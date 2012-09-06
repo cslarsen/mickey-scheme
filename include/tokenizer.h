@@ -14,5 +14,6 @@
 
 void set_source(const char* program);
 const char* get_token();
+bool fold_case();
 
 #endif

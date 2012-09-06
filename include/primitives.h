@@ -17,6 +17,7 @@
 
 type_t type_of(const cons_t* p);
 size_t length(const cons_t*);
+int decimals_in(decimal_t);
 
 cons_t* cons(const cons_t* head, const cons_t* tail = NULL);
 cons_t* list(const cons_t* head = NULL, const cons_t* tail = NULL);
@@ -30,10 +31,12 @@ cons_t* splice(cons_t*, cons_t*);
 cons_t* splice_into(cons_t *from, cons_t *to);
 
 cons_t* symbol(const char*);
-cons_t* integer(int, bool exact = false);
+cons_t* integer(integer_t, bool exact = false);
+cons_t* rational(rational_t, bool exact = false);
 cons_t* boolean(bool);
 cons_t* character(character_t);
 cons_t* decimal(decimal_t);
+cons_t* decimal(rational_t);
 cons_t* string(const char*);
 cons_t* vector(cons_t*, size_t size=0, cons_t* fill=NULL);
 cons_t* bytevector(cons_t*);
@@ -45,6 +48,11 @@ cons_t* pointer(pointer_t*);
 cons_t* pointer(const char* tag, void* value);
 cons_t* closure(lambda_t, environment_t*, bool syntactic = false);
 cons_t* nil();
+
+/*
+ * Explicitly mark unspecified return-values.
+ */
+cons_t* unspecified(cons_t* p = nil());
 
 cons_t* caaar(const cons_t*);
 cons_t* caaddr(const cons_t*);
@@ -68,6 +76,7 @@ cons_t* cdr(const cons_t*);
 bool symbolp(const cons_t*);
 bool atomp(const cons_t*);
 bool integerp(const cons_t*);
+bool rationalp(const cons_t*);
 bool decimalp(const cons_t*);
 bool nullp(const cons_t*);
 bool pairp(const cons_t*);

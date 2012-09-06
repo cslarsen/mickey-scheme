@@ -88,7 +88,7 @@ cons_t* proc_exit(cons_t* p, environment_t*)
   }
 
   ::exit(code);
-  return nil();
+  return unspecified();
 }
 
 }

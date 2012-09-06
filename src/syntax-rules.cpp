@@ -147,7 +147,7 @@ cons_t* syntax_expand(cons_t *macro, cons_t *code, environment_t*)
   raise(runtime_exception(
     "Macro invocation did not match any patterns: "
       + sprint(code)));
-  return nil();
+  return unspecified();
 }
 
 cons_t* make_syntax(cons_t* body, environment_t* e)

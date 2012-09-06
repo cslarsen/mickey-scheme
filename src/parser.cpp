@@ -9,6 +9,7 @@
  *
  */
 
+#include "strings.h"
 #include "exceptions.h"
 #include "parser.h"
 #include "primitives.h"
@@ -20,6 +21,9 @@ cons_t* type_convert(const char* token)
   if ( isfloat(token) )
     return decimal(to_f(token));
 
+  if ( isrational(token) )
+    return rational(to_r(token), true);
+
   if ( isinteger(token) )
     return integer(to_i(token), true);
 
@@ -27,7 +31,7 @@ cons_t* type_convert(const char* token)
     return parse_string(token);
 
   if ( isatom(token) )
-    return symbol(token);
+    return symbol(!fold_case()? token : string_foldcase(token).c_str());
 
   if ( isbool(token) )
     return boolean(to_b(token));
@@ -39,7 +43,7 @@ cons_t* type_convert(const char* token)
     return nil();
 
   // probably a function called "+" or something
-  return symbol(token);
+  return symbol(!fold_case()? token : string_foldcase(token).c_str());
 }
 
 static cons_t* parse_quote(environment_t* e);

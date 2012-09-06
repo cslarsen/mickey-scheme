@@ -51,6 +51,28 @@ int to_i(const char* s)
   return sign * atoi(has_sign + s);
 }
 
+rational_t to_r(const char* sc)
+{
+  char *s = strdup(sc);
+
+  // form: <integer>/<integer>
+  char *d = strchr(s, '/');
+
+  if ( d == NULL )
+    raise(runtime_exception("Rational number has no divisor"));
+
+  *d = '\0';
+  char *numerator = s;
+  char *denominator = d+1;
+
+  rational_t r;
+  r.numerator = to_i(numerator);
+  r.denominator = to_i(denominator);
+
+  free(s);
+  return r;
+}
+
 bool to_b(const char* s)
 {
   return s[1]=='t'? true : false;

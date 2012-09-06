@@ -1,5 +1,5 @@
 /*
- * Mickey Scheme
+ * Mickey R7RS Scheme
  *
  * Copyright (C) 2011-2012 Christian Stigen Larsen <csl@sublevel3.org>
  * http://csl.sublevel3.org                              _
@@ -9,25 +9,6 @@
  *
  */
 
-/*
- * Basic and extended Scheme types.
- */
-enum type_t {
-  NIL,
-  BOOLEAN,
-  CHAR,
-  INTEGER,
-  RATIONAL,
-  DECIMAL,
-  CLOSURE,
-  PAIR,
-  SYMBOL,
-  STRING,
-  VECTOR,
-  CONTINUATION,
-  BYTEVECTOR,
-  SYNTAX,
-  PORT,
-  ENVIRONMENT,
-  POINTER
-};
+#include <string>
+
+std::string string_foldcase(std::string s);

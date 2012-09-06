@@ -1,3 +1,7 @@
+- Add line and column numbers in parser
+
+- BUG: (display `(a #;(foo bar) c)) -> does not eat up parenthesis
+
 - boer ha en ny cons_t type som er cons_t-pointer,
   saa kan man slaa opp symbol i environment og sette
   den til aa peke paa cons_t-en som staar i mappen, men
@@ -44,20 +48,9 @@
 PARSER TODO
 
 - Exact numbers: #e3.3 -> 33/10
-- Rational numbers: 12/15 -> rational(12, 15)
 - Literals: (define (|square number| x) (* x x)) --> (|square number| 12) ==> 144
 - make sure |\t\t| and |\x9;\x9;| are the same
 - Inf: +inf0.0 -inf0.0 etc.
-
-BYTEVECTOR NOTATION
-
-- Add support fo #u8(1 2 3)
-
-CASE-FOLDING
-
-- Add #!fold-case and #!no-fold-case:
-  - When #!fold-case is active, all create_symbols() will simply have their
-    case folded.
 
 SCHEME BASE
 
@@ -202,12 +195,6 @@ Now:
   "#|", ...) etc and generally clean up
 
 - BUG: (length (cons 1 2)) ==> 2 but should be an error
-- Add primitives.cpp unspecified_value() or something that we use everywhere
-  where values are unspecified.  (Sometimes it makes sense in
-  implementations to return actually diverse set of values for unspecifieds,
-  but it's not a bad idea to mark these spots... so we could do
-  unspecified() to return a default unspecified value, or unspecified(123)
-  to MARK this as an unspecified return value but return 123 nevertheless.
 
 Fix 1:
 #; mickey> (cons 1 2)
@@ -286,7 +273,6 @@ Should return (1 . 2) or the same as (cons 1 2).
 - Add (exact?)
 - Add (inexact?)
 - Add (exact-integer?)
-- Add (rational?)
 - Add (complex?)
 - Add (letrec-syntax)
 - Add (let-syntax) ; almost same as define-syntax, so should be asy

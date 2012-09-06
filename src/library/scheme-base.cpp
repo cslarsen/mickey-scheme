@@ -11,6 +11,7 @@
 
 #include <cmath>
 #include "library/scheme-base.h"
+#include "primitives.h"
 
 extern "C" {
 
@@ -53,7 +54,7 @@ cons_t* proc_write(cons_t *p, environment_t*)
     fprintf(global_opts.current_output_device.file(),
       "%s", sprint(car(p)).c_str());
 
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_strcat(cons_t *p, environment_t*)
@@ -103,7 +104,9 @@ cons_t* proc_add(cons_t *p, environment_t* env)
    * the value of the FIRST number we find and
    * return that.
    */
-  int sum = 0;
+  rational_t sum;
+  sum.numerator = 0;
+  sum.denominator = 1;
   bool exact = true;
 
   for ( ; !nullp(p); p = cdr(p) ) {
@@ -112,15 +115,19 @@ cons_t* proc_add(cons_t *p, environment_t* env)
     if ( integerp(i) ) {
       if ( !i->exact ) exact = false;
       sum += i->integer;
+    } else if ( rationalp(i) ) {
+      if ( !i->exact ) exact = false;
+      sum += i->rational;
     } else if ( decimalp(i) ) {
       // automatically convert; perform rest of computation in floats
       exact = false;
       return proc_addf(cons(decimal(sum), p), env);
     } else
-      raise(runtime_exception("Cannot add integer with " + to_s(type_of(i)) + ": " + sprint(i)));
+      raise(runtime_exception(
+        "Cannot add integer with " + to_s(type_of(i)) + ": " + sprint(i)));
   }
 
-  return integer(sum, exact);
+  return rational(sum, exact);
 }
 
 cons_t* proc_sub(cons_t *p, environment_t*)
@@ -257,7 +264,7 @@ cons_t* proc_define(cons_t *p, environment_t *env)
     raise(runtime_exception("Cannot define with empty variable name")); // TODO: Even possible?
 
   env->define(*name->symbol, body);
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_define_syntax(cons_t *p, environment_t *env)
@@ -271,7 +278,7 @@ cons_t* proc_define_syntax(cons_t *p, environment_t *env)
     raise(runtime_exception("Cannot define-syntax with empty name"));
 
   env->define(*name->symbol, syntax);
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_map(cons_t *p, environment_t*)
@@ -380,6 +387,26 @@ cons_t* proc_integerp(cons_t* p, environment_t*)
   return boolean(integerp(car(p)));
 }
 
+cons_t* proc_rationalp(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+
+
+  /*
+   * All integers can be written as rationals
+   */
+  if ( integerp(car(p)) )
+    return boolean(true);
+
+  /*
+   * All finite reals can be written as rationals
+   */
+  if ( decimalp(car(p)) )
+    return boolean(true);
+
+  return boolean(rationalp(car(p)));
+}
+
 cons_t* proc_realp(cons_t* p, environment_t*)
 {
   /*
@@ -417,7 +444,7 @@ cons_t* proc_close_port(cons_t* p, environment_t*)
   assert_length(p, 1);
   assert_type(PORT, car(p));
   car(p)->port->close();
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_close_input_port(cons_t* p, environment_t*)
@@ -434,7 +461,7 @@ cons_t* proc_close_input_port(cons_t* p, environment_t*)
    *       how it should be done.
    */
   car(p)->port->close();
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_close_output_port(cons_t* p, environment_t*)
@@ -451,7 +478,7 @@ cons_t* proc_close_output_port(cons_t* p, environment_t*)
    *       how it should be done.
    */
   car(p)->port->close();
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_portp(cons_t* p, environment_t*)
@@ -499,12 +526,6 @@ cons_t* proc_listp(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   return boolean(properlistp(car(p)));
-}
-
-cons_t* proc_numberp(cons_t* p, environment_t*)
-{
-  assert_length(p, 1);
-  return boolean(numberp(car(p)));
 }
 
 cons_t* proc_stringp(cons_t* p, environment_t*)
@@ -621,7 +642,7 @@ cons_t* proc_vector_set(cons_t* p, environment_t*)
     raise(runtime_exception("Vector index out of range: " + to_s(ref)));
 
   v->vector[ref] = set;
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_vector_to_list(cons_t* p, environment_t*)
@@ -781,7 +802,7 @@ cons_t* proc_bytevector_copy_partial_bang(cons_t* p, environment_t*)
     from->bytevector.begin()+end,
     to->bytevector.begin()+at);
 
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_bytevector_u8_set_bang(cons_t* p, environment_t*)
@@ -802,7 +823,7 @@ cons_t* proc_bytevector_u8_set_bang(cons_t* p, environment_t*)
     raise(runtime_exception("bytevector-u8-set! byte value out of range"));
 
   v->bytevector[k] = static_cast<uint8_t>(val);
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_bytevector_copy_bang(cons_t* p, environment_t*)
@@ -822,7 +843,7 @@ cons_t* proc_bytevector_copy_bang(cons_t* p, environment_t*)
     to->bytevector.resize(from->bytevector.size());
 
   to->bytevector = from->bytevector;
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_vector_fill(cons_t* p, environment_t*)
@@ -840,7 +861,7 @@ cons_t* proc_vector_fill(cons_t* p, environment_t*)
     (*i) = fill;
   }
 
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_string_to_vector(cons_t* p, environment_t*)
@@ -898,7 +919,7 @@ cons_t* proc_equalp(cons_t* p, environment_t*)
   return boolean(equalp(car(p), cadr(p)));
 }
 
-cons_t* proc_eqintp(cons_t* p, environment_t*)
+cons_t* proc_eqnump(cons_t* p, environment_t*)
 {
   assert_length(p, 2);
   assert_number(car(p));
@@ -907,9 +928,19 @@ cons_t* proc_eqintp(cons_t* p, environment_t*)
   cons_t *l = car(p),
          *r = cadr(p);
 
-  return (decimalp(l) || decimalp(r)) ?
-    boolean(number_to_float(l) == number_to_float(r)) :
-    boolean(l->integer == r->integer);
+  if ( decimalp(l) || decimalp(r) )
+    return boolean(number_to_float(l) == number_to_float(r));
+
+  if ( rationalp(l) && rationalp(r) )
+    return boolean(l->rational.numerator == r->rational.numerator &&
+                   l->rational.denominator == r->rational.denominator);
+
+  if ( integerp(l) && integerp(r) )
+    return boolean(l->integer == r->integer);
+
+  raise(runtime_exception("Cannot compare " + sprint(l)
+        + " with " + sprint(r)));
+  return unspecified(boolean(false));
 }
 
 cons_t* proc_not(cons_t* p, environment_t*)
@@ -1287,7 +1318,7 @@ cons_t* proc_set_car(cons_t* p, environment_t* e)
     source = eval(source, e);
 
   target->car = source;
-  return nil();
+  return unspecified();
 }
 
 /*
@@ -1313,7 +1344,7 @@ cons_t* proc_set_cdr(cons_t* p, environment_t* e)
     source = eval(source, e);
 
   target->cdr = source;
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_file_existsp(cons_t* p, environment_t*)
@@ -1328,12 +1359,12 @@ cons_t* proc_begin(cons_t* p, environment_t*)
 
 cons_t* proc_gteq(cons_t* p, environment_t* e)
 {
-  return boolean(proc_eqintp(p, e)->boolean || proc_greater(p, e)->boolean);
+  return boolean(proc_eqnump(p, e)->boolean || proc_greater(p, e)->boolean);
 }
 
 cons_t* proc_lteq(cons_t* p, environment_t* e)
 {
-  return boolean(proc_eqintp(p, e)->boolean || proc_less(p, e)->boolean);
+  return boolean(proc_eqnump(p, e)->boolean || proc_less(p, e)->boolean);
 }
 
 cons_t* proc_assq(cons_t* p, environment_t* e)
@@ -1398,7 +1429,7 @@ cons_t* proc_error(cons_t* p, environment_t*)
   assert_type(STRING, car(p));
   const char *message = car(p)->string;
   raise(runtime_exception(message));
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_oddp(cons_t* p, environment_t*)
@@ -1443,7 +1474,7 @@ cons_t* proc_newline(cons_t* p, environment_t*)
   } else
     raise(runtime_exception("String ports are not supported: " + to_s(po)));
 
-  return nil();
+  return unspecified();
 }
 
 cons_t* proc_positivep(cons_t* p, environment_t*)
@@ -1698,7 +1729,7 @@ cons_t* proc_list_set(cons_t* p, environment_t*)
 
   // insert new item
   l->car = obj;
-  return nil();
+  return unspecified();
 }
 
 /*
@@ -2196,6 +2227,46 @@ cons_t* proc_peek_char(cons_t* p, environment_t*)
 
   ungetc(ch, f);
   return character(static_cast<char>(ch));
+}
+
+static integer_t pow10(integer_t exp)
+{
+  integer_t r = 1;
+
+  while ( exp > 0 ) {
+    r *= 10;
+    --exp;
+  }
+
+  return r;
+}
+
+cons_t* proc_exact(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+
+  cons_t *z = car(p);
+  assert_number(z);
+
+  if ( rationalp(z) )
+    return rational(z->rational, true);
+
+  if ( integerp(z) )
+    return integer(z->integer, true);
+
+  if ( decimalp(z) ) {
+    integer_t decimals = decimals_in(z->decimal);
+    integer_t magnitude = pow10(decimals);
+
+    rational_t r;
+    r.numerator = z->decimal * magnitude;
+    r.denominator = magnitude;
+
+    return rational(r, true);
+  }
+
+  raise(runtime_exception("Not a number: " + sprint(p)));
+  return unspecified(nil());
 }
 
 } // extern "C"

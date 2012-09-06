@@ -36,6 +36,25 @@ bool isinteger(const char* s)
   return !empty(s) && all(s+sign, isdigit);
 }
 
+bool isrational(const char* sc)
+{
+  char *s = strdup(sc);
+
+  // form: <integer>/<integer>
+  char *d = strchr(s, '/');
+
+  if ( d == NULL )
+    return false;
+
+  *d = '\0';
+  char *numerator = s;
+  char *denominator = d+1;
+
+  bool ret = isinteger(numerator) && isinteger(denominator);
+  free(s);
+  return ret;
+}
+
 bool isbool(const char* s)
 {
   return s[0]=='#' && (s[1]=='t' || s[1]=='f');

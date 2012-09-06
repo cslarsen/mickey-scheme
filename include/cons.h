@@ -19,9 +19,11 @@
 #include "type/decimal_t.h"
 #include "type/dict_t.h"
 #include "type/environment_t.h"
+#include "type/integer_t.h"
 #include "type/lambda_t.h"
 #include "type/pointer_t.h"
 #include "type/port_t.h"
+#include "type/rational_t.h"
 #include "type/symbol_t.h"
 #include "type/syntax_t.h"
 #include "type/type_t.h"
@@ -38,8 +40,9 @@ struct cons_t {
   union {
     bool boolean;
     character_t character;
-    int integer;
+    integer_t integer;
     decimal_t decimal;
+    rational_t rational;
     struct { cons_t *car, *cdr; }; // pair
     closure_t* closure;
     syntax_t* syntax;

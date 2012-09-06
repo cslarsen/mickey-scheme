@@ -74,7 +74,7 @@ void detect_features()
    * All algebraic operations except / produce exactvalues given exact
    * inputs.
    */
-  add_feature("exact-closed"); // TODO: Add unit tests for this!
+  //add_feature("exact-closed"); // TODO: Add unit tests for this!
 
   /*
    * / with exact arguments produces an exact result when the divisor is

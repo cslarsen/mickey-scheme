@@ -57,7 +57,7 @@ cons_t* initialize(cons_t*, environment_t*)
   if ( SDL_Init(SDL_INIT_VIDEO) != 0 )
     raise(runtime_exception(SDL_GetError()));
 
-  return nil();
+  return unspecified();
 }
 
 /*

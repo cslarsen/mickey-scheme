@@ -57,6 +57,10 @@ cons_t* proc_debug(cons_t *p, environment_t *env)
   case INTEGER:
     s += format(" value=%d", p->integer);
     break;
+  case RATIONAL:
+    s += format(" value=%d/%d",
+        p->rational.numerator, p->rational.denominator);
+    break;
   case SYNTAX:
     s += format(" syntax_transformer->%p environment->%p",
            p->syntax->transformer,

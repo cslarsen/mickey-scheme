@@ -1,12 +1,12 @@
 /*
- * Mickey Scheme
+ * Mickey R7RS Scheme
  *
- * Copyright (C) 2011 Christian Stigen Larsen <csl@sublevel3.org>
+ * Copyright (C) 2011-2012 Christian Stigen Larsen <csl@sublevel3.org>
  * http://csl.sublevel3.org                              _
  *                                                        \
  * Distributed under the LGPL 2.1; see LICENSE            /\
  * Please post bugfixes and suggestions to the author.   /  \_
- *                                                          
+ *
  */
 
 #include <stdio.h>
@@ -18,6 +18,12 @@
 
 static const char* source = NULL;
 static bool inside_string = false;
+static bool fold_case_flag = false;
+
+bool fold_case()
+{
+  return fold_case_flag;
+}
 
 void set_source(const char* program)
 {
@@ -75,8 +81,16 @@ const char* get_token()
     // hash-bang or similar? skip to end of line
     // TODO: Properly handle reader directives like case-folding, etc.
     if ( source[0]=='#' && source[1]=='!' ) {
+
       // skip to end of line
+      const char *start = source;
       while ( *source != '\n' ) ++source;
+
+      if ( !strncmp("#!fold-case", start, source - start) )
+        fold_case_flag = true;
+      else if ( !strncmp("#!no-fold-case", start, source - start) )
+        fold_case_flag = false;
+
       continue;
     }
 
