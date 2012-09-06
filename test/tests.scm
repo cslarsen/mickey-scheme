@@ -677,6 +677,8 @@
 (test (exact 0.2) 2/10)
 (test (exact 0.02) 2/100)
 (test (exact 0.002) 2/1000)
+(test (exact 1.1) 11/10)
+(test (exact 1.2) 6/5)
 
 (display "\nResults\n")
 (display (string-append
