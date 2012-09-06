@@ -1831,7 +1831,7 @@ cons_t* proc_string_to_number(cons_t* p, environment_t*)
 
   const char *s = car(p)->string;
 
-  if ( isfloat(s) )
+  if ( isreal(s) )
     return real(to_f(s));
   else if ( isinteger(s) )
     return integer(to_i(s));
@@ -2229,44 +2229,10 @@ cons_t* proc_peek_char(cons_t* p, environment_t*)
   return character(static_cast<char>(ch));
 }
 
-static integer_t pow10(integer_t exp)
-{
-  integer_t r = 1;
-
-  while ( exp > 0 ) {
-    r *= 10;
-    --exp;
-  }
-
-  return r;
-}
-
 cons_t* proc_exact(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
-
-  cons_t *z = car(p);
-  assert_number(z);
-
-  if ( rationalp(z) )
-    return rational(z->rational, true);
-
-  if ( integerp(z) )
-    return integer(z->integer, true);
-
-  if ( realp(z) ) {
-    integer_t decimals = decimals_in(z->real);
-    integer_t magnitude = pow10(decimals);
-
-    rational_t r;
-    r.numerator = z->real * magnitude;
-    r.denominator = magnitude;
-
-    return rational(r, true);
-  }
-
-  raise(runtime_exception("Not a number: " + sprint(p)));
-  return unspecified(nil());
+  return make_exact(car(p));
 }
 
 } // extern "C"

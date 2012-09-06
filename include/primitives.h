@@ -48,6 +48,7 @@ cons_t* pointer(pointer_t*);
 cons_t* pointer(const char* tag, void* value);
 cons_t* closure(lambda_t, environment_t*, bool syntactic = false);
 cons_t* nil();
+cons_t* make_exact(cons_t* p);
 
 /*
  * Explicitly mark unspecified return-values.

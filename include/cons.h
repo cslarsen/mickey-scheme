@@ -28,6 +28,7 @@
 #include "types/syntax_t.h"
 #include "types/type_t.h"
 #include "types/vector_t.h"
+#include "types/radix_t.h"
 
 /*
  * A variant variable.  Called a cons-cell, but that's incorrect.

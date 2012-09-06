@@ -15,17 +15,119 @@
 #include "primitives.h"
 #include "print.h"
 #include "util.h"
+#include "types/radix_t.h"
+#include "debug.h"
+
+static bool hasradix(const char* s)
+{
+  if ( s[0] != '#' )
+    return false;
+
+  switch ( tolower(s[1]) ) {
+  case 'b':
+  case 'o':
+  case 'd':
+  case 'x':
+    return true;
+
+  default:
+    return false;
+  }
+}
+
+radix_t parse_radix(const char* s)
+{
+  if ( s[0] == '#' )
+  switch ( tolower(s[1]) ) {
+  case 'b': return BINARY;
+  case 'o': return OCTAL;
+  case 'd': return DECIMAL;
+  case 'x': return HEXADECIMAL;
+  default : break;
+  }
+
+  raise(parser_exception(format(
+    "Invalid radix specifier: %s", s)));
+  return BINARY; // to make compiler happy
+}
+
+bool parse_exact_prefix(const char* s)
+{
+  if ( !strncmp("#e", s, 2) )
+    return true;
+
+  if ( !strncmp("#i", s, 2) )
+    return false;
+
+  raise(parser_exception(format(
+    "Invalid exactness prefix: %s", s)));
+  return false; // to make compiler happy
+}
+
+static bool hasexactspecifier(const char* s)
+{
+  return s[0]=='#' && s[1]=='e';
+}
 
 cons_t* type_convert(const char* token)
 {
-  if ( isfloat(token) )
-    return real(to_f(token));
+  const char* token_start = token;
+
+  bool has_exact_prefix = false;
+  bool has_radix_prefix = false;
+
+  bool is_exact_number = false;
+  radix_t radix = DECIMAL;
+
+  if ( hasradix(token) ) {
+    radix = parse_radix(token);
+    has_radix_prefix = true;
+    token += 2;
+  }
+
+  if ( hasexactspecifier(token) ) {
+    is_exact_number = parse_exact_prefix(token);
+    has_exact_prefix = true;
+    token += 2;
+  }
+
+  /*
+   * See, this is a trick.  The report says that the radix and exactness
+   * prefices can come in any order, so therefore we check again here to
+   * allow for that.
+   */
+  if ( hasradix(token) ) {
+    radix = parse_radix(token);
+    has_radix_prefix = true;
+    token += 2;
+  }
+
+  /*
+   * If we found radix or exactness prefix above, we MUST have a number now.
+   */
+
+  if ( isreal(token) ) {
+    cons_t* r = real(to_f(token, radix));
+    return is_exact_number? make_exact(r) : r;
+  }
 
   if ( isrational(token) )
-    return rational(to_r(token), true);
+    return rational(to_r(token, radix), true);
 
-  if ( isinteger(token) )
-    return integer(to_i(token), true);
+  if ( isinteger(token, radix) )
+    return integer(to_i(token, radix), true);
+
+  /*
+   * TODO: When we've got complex numbers, this is the spot to handle them.
+   */
+
+  /*
+   * If we have radix/exactness prefix, we should have a number, and so this
+   * should be an error.
+   */
+  if ( has_radix_prefix || has_exact_prefix )
+    raise(parser_exception(format(
+      "Invalid use of prefix with non-number: %s", token_start)));
 
   if ( isstring(token) )
     return parse_string(token);

@@ -681,3 +681,40 @@ int decimals_in(real_t n)
 
   return r;
 }
+
+static integer_t pow10(integer_t exp)
+{
+  integer_t r = 1;
+
+  while ( exp > 0 ) {
+    r *= 10;
+    --exp;
+  }
+
+  return r;
+}
+
+cons_t* make_exact(cons_t* z)
+{
+  assert_number(z);
+
+  if ( rationalp(z) )
+    return rational(z->rational, true);
+
+  if ( integerp(z) )
+    return integer(z->integer, true);
+
+  if ( realp(z) ) {
+    integer_t decimals = decimals_in(z->real);
+    integer_t magnitude = pow10(decimals);
+
+    rational_t r;
+    r.numerator = z->real * magnitude;
+    r.denominator = magnitude;
+
+    return rational(r, true);
+  }
+
+  raise(runtime_exception("Not a number: " + sprint(z)));
+  return unspecified(nil());
+}

@@ -33,9 +33,9 @@ bool isatom(const char*);
 bool isbool(const char*);
 bool isbytevector(const char*);
 bool ischar(const char*);
-bool isfloat(const char*);
+bool isreal(const char*);
 bool ishex(const char*);
-bool isinteger(const char*);
+bool isinteger(const char*, int radix=10);
 bool isrational(const char*);
 bool isquasiquote(const char*);
 bool issinglequote(const char*);
@@ -45,7 +45,7 @@ bool isunquote_splicing(const char*);
 bool isvector(const char*);
 bool isvowel(char);
 int isdot(int s);
-int ishex(int s);
+int ishexdigit(int s);
 
 /*
  * Conversion from text
@@ -53,10 +53,10 @@ int ishex(int s);
 bool to_b(const char*);
 char literal_to_char(const char*);
 char to_char(const char*);
-real_t to_f(const char*);
+real_t to_f(const char*, int radix = 10);
 enum type_t to_type_t(const char*);
-int to_i(const char*);
-rational_t to_r(const char*);
+integer_t  to_i(const char*, int radix = 10);
+rational_t to_r(const char*, int radix = 10);
 
 /*
  * Pattern matchers

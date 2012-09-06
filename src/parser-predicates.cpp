@@ -18,7 +18,7 @@ int isdot(int s)
   return s == '.';
 }
 
-int ishex(int s)
+int ishexdigit(int s)
 {
   return isdigit(s) ||
     (s>='a' && s<='f') ||
@@ -27,13 +27,13 @@ int ishex(int s)
 
 bool ishex(const char* s)
 {
-  return !empty(s) && all(s, ishex);
+  return !empty(s) && all(s, ishexdigit);
 }
 
-bool isinteger(const char* s)
+bool isinteger(const char* s, int radix)
 {
   int sign = (s[0]=='-' || s[0]=='+');
-  return !empty(s) && all(s+sign, isdigit);
+  return !empty(s) && all(s+sign, radix<=10? isdigit : ishexdigit);
 }
 
 bool isrational(const char* sc)
@@ -65,7 +65,7 @@ bool ischar(const char* s)
   return s[0]=='#' && s[1]=='\\';
 }
 
-bool isfloat(const char* s)
+bool isreal(const char* s)
 {
   // TODO: Make pattern complete
   // Pattern now: [+-]?[0-9]*\.?[0-9]+f?

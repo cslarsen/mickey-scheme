@@ -35,12 +35,21 @@ int all(const char* s, int (*check)(int))
   return true;
 }
 
-real_t to_f(const char* s)
+real_t to_f(const char* s, int radix)
 {
+  // TODO: Add support for non-decimal radix
+  if ( radix != 10 )
+    raise(parser_exception("Only radix 10 reals are supported"));
+
   return atof(s);
 }
 
-int to_i(const char* s)
+static integer_t atoi(const char* s, int radix)
+{
+  return static_cast<integer_t>(strtol(s, static_cast<char**>(NULL), radix));
+}
+
+integer_t  to_i(const char* s, int radix)
 {
   if ( s == NULL )
     raise(runtime_exception("Cannot convert NULL to INTEGER"));
@@ -48,10 +57,10 @@ int to_i(const char* s)
   int has_sign = (char_in(*s, "+-"));
   int sign = (s[0]=='-'? -1 : 1);
 
-  return sign * atoi(has_sign + s);
+  return sign * atoi(has_sign + s, radix);
 }
 
-rational_t to_r(const char* sc)
+rational_t to_r(const char* sc, int radix)
 {
   char *s = strdup(sc);
 
@@ -66,8 +75,8 @@ rational_t to_r(const char* sc)
   char *denominator = d+1;
 
   rational_t r;
-  r.numerator = to_i(numerator);
-  r.denominator = to_i(denominator);
+  r.numerator = to_i(numerator, radix);
+  r.denominator = to_i(denominator, radix);
 
   free(s);
   return r;

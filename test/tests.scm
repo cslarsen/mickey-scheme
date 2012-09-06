@@ -63,6 +63,16 @@
 (testq (= 0.51 1/2) #f)
 (testq 1000/200 5)
 
+;; Number prefices
+(testq #xFF 255)
+(testq #xFFF 4095)
+(testq #b11 3)
+(testq #o77 63)
+(testq #d123 123)
+;; ... with exactness
+(test #e1.1 11/10)
+(test #e1.2 6/5)
+
 ;; pair?, list? and dot notation
 (test '(1 . 2) (cons 1 2))
 (testq (pair? '(1 . 3)) #t)
