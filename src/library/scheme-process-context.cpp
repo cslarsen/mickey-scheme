@@ -81,8 +81,8 @@ cons_t* proc_exit(cons_t* p, environment_t*)
   if ( length(p) == 1 ) {
     if ( integerp(car(p)) )
       code = car(p)->integer;
-    else if ( decimalp(car(p)) )
-      code = static_cast<int>(car(p)->decimal);
+    else if ( realp(car(p)) )
+      code = static_cast<int>(car(p)->real);
     else
       code = !boolean_false(car(p))? EXIT_SUCCESS : EXIT_FAILURE;
   }

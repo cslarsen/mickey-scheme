@@ -16,12 +16,12 @@
  * All <math.h> procedures have identical signatures,
  * so create a macro to, in darkness, bind them.
  */
-#define MAKE_PROC(name, math_fun)                       \
-  cons_t* name(cons_t* p, environment_t*)               \
-  {                                                     \
-    assert_length(p, 1);                                \
-    assert_number(car(p));                              \
-    return decimal(math_fun(number_to_decimal(car(p)))); \
+#define MAKE_PROC(name, math_fun)                  \
+  cons_t* name(cons_t* p, environment_t*)          \
+  {                                                \
+    assert_length(p, 1);                           \
+    assert_number(car(p));                         \
+    return real(math_fun(number_to_real(car(p)))); \
   }
 
 extern "C" {
@@ -41,7 +41,7 @@ cons_t* proc_atan(cons_t* p, environment_t*)
 {
   if ( length(p) == 1 ) {
     assert_number(car(p));
-    return decimal(atan(number_to_decimal(car(p))));
+    return real(atan(number_to_real(car(p))));
   } else if ( length(p) == 2 ) {
     raise(runtime_exception("Two-argument atan is not (yet) supported"));
   } else

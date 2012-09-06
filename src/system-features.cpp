@@ -90,7 +90,7 @@ void detect_features()
   /*
    * Inexact numbers are IEEE 754 floating point values.
    */
-  if ( std::numeric_limits<decimal_t>::is_iec559 )
+  if ( std::numeric_limits<real_t>::is_iec559 )
     add_feature("ieee-float");
 
   /*

@@ -44,7 +44,7 @@ std::string to_s(bytevector_t*);
 std::string to_s(char, bool);
 std::string to_s(closure_t*);
 std::string to_s(continuation_t*);
-std::string to_s(decimal_t n);
+std::string to_s(real_t n);
 std::string to_s(enum type_t);
 std::string to_s(environment_t*);
 std::string to_s(integer_t n);

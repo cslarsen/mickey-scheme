@@ -51,8 +51,8 @@ cons_t* proc_debug(cons_t *p, environment_t *env)
   case BOOLEAN:
     s += format(" value=%s", p->integer? "#t" : "#f");
     break;
-  case DECIMAL:
-    s += format(" value=%f", p->decimal);
+  case REAL:
+    s += format(" value=%f", p->real);
     break;
   case INTEGER:
     s += format(" value=%d", p->integer);

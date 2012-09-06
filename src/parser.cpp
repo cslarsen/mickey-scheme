@@ -19,7 +19,7 @@
 cons_t* type_convert(const char* token)
 {
   if ( isfloat(token) )
-    return decimal(to_f(token));
+    return real(to_f(token));
 
   if ( isrational(token) )
     return rational(to_r(token), true);

@@ -16,7 +16,7 @@
 #include "types/character_t.h"
 #include "types/closure_t.h"
 #include "types/continuation_t.h"
-#include "types/decimal_t.h"
+#include "types/real_t.h"
 #include "types/dict_t.h"
 #include "types/environment_t.h"
 #include "types/integer_t.h"
@@ -45,7 +45,7 @@ struct cons_t {
       bool exact;
       union {
         integer_t integer;
-        decimal_t decimal;
+        real_t real;
         rational_t rational;
       };
     };

@@ -9,4 +9,4 @@
  *
  */
 
-typedef double decimal_t;
+typedef double real_t;

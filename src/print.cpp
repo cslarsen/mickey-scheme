@@ -23,7 +23,7 @@ std::string sprint(const cons_t* p, std::string& s, bool escape)
   case NIL:          return s;
   case BOOLEAN:      return s + to_s(p->boolean);
   case CHAR:         return s + to_s(p->character, escape);
-  case DECIMAL:      return s + to_s(p->decimal);
+  case REAL:         return s + to_s(p->real);
   case INTEGER:      return s + to_s(p->integer);
   case RATIONAL:     return s + to_s(p->rational);
   case CLOSURE:      return s + (escape? to_s(p->closure) : "");
@@ -135,7 +135,7 @@ std::string to_s(rational_t n)
   return std::string(buf);
 }
 
-std::string to_s(decimal_t n)
+std::string to_s(real_t n)
 {
   char buf[64];
   sprintf(buf, "%g", n);
@@ -163,7 +163,7 @@ std::string to_s(enum type_t type)
   case NIL:          return "nil";          break;
   case BOOLEAN:      return "boolean";      break;
   case CHAR:         return "char";         break;
-  case DECIMAL:      return "decimal";      break;
+  case REAL:         return "real";         break;
   case INTEGER:      return "integer";      break;
   case RATIONAL:     return "rational";     break;
   case CLOSURE:      return "closure";      break;
@@ -188,7 +188,7 @@ std::string to_s(cons_t *p)
   case NIL:      return "#<nil>";
   case BOOLEAN:  return to_s(p->boolean);
   case CHAR:     return to_s(p->character, false);
-  case DECIMAL:  return to_s(p->decimal);
+  case REAL:     return to_s(p->real);
   case INTEGER:  return to_s(p->integer);
   case RATIONAL: return to_s(p->rational);
   case CLOSURE:  return format("#<closure %p>", p->closure);

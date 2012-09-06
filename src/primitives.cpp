@@ -118,22 +118,22 @@ cons_t* pointer(const char* tag, void* value)
   return r;
 }
 
-cons_t* decimal(decimal_t n)
+cons_t* real(real_t n)
 {
   cons_t *p = new cons_t();
-  p->type = DECIMAL;
-  p->decimal = n;
+  p->type = REAL;
+  p->real = n;
   p->exact = false;
   return p;
 }
 
-cons_t* decimal(rational_t r)
+cons_t* real(rational_t r)
 {
   cons_t *p = new cons_t();
-  p->type = DECIMAL;
+  p->type = REAL;
   p->exact = false;
-  p->decimal = static_cast<double>(r.numerator) / 
-               static_cast<double>(r.denominator);
+  p->real = static_cast<real_t>(r.numerator) /
+            static_cast<real_t>(r.denominator);
   return p;
 }
 
@@ -335,9 +335,9 @@ bool rationalp(const cons_t* p)
   return type_of(p) == RATIONAL;
 }
 
-bool decimalp(const cons_t* p)
+bool realp(const cons_t* p)
 {
-  return type_of(p) == DECIMAL;
+  return type_of(p) == REAL;
 }
 
 bool vectorp(const cons_t* p)
@@ -372,7 +372,7 @@ bool booleanp(const cons_t* p)
 
 bool numberp(const cons_t* p)
 {
-  return integerp(p) || decimalp(p) || rationalp(p);
+  return integerp(p) || realp(p) || rationalp(p);
 }
 
 bool stringp(const cons_t* p)
@@ -458,8 +458,8 @@ bool eqvp(const cons_t* l, const cons_t* r)
                       // TODO: Should we also check exactness?
                          //    && l->exact == r->exact;
 
-  case DECIMAL:       // Check both exact/both inexact
-                      return l->decimal == r->decimal;
+  case REAL:          // Check both exact/both inexact
+                      return l->real == r->real;
   case CHAR:          return l->character == r->character;
   case PAIR:          return nullp(l) && nullp(r)? true : l == r;
   case VECTOR:        return l == r;
@@ -572,23 +572,23 @@ bool xor_p(const cons_t* p)
   return !not_p(p) ^ !not_p(cdr(p));
 }
 
-decimal_t number_to_decimal(const cons_t* p)
+real_t number_to_real(const cons_t* p)
 {
   assert_number(p);
 
   switch ( type_of(p) ) {
   default:
     raise(runtime_exception("Unsupported number->double conversion: " + sprint(p)));
-  case INTEGER: return static_cast<double>(p->integer);
-  case DECIMAL: return static_cast<double>(p->decimal);
+  case INTEGER: return static_cast<real_t>(p->integer);
+  case REAL:    return static_cast<real_t>(p->real);
   case RATIONAL: {
-    double n = p->rational.numerator;
-    double d = p->rational.denominator;
+    real_t n = p->rational.numerator;
+    real_t d = p->rational.denominator;
     return n / d;
   }}
 }
 
-bool iswhole(decimal_t n)
+bool iswhole(real_t  n)
 {
   if ( !isfinite(n) || isnan(n) || !isnormal(n) )
     return false;
@@ -670,7 +670,7 @@ environment_t* null_import_environment()
   return r;
 }
 
-int decimals_in(decimal_t n)
+int decimals_in(real_t n)
 {
   int r = 0;
 

@@ -18,7 +18,7 @@ enum type_t {
   CHAR,
   INTEGER,
   RATIONAL,
-  DECIMAL,
+  REAL,
   CLOSURE,
   PAIR,
   SYMBOL,

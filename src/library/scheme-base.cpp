@@ -20,9 +20,9 @@ cons_t* proc_abs(cons_t* p, environment_t*)
   assert_length(p, 1);
   assert_number(car(p));
 
-  if ( decimalp(car(p)) ) {
-    decimal_t n = car(p)->decimal;
-    return decimal(n<0.0? -n : n);
+  if ( realp(car(p)) ) {
+    real_t n = car(p)->real;
+    return real(n<0.0? -n : n);
   }
 
   int n = car(p)->integer;
@@ -80,20 +80,20 @@ cons_t* proc_make_string(cons_t *p, environment_t*)
 
 cons_t* proc_addf(cons_t *p, environment_t*)
 {
-  decimal_t sum = 0.0;
+  real_t sum = 0.0;
 
   for ( ; !nullp(p); p = cdr(p) ) {
     cons_t *i = listp(p)? car(p) : p;
 
     if ( integerp(i) )
-      sum += static_cast<decimal_t>(i->integer);
-    else if ( decimalp(i) )
-      sum += i->decimal;
+      sum += static_cast<real_t>(i->integer);
+    else if ( realp(i) )
+      sum += i->real;
     else
-      raise(runtime_exception("Cannot add decimal with " + to_s(type_of(i)) + ": " + sprint(i)));
+      raise(runtime_exception("Cannot add real with " + to_s(type_of(i)) + ": " + sprint(i)));
   }
 
-  return decimal(sum);
+  return real(sum);
 }
 
 cons_t* proc_add(cons_t *p, environment_t* env)
@@ -118,10 +118,10 @@ cons_t* proc_add(cons_t *p, environment_t* env)
     } else if ( rationalp(i) ) {
       if ( !i->exact ) exact = false;
       sum += i->rational;
-    } else if ( decimalp(i) ) {
+    } else if ( realp(i) ) {
       // automatically convert; perform rest of computation in floats
       exact = false;
-      return proc_addf(cons(decimal(sum), p), env);
+      return proc_addf(cons(real(sum), p), env);
     } else
       raise(runtime_exception(
         "Cannot add integer with " + to_s(type_of(i)) + ": " + sprint(i)));
@@ -137,7 +137,7 @@ cons_t* proc_sub(cons_t *p, environment_t*)
   if ( length(p) == 0 )
     raise(runtime_exception("No arguments to -"));
 
-  decimal_t d = number_to_decimal(car(p));
+  real_t d = number_to_real(car(p));
 
   if ( !car(p)->exact )
     exact = false;
@@ -149,10 +149,10 @@ cons_t* proc_sub(cons_t *p, environment_t*)
   while ( !nullp(p = cdr(p)) ) {
     if ( !car(p)->exact )
       exact = false;
-    d -= number_to_decimal(car(p));
+    d -= number_to_real(car(p));
   }
 
-  return iswhole(d) ? integer((int)d, exact) : decimal(d);
+  return iswhole(d) ? integer((int)d, exact) : real(d);
 }
 
 cons_t* proc_divf(cons_t *p, environment_t*)
@@ -162,12 +162,12 @@ cons_t* proc_divf(cons_t *p, environment_t*)
   cons_t *a = car(p);
   cons_t *b = cadr(p);
 
-  decimal_t x = (type_of(a) == DECIMAL)? a->decimal : a->integer;
-  decimal_t y = (type_of(b) == DECIMAL)? b->decimal : b->integer;
+  real_t x = (type_of(a) == REAL)? a->real : a->integer;
+  real_t y = (type_of(b) == REAL)? b->real : b->integer;
 
   // Automatically convert back to int if possible
-  decimal_t q = x / y;
-  return iswhole(q)? integer(static_cast<int>(q)) : decimal(q);
+  real_t q = x / y;
+  return iswhole(q)? integer(static_cast<int>(q)) : real(q);
 }
 
 cons_t* proc_div(cons_t *p, environment_t *e)
@@ -195,21 +195,21 @@ cons_t* proc_div(cons_t *p, environment_t *e)
 
 cons_t* proc_mulf(cons_t *p, environment_t*)
 {
-  decimal_t product = 1.0;
+  real_t product = 1.0;
 
   for ( ; !nullp(p); p = cdr(p) ) {
     cons_t *i = listp(p)? car(p) : p;
 
     if ( integerp(i) )
-      product *= static_cast<decimal_t>(i->integer);
-    else if ( decimalp(i) )
+      product *= static_cast<real_t>(i->integer);
+    else if ( realp(i) )
       // automatically convert; perform rest of computation in floats
-      product *= i->decimal;
+      product *= i->real;
     else
       raise(runtime_exception("Cannot multiply integer with " + to_s(type_of(i)) + ": " + sprint(i)));
   }
 
-  return decimal(product);
+  return real(product);
 }
 
 cons_t* proc_mul(cons_t *p, environment_t *env)
@@ -223,10 +223,10 @@ cons_t* proc_mul(cons_t *p, environment_t *env)
     if ( integerp(i) ) {
       product *= i->integer;
       if ( !i->exact ) exact = false;
-    } else if ( decimalp(i) ) {
+    } else if ( realp(i) ) {
       // automatically convert; perform rest of computation in floats
       exact = false;
-      return proc_mulf(cons(decimal(product), p), env);
+      return proc_mulf(cons(real(product), p), env);
     } else
       raise(runtime_exception("Cannot multiply integer with " + to_s(type_of(i)) + ": " + sprint(i)));
   }
@@ -376,12 +376,12 @@ cons_t* proc_symbolp(cons_t* p, environment_t*)
 cons_t* proc_integerp(cons_t* p, environment_t*)
 {
   /*
-   * Note that decimals like 3.0 should be considered
+   * Note that reals like 3.0 should be considered
    * integers.
    */
-  if ( decimalp(car(p)) ) {
-    decimal_t n = car(p)->decimal;
-    return boolean((decimal_t)((int)n) == n);
+  if ( realp(car(p)) ) {
+    real_t n = car(p)->real;
+    return boolean((real_t)((int)n) == n);
   }
 
   return boolean(integerp(car(p)));
@@ -401,7 +401,7 @@ cons_t* proc_rationalp(cons_t* p, environment_t*)
   /*
    * All finite reals can be written as rationals
    */
-  if ( decimalp(car(p)) )
+  if ( realp(car(p)) )
     return boolean(true);
 
   return boolean(rationalp(car(p)));
@@ -413,7 +413,7 @@ cons_t* proc_realp(cons_t* p, environment_t*)
    * All integers can also be considered reals.
    */
   return boolean(
-    decimalp(car(p)) ||
+    realp(car(p)) ||
     integerp(car(p)));
 }
 
@@ -427,8 +427,8 @@ cons_t* proc_zerop(cons_t* p, environment_t*)
   if ( type_of(car(p)) == INTEGER )
     return boolean(car(p)->integer == 0);
 
-  if ( type_of(car(p)) == DECIMAL )
-    return boolean(car(p)->decimal == 0.0);
+  if ( type_of(car(p)) == REAL )
+    return boolean(car(p)->real == 0.0);
 
   return boolean(false);
 }
@@ -928,8 +928,8 @@ cons_t* proc_eqnump(cons_t* p, environment_t*)
   cons_t *l = car(p),
          *r = cadr(p);
 
-  if ( decimalp(l) || decimalp(r) )
-    return boolean(number_to_decimal(l) == number_to_decimal(r));
+  if ( realp(l) || realp(r) )
+    return boolean(number_to_real(l) == number_to_real(r));
 
   if ( rationalp(l) && rationalp(r) )
     return boolean(l->rational.numerator == r->rational.numerator &&
@@ -1011,8 +1011,8 @@ cons_t* proc_less(cons_t* p, environment_t*)
   assert_number(car(p));
   assert_number(cadr(p));
 
-  decimal_t x = (type_of(car(p)) == INTEGER)? car(p)->integer : car(p)->decimal;
-  decimal_t y = (type_of(cadr(p)) == INTEGER)? cadr(p)->integer : cadr(p)->decimal;
+  real_t x = (type_of(car(p)) == INTEGER)? car(p)->integer : car(p)->real;
+  real_t y = (type_of(cadr(p)) == INTEGER)? cadr(p)->integer : cadr(p)->real;
 
   return boolean(x < y);
 }
@@ -1023,8 +1023,8 @@ cons_t* proc_greater(cons_t* p, environment_t*)
   assert_number(car(p));
   assert_number(cadr(p));
 
-  decimal_t x = (type_of(car(p)) == INTEGER)? car(p)->integer : car(p)->decimal;
-  decimal_t y = (type_of(cadr(p)) == INTEGER)? cadr(p)->integer : cadr(p)->decimal;
+  real_t x = (type_of(car(p)) == INTEGER)? car(p)->integer : car(p)->real;
+  real_t y = (type_of(cadr(p)) == INTEGER)? cadr(p)->integer : cadr(p)->real;
 
   return boolean(x > y);
 }
@@ -1444,7 +1444,7 @@ cons_t* proc_negativep(cons_t* p, environment_t*)
   assert_length(p, 1);
   assert_number(car(p));
   return boolean(integerp(car(p)) ? car(p)->integer < 0 :
-                                    car(p)->decimal < 0);
+                                    car(p)->real < 0);
 }
 
 cons_t* proc_newline(cons_t* p, environment_t*)
@@ -1482,7 +1482,7 @@ cons_t* proc_positivep(cons_t* p, environment_t*)
   assert_length(p, 1);
   assert_number(car(p));
   return boolean(integerp(car(p)) ? car(p)->integer > 0 :
-                                    car(p)->decimal > 0);
+                                    car(p)->real > 0);
 }
 
 cons_t* proc_round(cons_t* p, environment_t*)
@@ -1493,7 +1493,7 @@ cons_t* proc_round(cons_t* p, environment_t*)
   if ( integerp(car(p)) )
     return integer(car(p)->integer);
   else
-    return decimal(roundf(car(p)->decimal));
+    return real(roundf(car(p)->real));
 }
 
 cons_t* proc_truncate(cons_t* p, environment_t*)
@@ -1504,7 +1504,7 @@ cons_t* proc_truncate(cons_t* p, environment_t*)
   if ( integerp(car(p)) )
     return integer(car(p)->integer);
   else
-    return decimal(truncf(car(p)->decimal));
+    return real(truncf(car(p)->real));
 }
 
 cons_t* proc_min(cons_t* p, environment_t*)
@@ -1515,7 +1515,7 @@ cons_t* proc_min(cons_t* p, environment_t*)
   while ( !nullp(p) ) {
     assert_number(car(p));
 
-    if ( number_to_decimal(car(p)) < number_to_decimal(min) )
+    if ( number_to_real(car(p)) < number_to_real(min) )
       min = car(p);
 
     p = cdr(p);
@@ -1532,7 +1532,7 @@ cons_t* proc_max(cons_t* p, environment_t*)
   while ( !nullp(p) ) {
     assert_number(car(p));
 
-    if ( number_to_decimal(car(p)) > number_to_decimal(max) )
+    if ( number_to_real(car(p)) > number_to_real(max) )
       max = car(p);
 
     p = cdr(p);
@@ -1574,12 +1574,12 @@ cons_t* proc_expt(cons_t* p, environment_t*)
   }
 
   // Floating point exponentiation
-  decimal_t a = number_to_decimal(base),
-            n = number_to_decimal(expn),
+  real_t a = number_to_real(base),
+            n = number_to_real(expn),
             r = a;
 
   if ( n == 0.0 )
-    return decimal(1.0);
+    return real(1.0);
 
   if ( n < 0.0 )
     raise(runtime_exception("Negative exponents not implemented"));
@@ -1593,7 +1593,7 @@ cons_t* proc_expt(cons_t* p, environment_t*)
     raise(runtime_exception("Fractional exponents not supported"));
 
   // TODO: Compute r^n, where n is in [0..1)
-  return decimal(r);
+  return real(r);
 }
 
 cons_t* proc_modulo(cons_t* p, environment_t*)
@@ -1832,7 +1832,7 @@ cons_t* proc_string_to_number(cons_t* p, environment_t*)
   const char *s = car(p)->string;
 
   if ( isfloat(s) )
-    return decimal(to_f(s));
+    return real(to_f(s));
   else if ( isinteger(s) )
     return integer(to_i(s));
 
@@ -1931,7 +1931,7 @@ cons_t* proc_nanp(cons_t* p, environment_t*)
   if ( type_of(car(p)) == INTEGER )
     return boolean(false);
 
-  return boolean(std::isnan(car(p)->decimal));
+  return boolean(std::isnan(car(p)->real));
 }
 
 cons_t* proc_infinitep(cons_t* p, environment_t*)
@@ -1942,7 +1942,7 @@ cons_t* proc_infinitep(cons_t* p, environment_t*)
   if ( type_of(car(p)) == INTEGER )
     return boolean(false);
 
-  return boolean(std::fpclassify(car(p)->decimal) == FP_INFINITE);
+  return boolean(std::fpclassify(car(p)->real) == FP_INFINITE);
 }
 
 cons_t* proc_finitep(cons_t* p, environment_t*)
@@ -1953,7 +1953,7 @@ cons_t* proc_finitep(cons_t* p, environment_t*)
   if ( type_of(car(p)) == INTEGER )
     return boolean(true);
 
-  return boolean(std::isfinite(car(p)->decimal));
+  return boolean(std::isfinite(car(p)->real));
 }
 
 cons_t* proc_do(cons_t* p, environment_t*)
@@ -2254,12 +2254,12 @@ cons_t* proc_exact(cons_t* p, environment_t*)
   if ( integerp(z) )
     return integer(z->integer, true);
 
-  if ( decimalp(z) ) {
-    integer_t decimals = decimals_in(z->decimal);
+  if ( realp(z) ) {
+    integer_t decimals = decimals_in(z->real);
     integer_t magnitude = pow10(decimals);
 
     rational_t r;
-    r.numerator = z->decimal * magnitude;
+    r.numerator = z->real * magnitude;
     r.denominator = magnitude;
 
     return rational(r, true);

@@ -53,7 +53,7 @@ int ishex(int s);
 bool to_b(const char*);
 char literal_to_char(const char*);
 char to_char(const char*);
-decimal_t to_f(const char*);
+real_t to_f(const char*);
 enum type_t to_type_t(const char*);
 int to_i(const char*);
 rational_t to_r(const char*);

@@ -17,7 +17,7 @@
 
 type_t type_of(const cons_t* p);
 size_t length(const cons_t*);
-int decimals_in(decimal_t);
+int decimals_in(real_t);
 
 cons_t* cons(const cons_t* head, const cons_t* tail = NULL);
 cons_t* list(const cons_t* head = NULL, const cons_t* tail = NULL);
@@ -35,8 +35,8 @@ cons_t* integer(integer_t, bool exact = false);
 cons_t* rational(rational_t, bool exact = false);
 cons_t* boolean(bool);
 cons_t* character(character_t);
-cons_t* decimal(decimal_t);
-cons_t* decimal(rational_t);
+cons_t* real(real_t);
+cons_t* real(rational_t);
 cons_t* string(const char*);
 cons_t* vector(cons_t*, size_t size=0, cons_t* fill=NULL);
 cons_t* bytevector(cons_t*);
@@ -77,7 +77,7 @@ bool symbolp(const cons_t*);
 bool atomp(const cons_t*);
 bool integerp(const cons_t*);
 bool rationalp(const cons_t*);
-bool decimalp(const cons_t*);
+bool realp(const cons_t*);
 bool nullp(const cons_t*);
 bool pairp(const cons_t*);
 bool listp(const cons_t*);
@@ -102,8 +102,8 @@ bool and_p(const cons_t*);
 bool or_p(const cons_t*);
 bool xor_p(const cons_t*);
 
-decimal_t number_to_decimal(const cons_t*);
-bool iswhole(decimal_t);
+real_t number_to_real(const cons_t*);
+bool iswhole(real_t);
 
 int gcd(int a, int b);
 int lcm(int a, int b);

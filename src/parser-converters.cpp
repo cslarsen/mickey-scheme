@@ -35,9 +35,9 @@ int all(const char* s, int (*check)(int))
   return true;
 }
 
-decimal_t to_f(const char* s)
+real_t to_f(const char* s)
 {
-  return static_cast<decimal_t>(atof(s));
+  return atof(s);
 }
 
 int to_i(const char* s)
