@@ -17,7 +17,7 @@
 
 type_t type_of(const cons_t* p);
 size_t length(const cons_t*);
-int decimals_in(real_t);
+int decimals_in(long double);
 
 cons_t* cons(const cons_t* head, const cons_t* tail = NULL);
 cons_t* list(const cons_t* head = NULL, const cons_t* tail = NULL);
@@ -132,5 +132,7 @@ environment_t* null_environment(int version = 7);
  * TODO: Move this to own environment.h / environment.cpp
  */
 environment_t* null_import_environment();
+
+integer_t pow10(integer_t exp);
 
 #endif

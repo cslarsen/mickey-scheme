@@ -588,14 +588,24 @@ real_t number_to_real(const cons_t* p)
   }}
 }
 
-bool iswhole(real_t  n)
+/*
+ * NOTE:  Floating point numbers is really difficult to get right.
+ *
+ * Therefore, go through this function again and again.  I once had a loop
+ * that multiplied a double by 10.0 and used iswhole() to find the nearest
+ * full integer, but the loop never terminated.
+ *
+ * So maybe it's impossible to create a function like this?
+ * 
+ */
+bool iswhole(real_t n)
 {
   if ( !isfinite(n) || isnan(n) || !isnormal(n) )
     return false;
 
   // Return true if `n` has no decimals, i.e. is "x.0" for a value of x
-  // NOTE: Can possible do `(int)n == n` as well, but better to use floor.
-  return (floor(n) == n) && !(n <= INT_MIN || n >= INT_MAX);
+  long int li = lrint(floor(n));
+  return (li == n) && !(n <= LONG_MIN || n >= LONG_MAX);
 }
 
 int gcd(int a, int b)
@@ -670,11 +680,20 @@ environment_t* null_import_environment()
   return r;
 }
 
-int decimals_in(real_t n)
+/*
+ * Estimate number of decimals in `n`.
+ *
+ * Note that before we used long double below, calling decimals_in(123.456)
+ * made the routine loop forever, because iswhole() can't be trusted.
+ *
+ * So, even though we use long_real_t we are bound to overflow one time or
+ * another (well, not as long as we only support real_t as the base type).
+ */
+int decimals_in(long double n)
 {
   int r = 0;
 
-  while ( (n - static_cast<int>(n)) != 0.0 ) {
+  while ( !iswhole(n) ) {
     ++r;
     n *= 10.0;
   }
@@ -682,7 +701,7 @@ int decimals_in(real_t n)
   return r;
 }
 
-static integer_t pow10(integer_t exp)
+integer_t pow10(integer_t exp)
 {
   integer_t r = 1;
 

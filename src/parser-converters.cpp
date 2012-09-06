@@ -14,6 +14,7 @@
 #include "parser.h"
 #include "print.h"
 #include "util.h"
+#include "primitives.h"
 
 int count(const char *s, int (*check)(int))
 {
@@ -126,4 +127,34 @@ char to_char(const char* s)
 
   raise(runtime_exception(format("Unrecognized character literal: #\\%s", s)));
   return '\0'; // make compiler happy
+}
+
+cons_t* parse_exact_real(const char* sc, int radix)
+{
+  if ( radix != 10 )
+    raise(parser_exception(
+      "Only reals with decimal radix are supported"));
+
+  /*
+   * Since the real is already in string form, we can simply turn it into a
+   * rational number.
+   */
+  char *s = strdup(sc);
+  char *d = strchr(s, '.');
+  *d = '\0';
+  const char* left = s;
+  const char* right = d+1;
+
+  int decimals = strlen(right);
+
+  /*
+   * NOTE: If we overflow here, we're in big trouble.
+   * TODO: Throw an error if we overflow.  Or just implement bignums.
+   */
+  rational_t r;
+  r.numerator = to_i(left, radix)*pow10(decimals) + to_i(right, radix);
+  r.denominator = pow10(decimals);
+
+  free(s);
+  return rational(r, true);
 }

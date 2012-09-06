@@ -25,6 +25,7 @@ struct program_t {
  */
 cons_t* parse_string(const char*);
 program_t* parse(const std::string& program, environment_t *env);
+cons_t* parse_exact_real(const char*, int radix);
 
 /*
  * Predicates

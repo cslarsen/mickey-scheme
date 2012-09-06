@@ -35,7 +35,22 @@ static bool hasradix(const char* s)
   }
 }
 
-radix_t parse_radix(const char* s)
+static bool hasexactprefix(const char* s)
+{
+  if ( s[0] != '#' )
+    return false;
+
+  switch ( tolower(s[1]) ) {
+  case 'e':
+  case 'i':
+    return true;
+
+  default:
+    return false;
+  }
+}
+
+static radix_t parse_radix(const char* s)
 {
   if ( s[0] == '#' )
   switch ( tolower(s[1]) ) {
@@ -51,22 +66,18 @@ radix_t parse_radix(const char* s)
   return BINARY; // to make compiler happy
 }
 
-bool parse_exact_prefix(const char* s)
+static bool parse_exact_prefix(const char* s)
 {
-  if ( !strncmp("#e", s, 2) )
-    return true;
-
-  if ( !strncmp("#i", s, 2) )
-    return false;
+  if ( s[0] == '#' )
+  switch ( tolower(s[1]) ) {
+  case 'e': return true;
+  case 'i': return false;
+  default:  break;
+  }
 
   raise(parser_exception(format(
     "Invalid exactness prefix: %s", s)));
   return false; // to make compiler happy
-}
-
-static bool hasexactspecifier(const char* s)
-{
-  return s[0]=='#' && s[1]=='e';
 }
 
 cons_t* type_convert(const char* token)
@@ -85,7 +96,7 @@ cons_t* type_convert(const char* token)
     token += 2;
   }
 
-  if ( hasexactspecifier(token) ) {
+  if ( hasexactprefix(token) ) {
     is_exact_number = parse_exact_prefix(token);
     has_exact_prefix = true;
     token += 2;
@@ -107,15 +118,18 @@ cons_t* type_convert(const char* token)
    */
 
   if ( isreal(token) ) {
-    cons_t* r = real(to_f(token, radix));
-    return is_exact_number? make_exact(r) : r;
+    if ( !is_exact_number )
+      return real(to_f(token, radix));
+    return parse_exact_real(token, radix);
   }
 
   if ( isrational(token) )
-    return rational(to_r(token, radix), true);
+    return rational(to_r(token, radix),
+                   has_exact_prefix? is_exact_number : true);
 
   if ( isinteger(token, radix) )
-    return integer(to_i(token, radix), true);
+    return integer(to_i(token, radix),
+                   has_exact_prefix? is_exact_number : true);
 
   /*
    * TODO: When we've got complex numbers, this is the spot to handle them.
