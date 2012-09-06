@@ -27,8 +27,6 @@
 - lag assert-symbol(a ...) som sjekker at hver sak lagt inn er
   symbol, brukes i feks base.scm
 
-- fiks (set! (cdr a) 123), den krasjer
-
 - sjekk ut c++ muligheter for slikt:
   class value { value(int)... value(std::string).. value(float) osv
   og da value* proc(...) { return 123; } om det gaar an.

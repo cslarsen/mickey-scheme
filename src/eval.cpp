@@ -11,6 +11,7 @@
 
 #include "mickey.h"
 #include "core-transition.h"
+#include "assertions.h"
 
 extern "C" {
 
@@ -215,6 +216,8 @@ cons_t* eval(cons_t* p, environment_t* e)
       if ( name == "set!" ) {
         cons_t *def_name = cadr(p);
         cons_t *def_body = cddr(p);
+
+        assert_type(SYMBOL, def_name);
 
         std::string name = *def_name->symbol;
         environment_t *i = e;
