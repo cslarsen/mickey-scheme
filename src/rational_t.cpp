@@ -10,7 +10,7 @@
  */
 
 #include "primitives.h"
-#include "type/rational_t.h"
+#include "types/rational_t.h"
 
 rational_t& simplify(rational_t& r)
 {

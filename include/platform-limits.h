@@ -9,7 +9,7 @@
  *
  */
 
-#include "type/character_t.h"
+#include "types/character_t.h"
 
 /*
  * We've only got 8-bit ASCII character support, yet.

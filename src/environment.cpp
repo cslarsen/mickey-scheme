@@ -9,7 +9,7 @@
  *
  */
 
-#include "type/environment_t.h"
+#include "types/environment_t.h"
 #include "exceptions.h"
 #include "primitives.h"
 #include "print.h"

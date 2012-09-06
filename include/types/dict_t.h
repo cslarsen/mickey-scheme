@@ -11,7 +11,7 @@
 
 #include <map>
 #include "cons.h"
-#include "type/symbol_t.h"
+#include "types/symbol_t.h"
 
 /*
  * Symbol tables maps strings to values.
