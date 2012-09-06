@@ -88,6 +88,7 @@ The larger part of this library resides in libscheme-base.so.
     get-features
     if
     inexact?
+    inexact
     infinite?
     input-port?
     integer->char
@@ -247,6 +248,7 @@ The larger part of this library resides in libscheme-base.so.
     (define finite?  (bind-procedure "proc_finitep"))
     (define gcd (bind-procedure "proc_gcd"))
     (define if (bind-syntax "proc_dummy_placeholder"))
+    (define inexact (bind-procedure "proc_inexact"))
     (define inexact? (bind-procedure "proc_inexactp"))
     (define infinite?  (bind-procedure "proc_infinitep"))
     (define input-port?  (bind-procedure "proc_input_portp"))

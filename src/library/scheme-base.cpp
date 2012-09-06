@@ -2235,4 +2235,10 @@ cons_t* proc_exact(cons_t* p, environment_t*)
   return make_exact(car(p));
 }
 
+cons_t* proc_inexact(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  return make_inexact(car(p));
+}
+
 } // extern "C"

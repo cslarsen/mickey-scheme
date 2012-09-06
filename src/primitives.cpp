@@ -718,3 +718,21 @@ cons_t* make_exact(cons_t* z)
   raise(runtime_exception("Not a number: " + sprint(z)));
   return unspecified(nil());
 }
+
+cons_t* make_inexact(cons_t* z)
+{
+  assert_number(z);
+
+  if ( rationalp(z) )
+    return real(static_cast<real_t>(z->rational.numerator) /
+                static_cast<real_t>(z->rational.denominator));
+
+  if ( integerp(z) )
+    return real(static_cast<real_t>(z->integer));
+
+  if ( realp(z) )
+    return real(z->real);
+
+  raise(runtime_exception("Not a number: " + sprint(z)));
+  return unspecified();
+}
