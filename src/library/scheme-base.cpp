@@ -137,7 +137,7 @@ cons_t* proc_sub(cons_t *p, environment_t*)
   if ( length(p) == 0 )
     raise(runtime_exception("No arguments to -"));
 
-  decimal_t d = number_to_float(car(p));
+  decimal_t d = number_to_decimal(car(p));
 
   if ( !car(p)->exact )
     exact = false;
@@ -149,7 +149,7 @@ cons_t* proc_sub(cons_t *p, environment_t*)
   while ( !nullp(p = cdr(p)) ) {
     if ( !car(p)->exact )
       exact = false;
-    d -= number_to_float(car(p));
+    d -= number_to_decimal(car(p));
   }
 
   return iswhole(d) ? integer((int)d, exact) : decimal(d);
@@ -929,7 +929,7 @@ cons_t* proc_eqnump(cons_t* p, environment_t*)
          *r = cadr(p);
 
   if ( decimalp(l) || decimalp(r) )
-    return boolean(number_to_float(l) == number_to_float(r));
+    return boolean(number_to_decimal(l) == number_to_decimal(r));
 
   if ( rationalp(l) && rationalp(r) )
     return boolean(l->rational.numerator == r->rational.numerator &&
@@ -1515,7 +1515,7 @@ cons_t* proc_min(cons_t* p, environment_t*)
   while ( !nullp(p) ) {
     assert_number(car(p));
 
-    if ( number_to_float(car(p)) < number_to_float(min) )
+    if ( number_to_decimal(car(p)) < number_to_decimal(min) )
       min = car(p);
 
     p = cdr(p);
@@ -1532,7 +1532,7 @@ cons_t* proc_max(cons_t* p, environment_t*)
   while ( !nullp(p) ) {
     assert_number(car(p));
 
-    if ( number_to_float(car(p)) > number_to_float(max) )
+    if ( number_to_decimal(car(p)) > number_to_decimal(max) )
       max = car(p);
 
     p = cdr(p);
@@ -1574,8 +1574,8 @@ cons_t* proc_expt(cons_t* p, environment_t*)
   }
 
   // Floating point exponentiation
-  decimal_t a = number_to_float(base),
-            n = number_to_float(expn),
+  decimal_t a = number_to_decimal(base),
+            n = number_to_decimal(expn),
             r = a;
 
   if ( n == 0.0 )

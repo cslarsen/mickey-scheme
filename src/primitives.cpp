@@ -123,6 +123,7 @@ cons_t* decimal(decimal_t n)
   cons_t *p = new cons_t();
   p->type = DECIMAL;
   p->decimal = n;
+  p->exact = false;
   return p;
 }
 
@@ -130,6 +131,7 @@ cons_t* decimal(rational_t r)
 {
   cons_t *p = new cons_t();
   p->type = DECIMAL;
+  p->exact = false;
   p->decimal = static_cast<double>(r.numerator) / 
                static_cast<double>(r.denominator);
   return p;
@@ -570,7 +572,7 @@ bool xor_p(const cons_t* p)
   return !not_p(p) ^ !not_p(cdr(p));
 }
 
-double number_to_double(const cons_t* p)
+decimal_t number_to_decimal(const cons_t* p)
 {
   assert_number(p);
 
@@ -584,11 +586,6 @@ double number_to_double(const cons_t* p)
     double d = p->rational.denominator;
     return n / d;
   }}
-}
-
-decimal_t number_to_float(const cons_t* p)
-{
-  return static_cast<decimal_t>(number_to_double(p));
 }
 
 bool iswhole(decimal_t n)

@@ -36,13 +36,20 @@
  */
 struct cons_t {
   type_t type;
-  bool exact; // TODO: Move into own number type, or something
   union {
     bool boolean;
     character_t character;
-    integer_t integer;
-    decimal_t decimal;
-    rational_t rational;
+
+    // numbers
+    struct {
+      bool exact;
+      union {
+        integer_t integer;
+        decimal_t decimal;
+        rational_t rational;
+      };
+    };
+
     struct { cons_t *car, *cdr; }; // pair
     closure_t* closure;
     syntax_t* syntax;

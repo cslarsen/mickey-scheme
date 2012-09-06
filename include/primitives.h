@@ -102,8 +102,7 @@ bool and_p(const cons_t*);
 bool or_p(const cons_t*);
 bool xor_p(const cons_t*);
 
-double number_to_double(const cons_t*);
-decimal_t number_to_float(const cons_t*);
+decimal_t number_to_decimal(const cons_t*);
 bool iswhole(decimal_t);
 
 int gcd(int a, int b);
