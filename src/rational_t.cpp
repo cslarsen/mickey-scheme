@@ -14,6 +14,9 @@
 
 rational_t& simplify(rational_t& r)
 {
+  if ( r.denominator == 1 )
+    return r;
+
   integer_t d;
 
   while ( (d = gcd(r.numerator, r.denominator)) != 1 ) {
