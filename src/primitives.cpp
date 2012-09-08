@@ -464,8 +464,7 @@ bool eqvp(const cons_t* l, const cons_t* r)
   case PAIR:          return nullp(l) && nullp(r)? true : l == r;
   case VECTOR:        return l == r;
   case BYTEVECTOR:    return l == r;
-  case RATIONAL:      return l == r || l->rational == r->rational;
-
+  case RATIONAL:      return l == r;
                       // fast pointer comparison first
   case STRING:        return (l->string == r->string ||
                           !strcmp(l->string, r->string));
