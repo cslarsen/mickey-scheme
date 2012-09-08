@@ -214,7 +214,9 @@ cons_t* proc_mulf(cons_t *p, environment_t*)
 
 cons_t* proc_mul(cons_t *p, environment_t *env)
 {
-  int product = 1;
+  rational_t product;
+  product.numerator = 1;
+  product.denominator = 1;
   bool exact = true;
 
   for ( ; !nullp(p); p = cdr(p) ) {
@@ -223,6 +225,9 @@ cons_t* proc_mul(cons_t *p, environment_t *env)
     if ( integerp(i) ) {
       product *= i->integer;
       if ( !i->exact ) exact = false;
+    } else if ( rationalp(i) ) {
+      if ( !i->exact ) exact = false;
+      product *= i->rational;
     } else if ( realp(i) ) {
       // automatically convert; perform rest of computation in floats
       exact = false;
@@ -231,7 +236,7 @@ cons_t* proc_mul(cons_t *p, environment_t *env)
       raise(runtime_exception("Cannot multiply integer with " + to_s(type_of(i)) + ": " + sprint(i)));
   }
 
-  return integer(product, exact);
+  return rational(product, exact);
 }
 
 cons_t* proc_to_string(cons_t* p, environment_t*)

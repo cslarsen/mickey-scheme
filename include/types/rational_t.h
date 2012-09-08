@@ -21,6 +21,8 @@ struct rational_t {
   friend rational_t operator+(const rational_t& l, const integer_t& r);
   rational_t& operator+=(const integer_t& n);
   rational_t& operator+=(const rational_t& that);
+  rational_t& operator*=(const integer_t& n);
+  rational_t& operator*=(const rational_t& that);
 };
 
 rational_t& simplify(rational_t& r);

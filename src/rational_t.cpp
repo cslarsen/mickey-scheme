@@ -38,6 +38,24 @@ rational_t& rational_t::operator+=(const rational_t& that)
   return simplify(*this);
 }
 
+rational_t& rational_t::operator*=(const integer_t& n)
+{
+  this->numerator *= n;
+  return simplify(*this);
+}
+
+rational_t& rational_t::operator*=(const rational_t& that)
+{
+  /*
+   * TODO: This could cause overflowing because we do simplification in the
+   * last step.  A way to fix this is to detect common factors beforehand,
+   * and only multiply those that are not.
+   */
+  this->numerator *= that.numerator;
+  this->denominator *= that.denominator;
+  return simplify(*this);
+}
+
 rational_t operator+(const rational_t& l, const integer_t& r)
 {
   rational_t ret;

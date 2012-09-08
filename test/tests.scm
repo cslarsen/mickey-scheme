@@ -63,6 +63,21 @@
 (testq (= 0.51 1/2) #f)
 (testq 1000/200 5)
 
+;; Rational arithmetic
+(testq (* 1/2 1/2) 1/4)
+(testq (exact? (* 1/2 1/2)) #t)
+(testq (* 1/2 1/2 2) 1/2)
+(testq (* 1/2 1/2 2 2) 1)
+(testq (exact? (* 1/2 1/2 2 2)) #t)
+(testq (exact? (* 1/2 1/2 2 #i2)) #f)
+(testq (* 1/2 1/2 2 3) 3/2)
+(testq (rational? (* 1/2 1/2 2 3)) #t)
+(testq (* 1/2 1/2 2 10) 5)
+(testq (integer? (* 1/2 1/2 2 10)) #t)
+(testq (exact? (* 1/2 1/2 2 10)) #t)
+(testq (inexact? (* 1/2 1/2 2 10)) #f)
+(testq (inexact? (* 1/2 1/2 #i2 10)) #t)
+
 ;; Number prefices
 (testq #xFF 255)
 (testq #xFFF 4095)
