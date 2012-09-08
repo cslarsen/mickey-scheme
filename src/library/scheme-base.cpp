@@ -1497,8 +1497,11 @@ cons_t* proc_round(cons_t* p, environment_t*)
 
   if ( integerp(car(p)) )
     return integer(car(p)->integer);
-  else
-    return real(roundf(car(p)->real));
+  else if ( rationalp(car(p)) )
+    return real(roundf(make_inexact(car(p))->real));
+
+  assert_type(REAL, car(p));
+  return real(roundf(car(p)->real));
 }
 
 cons_t* proc_truncate(cons_t* p, environment_t*)
