@@ -607,7 +607,7 @@ bool iswhole(real_t n)
   return (li == n) && !(n <= LONG_MIN || n >= LONG_MAX);
 }
 
-int gcd(int a, int b)
+int gcd_naive(int a, int b)
 {
   a = a<0? -a : a;
   b = b<0? -b : b;
@@ -623,6 +623,37 @@ int gcd(int a, int b)
   }
 
   return a;
+}
+
+static int gcd_binary(int u, int v)
+{
+  int shl = 0;
+
+  while ( u && v && u!=v ) {
+    bool eu = !(u & 1);
+    bool ev = !(v & 1);
+
+    if ( eu && ev ) {
+      ++shl;
+      u >>= 1;
+      v >>= 1;
+    }
+    else if ( eu && !ev ) u >>= 1;
+    else if ( !eu && ev ) v >>= 1;
+    else if ( u>=v ) u = (u-v)>>1;
+    else {
+      int tmp = u;
+      u = (v-u)>>1;
+      v = tmp;
+    }
+  }
+
+  return !u? v<<shl : u<<shl;
+}
+
+int gcd(int a, int b)
+{
+  return gcd_binary(abs(a), abs(b));
 }
 
 int lcm(int a, int b)
