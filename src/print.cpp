@@ -230,7 +230,9 @@ std::string to_s(port_t* p)
 
 std::string to_s(char p, bool escape)
 {
-  return format(escape? "#\\%c" : "%c", isprint(p)? p : '?' );
+  return escape?
+    format("#\\x%x;", static_cast<int>(p)) :
+    format("%c", p);
 }
 
 std::string to_s(environment_t* e)

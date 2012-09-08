@@ -62,7 +62,7 @@ bool isbool(const char* s)
 
 bool ischar(const char* s)
 {
-  return s[0]=='#' && s[1]=='\\';
+  return s[0]=='#' && s[1]=='\\' && s[2]!='\0';
 }
 
 bool isreal(const char* s)
