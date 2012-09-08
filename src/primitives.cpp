@@ -607,24 +607,6 @@ bool iswhole(real_t n)
   return (li == n) && !(n <= LONG_MIN || n >= LONG_MAX);
 }
 
-int gcd_naive(int a, int b)
-{
-  a = a<0? -a : a;
-  b = b<0? -b : b;
-
-  if ( a == 0 )
-    return b;
-
-  while ( b ) {
-    if ( a > b )
-      a -= b;
-    else
-      b -= a;
-  }
-
-  return a;
-}
-
 static int gcd_binary(int u, int v)
 {
   int shl = 0;
