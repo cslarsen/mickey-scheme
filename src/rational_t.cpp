@@ -63,3 +63,8 @@ rational_t operator+(const rational_t& l, const integer_t& r)
   ret.denominator = l.denominator;
   return ret;
 }
+
+bool rational_t::operator==(const rational_t& r) const
+{
+  return numerator == r.numerator && denominator == r.denominator;
+}
