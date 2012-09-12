@@ -126,3 +126,8 @@ std::string sbasename(const std::string& s)
   free(p);
   return r;
 }
+
+integer_t& min(integer_t& a, integer_t& b)
+{
+  return a<b? a : b;
+}

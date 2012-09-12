@@ -88,6 +88,18 @@
 (test #e1.1 11/10)
 (test #e1.2 6/5)
 
+;; Test exactness
+(testq (exact? 1) #t)
+(testq (exact? 1.1) #f)
+(testq (exact? (+ 1 2 3)) #t)
+(testq (exact? (+ 1 2/3 3)) #t)
+(testq (exact? (* 1 2/3 3)) #t)
+(testq (exact? (* 1 2/3 #i3)) #f)
+(testq (exact? (* #i1 2/3 3)) #f)
+(testq (exact? (/ 8 2)) #t)
+(testq (exact? (/ 10 10)) #t)
+
+
 ;; pair?, list? and dot notation
 (test '(1 . 2) (cons 1 2))
 (testq (pair? '(1 . 3)) #t)
@@ -132,6 +144,10 @@
 (testq (or #f #t #f) #t)
 (testq (or #f #f #t) #t)
 (test (or 1 (/ 0)) 1)
+
+;; here we show that (or) only evaluates as many arguments as is needed;
+;; therefore we stick in a division by zero, which should not be evaluated,
+;; and thus not give any error.
 (test (or (memq 'b '(a b c)) (/ 3 0)) '(b c))
 (testq (or) #f)
 (testq (or #t (/ 1 0)) #t)

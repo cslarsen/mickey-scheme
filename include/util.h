@@ -29,5 +29,6 @@ std::string indef_art(const std::string&);
 cons_t* deep_copy(const cons_t*);
 
 std::string sbasename(const std::string&);
+integer_t& min(integer_t& a, integer_t& b);
 
 #endif

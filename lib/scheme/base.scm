@@ -186,7 +186,7 @@ The larger part of this library resides in libscheme-base.so.
     (define * (bind-procedure "proc_mul"))
     (define + (bind-procedure "proc_add"))
     (define - (bind-procedure "proc_sub"))
-    (define / (bind-procedure "proc_divf"))
+    (define / (bind-procedure "proc_div"))
     (define < (bind-procedure "proc_less"))
     (define <= (bind-procedure "proc_lteq"))
     (define = (bind-procedure "proc_eqnump"))
