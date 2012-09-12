@@ -138,6 +138,10 @@ cons_t* eval(cons_t* p, environment_t* e)
     if ( symbolp(car(p)) ) {
       const std::string name = *car(p)->symbol;
 
+      /*
+       * NOTE: ALL the stuff here resides in core-transition.cpp, but will
+       * in time be moved to scheme-base.cpp (TODO)
+       */
       if ( name == "quote" ) {
         assert_length(cdr(p), 1);
         return cadr(p);
@@ -292,6 +296,12 @@ cons_t* eval(cons_t* p, environment_t* e)
 
       if ( name == "set-cdr!" )
         return proc_set_cdr(cdr(p), e);
+
+      if ( name == "or" )
+        return proc_or(cdr(p), e);
+
+      if ( name == "and" )
+        return proc_and(cdr(p), e);
 
       if ( name == "eval" ) {
         p = car(evlis(cdr(p), e));

@@ -602,6 +602,9 @@ bool iswhole(real_t n)
   if ( !isfinite(n) || isnan(n) || !isnormal(n) )
     return false;
 
+  if ( n == 0 )
+    return true;
+
   // Return true if `n` has no decimals, i.e. is "x.0" for a value of x
   long int li = lrint(floor(n));
   return (li == n) && !(n <= LONG_MIN || n >= LONG_MAX);

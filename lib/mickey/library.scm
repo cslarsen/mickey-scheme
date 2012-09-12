@@ -95,11 +95,10 @@ Distributed under the LGPL 2.1; see LICENSE
     ;; Returns syntactic closure of function in library.
     ;;
     (define (bind-syntax name)
-      (lambda (name)
-        (let
-          ((r (dlsym-syntax *handle* name)))
-          (if (not r)
-            (error (string-append
-              "Could not dlsym " name " in " *file* ": "
-              (dlerror))))
-          r))))
+      (let
+        ((r (dlsym-syntax *handle* name)))
+        (if (not r)
+          (error (string-append
+            "Could not dlsym " name " in " *file* ": "
+            (dlerror))))
+        r))

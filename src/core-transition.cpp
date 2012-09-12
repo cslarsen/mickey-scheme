@@ -14,6 +14,15 @@
 #include "mickey.h"
 #include "core-transition.h"
 
+/*
+ * This file is a placeholder for procedures that are actually syntactic,
+ * but must be here because of the broken way we deal with macros and
+ * environments / phasing.
+ *
+ * When that is fixed, the procedures here will be moved back into
+ * scheme-base.cpp, where they belong.
+ */
+
 extern "C" {
 
 cons_t* proc_begin(cons_t* p, environment_t*)
@@ -470,6 +479,69 @@ cons_t* proc_set_cdr(cons_t* p, environment_t* e)
 cons_t* proc_vector(cons_t* p, environment_t*)
 {
   return vector(p);
+}
+
+/*
+ * Evaluate from left to right, and return first expression that returns
+ * true, disregarding the rest.
+ *
+ * Note that (or) is a syntactic form; it ONLY evaluates the parameters it
+ * needs.  Therefore a good test to see if (or) has been correctly
+ * implemented is to insert an invalid statement and check that it skips it.
+ * Thus, this should return 1:
+ *
+ * (or 1 (/ 123 0))
+ * (or 1 (/ *))
+ *
+ */
+cons_t* proc_or(cons_t* p, environment_t* e)
+{
+  /*
+   * (or) should return #t.
+   */
+  for(;;) {
+    if ( nullp(p) )
+      break;
+
+    // true? then stop and return it
+    cons_t *element = eval(car(p), e);
+
+    if ( !boolean_false(element) )
+      return element;
+
+    p = cdr(p);
+  }
+
+  return boolean(false);
+}
+
+/*
+ * If any expression evaluates to #f,
+ * stop and return #f.  If not, return
+ * value of last expression.
+ */
+cons_t* proc_and(cons_t* p, environment_t* e)
+{
+  /*
+   * (and) should return #t.
+   */
+  cons_t* last = boolean(true);
+
+  for(;;) {
+    if ( nullp(p) )
+      return last;
+
+    // false? then stop evaluating
+    cons_t *element = eval(car(p), e);
+    last = element;
+
+    if ( boolean_false(element) )
+      return boolean(false);
+
+    p = cdr(p);
+  }
+
+  return last;
 }
 
 }

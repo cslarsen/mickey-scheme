@@ -131,6 +131,7 @@
 (testq (or #t #f #f) #t)
 (testq (or #f #t #f) #t)
 (testq (or #f #f #t) #t)
+(test (or 1 (/ 0)) 1)
 (test (or (memq 'b '(a b c)) (/ 3 0)) '(b c))
 (testq (or) #f)
 (testq (or #t (/ 1 0)) #t)

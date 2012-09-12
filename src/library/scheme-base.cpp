@@ -954,57 +954,6 @@ cons_t* proc_not(cons_t* p, environment_t*)
   return boolean(not_p(p));
 }
 
-/*
- * If any expression evaluates to #f,
- * stop and return #f.  If not, return
- * value of last expression.
- */
-cons_t* proc_and(cons_t* p, environment_t*)
-{
-  /*
-   * (and) should return #t.
-   */
-  cons_t* last = boolean(true);
-
-  for(;;) {
-    if ( nullp(p) )
-      return last;
-
-    last = car(p);
-
-    if ( not_p(p) )
-      return boolean(false);
-
-    p = cdr(p);
-  }
-
-  return last;
-}
-
-/*
- * Evaluate from left to right, and return
- * first expression that returns true, disregarding
- * the rest.
- */
-cons_t* proc_or(cons_t* p, environment_t*)
-{
-  /*
-   * (or) should return #t.
-   */
-  for(;;) {
-    if ( nullp(p) )
-      break;
-
-    // true? then stop and return it
-    if ( !not_p(p) )
-      return car(p);
-
-    p = cdr(p);
-  }
-
-  return boolean(false);
-}
-
 cons_t* proc_xor(cons_t* p, environment_t*)
 {
   return boolean(xor_p(p));
@@ -2247,6 +2196,14 @@ cons_t* proc_inexact(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   return make_inexact(car(p));
+}
+
+cons_t* proc_dummy_placeholder(cons_t*, environment_t*)
+{
+  raise(general_exception(
+    "You should never call proc_dummy_placeholder in "
+    "scheme-base.cpp directly"));
+  return unspecified();
 }
 
 } // extern "C"
