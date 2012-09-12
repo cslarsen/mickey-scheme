@@ -23,7 +23,10 @@ struct rational_t {
   rational_t& operator+=(const rational_t& that);
   rational_t& operator*=(const integer_t& n);
   rational_t& operator*=(const rational_t& that);
+  rational_t& operator/=(const rational_t& that);
+  rational_t& operator/=(const integer_t& that);
   bool operator==(const rational_t& r) const;
+  friend rational_t operator/(const rational_t& n, const rational_t& d);
 };
 
 rational_t& simplify(rational_t& r);

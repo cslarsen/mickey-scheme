@@ -11,13 +11,7 @@
 
 #include <stdint.h> // limits
 #include <math.h> // floor
-#include "primitives.h"
-#include "util.h"
-#include "assertions.h"
-#include "print.h"
-#include "circular.h"
-#include "exceptions.h"
-#include "import.h"
+#include "mickey.h"
 
 /*
  * Marks that return-value is unspecified.
@@ -65,7 +59,7 @@ cons_t* integer(integer_t n, bool exact)
   return p;
 }
 
-cons_t* rational(rational_t r, bool exact)
+cons_t* rational(rational_t r, bool exact, bool promote_to_int)
 {
   if ( r.denominator == 0 )
     raise(runtime_exception("Cannot divide by zero: " + to_s(r)));
@@ -78,7 +72,7 @@ cons_t* rational(rational_t r, bool exact)
   /*
    * Can we promote to an integer?
    */
-  if ( p->rational.denominator == 1 ) {
+  if ( promote_to_int && p->rational.denominator == 1 ) {
     p->type = INTEGER;
     p->integer = r.numerator;
   }
@@ -483,6 +477,33 @@ bool eqvp(const cons_t* l, const cons_t* r)
   return false;
 }
 
+extern "C" bool zerop(const cons_t* p)
+{
+  switch ( type_of(p) ) {
+    case INTEGER:  return p->integer == 0;
+    case RATIONAL: return p->rational.numerator == 0;
+    case REAL:     return p->real == 0.0;
+
+    case NIL:
+    case BOOLEAN:
+    case CHAR:
+    case CLOSURE:
+    case PAIR:
+    case SYMBOL:
+    case STRING:
+    case VECTOR:
+    case CONTINUATION:
+    case BYTEVECTOR:
+    case SYNTAX:
+    case PORT:
+    case ENVIRONMENT:
+    case POINTER:
+      assert_number(p);
+      return false;
+      break;
+  }
+}
+
 cons_t* append(cons_t *h, cons_t *t)
 {
   return nullp(h)? t : cons(car(h), append(cdr(h), t));
@@ -769,4 +790,30 @@ cons_t* make_inexact(cons_t* z)
 
   raise(runtime_exception("Not a number: " + sprint(z)));
   return unspecified();
+}
+
+rational_t make_rational(const integer_t& n)
+{
+  rational_t r;
+  r.numerator = n;
+  r.denominator = 1;
+  return r;
+}
+
+rational_t make_rational(const rational_t& n)
+{
+  return rational_t(n);
+}
+
+rational_t make_rational(const cons_t* n)
+{
+  if ( type_of(n) == INTEGER )
+    return make_rational(n->integer);
+
+  if ( type_of(n) == RATIONAL )
+    return make_rational(n->rational);
+
+  raise(runtime_exception(format("Cannot make rational of %s",
+    indef_art(to_s(n)).c_str())));
+  return rational_t();
 }

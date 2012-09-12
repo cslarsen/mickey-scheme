@@ -77,6 +77,25 @@
 (test (exact? (* 1/2 1/2 2 10)) #t)
 (test (inexact? (* 1/2 1/2 2 10)) #f)
 (test (inexact? (* 1/2 1/2 #i2 10)) #t)
+(test (+ 1/2 1/2) 1)
+(test (+ 1/4 1/4) 1/2)
+(test (+ 1/2 0.2) 0.7)
+(test (+ 1/2 1) 3/2)
+(testq (exact? (+ 1/2 1/2)) #t)
+(testq (exact? (+ 1/4 1/4)) #t)
+(testq (exact? (+ 1/2 0.2)) #f)
+(testq (exact? (+ 1/2 1)) #t)
+
+;; Zero predicate
+(test (zero? -1/2) #f)
+(test (zero? -0.2) #f)
+(test (zero? -1) #f)
+(test (zero? 0) #t)
+(test (zero? 0/1) #t)
+(test (zero? 0.0) #t)
+(test (zero? 1) #f)
+(test (zero? 1/2) #f)
+(test (zero? 0.2) #f)
 
 ;; Number prefices
 (testq #xFF 255)
@@ -628,8 +647,8 @@
 (test (cos 0.5) 0.877583)
 (test (sin (* 0.5 3.1415926535)) 1.0)
 (test (log 256) 5.54518)
-(test (/ (log 256) (log 2)) 8)
-(test (/ (log 1024) (log 2)) 10)
+(test (/ (log 256) (log 2)) 8.0)
+(test (/ (log 1024) (log 2)) 10.0)
 
 ;; Number system
 (testq (real? 3) #t) ; from r7rs draft

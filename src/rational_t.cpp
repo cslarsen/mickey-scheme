@@ -11,6 +11,7 @@
 
 #include "primitives.h"
 #include "types/rational_t.h"
+#include "exceptions.h"
 
 rational_t& simplify(rational_t& r)
 {
@@ -33,11 +34,11 @@ rational_t& rational_t::operator+=(const integer_t& n)
   return simplify(*this);
 }
 
-rational_t& rational_t::operator+=(const rational_t& that)
+rational_t& rational_t::operator+=(const rational_t& n)
 {
-  this->numerator = this->numerator*that.denominator +
-                    that.numerator*this->denominator;
-  this->denominator *= that.denominator;
+  this->numerator = this->numerator*n.denominator +
+                    n.numerator*this->denominator;
+  this->denominator *= n.denominator;
   return simplify(*this);
 }
 
@@ -47,15 +48,22 @@ rational_t& rational_t::operator*=(const integer_t& n)
   return simplify(*this);
 }
 
-rational_t& rational_t::operator*=(const rational_t& that)
+rational_t& rational_t::operator*=(const rational_t& n)
 {
   /*
    * TODO: This could cause overflowing because we do simplification in the
    * last step.  A way to fix this is to detect common factors beforehand,
-   * and only multiply those that are not.
+   * and only multiply those n are not.
    */
-  this->numerator *= that.numerator;
-  this->denominator *= that.denominator;
+  this->numerator *= n.numerator;
+  this->denominator *= n.denominator;
+  return simplify(*this);
+}
+
+rational_t& rational_t::operator/=(const rational_t& d)
+{
+  numerator *= d.denominator;
+  denominator *= d.numerator;
   return simplify(*this);
 }
 
@@ -70,4 +78,15 @@ rational_t operator+(const rational_t& l, const integer_t& r)
 bool rational_t::operator==(const rational_t& r) const
 {
   return numerator == r.numerator && denominator == r.denominator;
+}
+
+rational_t operator/(const rational_t& n, const rational_t& d)
+{
+  if ( d.numerator == 0 )
+    raise(runtime_exception("Division by zero"));
+
+  rational_t q(n);
+  q /= d;
+
+  return q;
 }

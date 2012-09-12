@@ -11,7 +11,6 @@
 
 #include <cmath>
 #include "library/scheme-base.h"
-#include "primitives.h"
 
 extern "C" {
 
@@ -89,6 +88,8 @@ cons_t* proc_addf(cons_t *p, environment_t*)
       sum += static_cast<real_t>(i->integer);
     else if ( realp(i) )
       sum += i->real;
+    else if ( rationalp(i) )
+      sum += real(i->rational)->real;
     else
       raise(runtime_exception("Cannot add real with " + to_s(type_of(i)) + ": " + sprint(i)));
   }
@@ -173,7 +174,6 @@ cons_t* proc_divf(cons_t *p, environment_t*)
 cons_t* proc_div(cons_t *p, environment_t *e)
 {
   assert_length(p, 2);
-  bool exact = true;
 
   cons_t *a = car(p);
   cons_t *b = cadr(p);
@@ -181,16 +181,37 @@ cons_t* proc_div(cons_t *p, environment_t *e)
   assert_number(a);
   assert_number(b);
 
-  if ( integerp(a) && integerp(b) ) {
-    if ( b->integer == 0 )
-      raise(runtime_exception("Division by zero"));
+  bool exact = (a->exact && b->exact);
 
-    if ( !(a->exact && b->exact && gcd(a->integer, b->integer)==0) )
-      exact = false;
+  if ( zerop(b) )
+    raise(runtime_exception(format(
+      "Division by zero: %s", sprint(cons(symbol("/"), p)).c_str())));
 
-    return integer(a->integer / b->integer, exact);
-  } else
-    return proc_divf(p, e);
+  if ( type_of(a) == type_of(b) ) {
+    if ( integerp(a) ) {
+      // division yields integer?
+      if ( gcd(a->integer, b->integer) == 0)
+        return integer(a->integer / b->integer, exact);
+      else
+        return rational(make_rational(a) /= make_rational(b), exact);
+    } else if ( realp(a) )
+      return real(a->real / b->real);
+    else if ( rationalp(a) )
+      return rational(a->rational / b->rational, exact);
+    else
+      raise(runtime_exception(format("Cannot perform division on %s",
+        indef_art(to_s(type_of(a))).c_str())));
+  }
+
+  bool anyrational = (rationalp(a) || rationalp(b));
+  bool anyinteger = (integerp(a) || integerp(b));
+
+  // int/rat or rat/int ==> turn into rational, and not an int
+  if ( anyrational && anyinteger )
+    return rational(make_rational(a) /= make_rational(b), exact, false);
+
+  // proceed with real division
+  return proc_divf(p, e);
 }
 
 cons_t* proc_mulf(cons_t *p, environment_t*)
@@ -429,13 +450,7 @@ cons_t* proc_nullp(cons_t* p, environment_t*)
 
 cons_t* proc_zerop(cons_t* p, environment_t*)
 {
-  if ( type_of(car(p)) == INTEGER )
-    return boolean(car(p)->integer == 0);
-
-  if ( type_of(car(p)) == REAL )
-    return boolean(car(p)->real == 0.0);
-
-  return boolean(false);
+  return boolean(zerop(car(p)));
 }
 
 cons_t* proc_pairp(cons_t* p, environment_t*)

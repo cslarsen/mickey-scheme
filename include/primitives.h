@@ -32,7 +32,7 @@ cons_t* splice_into(cons_t *from, cons_t *to);
 
 cons_t* symbol(const char*);
 cons_t* integer(integer_t, bool exact = false);
-cons_t* rational(rational_t, bool exact = false);
+cons_t* rational(rational_t, bool exact = false, bool promote_to_int = true);
 cons_t* boolean(bool);
 cons_t* character(character_t);
 cons_t* real(real_t);
@@ -75,34 +75,34 @@ cons_t* cadddr(const cons_t*);
 cons_t* cddr(const cons_t*);
 cons_t* cdr(const cons_t*);
 
-bool symbolp(const cons_t*);
+bool and_p(const cons_t*);
 bool atomp(const cons_t*);
-bool integerp(const cons_t*);
-bool rationalp(const cons_t*);
-bool realp(const cons_t*);
-bool nullp(const cons_t*);
-bool pairp(const cons_t*);
-bool listp(const cons_t*);
-bool properlistp(const cons_t*);
-bool stringp(const cons_t*);
-bool closurep(const cons_t*);
-bool syntaxp(const cons_t*);
 bool booleanp(const cons_t*);
-bool vectorp(const cons_t*);
 bool bytevectorp(const cons_t*);
-bool portp(const cons_t*);
-bool environmentp(const cons_t*);
 bool charp(const cons_t*);
-bool numberp(const cons_t*);
+bool closurep(const cons_t*);
+bool emptylistp(const cons_t*);
+bool environmentp(const cons_t*);
 bool eqp(const cons_t*, const cons_t*);
 bool equalp(const cons_t*, const cons_t*);
 bool eqvp(const cons_t*, const cons_t*);
-bool emptylistp(const cons_t*);
-
+bool integerp(const cons_t*);
+bool listp(const cons_t*);
 bool not_p(const cons_t*);
-bool and_p(const cons_t*);
+bool nullp(const cons_t*);
+bool numberp(const cons_t*);
 bool or_p(const cons_t*);
+bool pairp(const cons_t*);
+bool portp(const cons_t*);
+bool properlistp(const cons_t*);
+bool rationalp(const cons_t*);
+bool realp(const cons_t*);
+bool stringp(const cons_t*);
+bool symbolp(const cons_t*);
+bool syntaxp(const cons_t*);
+bool vectorp(const cons_t*);
 bool xor_p(const cons_t*);
+extern "C" bool zerop(const cons_t*);
 
 real_t number_to_real(const cons_t*);
 bool iswhole(real_t);
@@ -134,5 +134,9 @@ environment_t* null_environment(int version = 7);
 environment_t* null_import_environment();
 
 integer_t pow10(integer_t exp);
+
+rational_t make_rational(const integer_t&);
+rational_t make_rational(const rational_t&);
+rational_t make_rational(const cons_t*);
 
 #endif

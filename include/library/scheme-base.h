@@ -28,5 +28,6 @@ cons_t* proc_map(cons_t*, environment_t*);
 cons_t* proc_vector(cons_t*, environment_t*);
 cons_t* proc_case(cons_t*, environment_t*);
 cons_t* proc_do(cons_t*, environment_t*);
+cons_t* proc_zerop(cons_t*, environment_t*);
 
 }
