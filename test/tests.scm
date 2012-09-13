@@ -97,10 +97,11 @@
 (test (zero? 1/2) #f)
 (test (zero? 0.2) #f)
 
-;; Number prefices
+;; Number radix / prefix
 (testq #xFF 255)
 (testq #xFFF 4095)
 (testq #b11 3)
+(testq #b01001001100101100000001011010010 1234567890)
 (testq #o77 63)
 (testq #d123 123)
 ;; ... with exactness
