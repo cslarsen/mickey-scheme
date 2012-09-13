@@ -14,20 +14,6 @@
 
 extern "C" {
 
-cons_t* proc_abs(cons_t* p, environment_t*)
-{
-  assert_length(p, 1);
-  assert_number(car(p));
-
-  if ( realp(car(p)) ) {
-    real_t n = car(p)->real;
-    return real(n<0.0? -n : n);
-  }
-
-  int n = car(p)->integer;
-  return integer(n<0? -n : n);
-}
-
 cons_t* proc_current_output_port(cons_t *p, environment_t*)
 {
   assert_length(p, 0);

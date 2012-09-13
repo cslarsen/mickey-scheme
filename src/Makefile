@@ -38,8 +38,11 @@ TARGETS_O =  \
             syntax-rules.o \
             system-features.o \
             tokenizer.o \
-            util.o \
+            util.o
 
+TARGETS_LIB_O = \
+								library/scheme-base.o \
+								library/scheme-base-math.o
 LIB_DEPS =  \
             apply.o \
             arguments.o \
@@ -85,7 +88,7 @@ TARGETS_SO = \
 						 libunix-dlopen.so \
 						 libunix-uname.so \
 
-TARGETS = $(TARGETS_O) $(TARGETS_SO) libmickey.so mickey
+TARGETS = $(TARGETS_O) $(TARGETS_SO) $(TARGETS_LIB_O) libmickey.so mickey
 
 all: $(TARGETS)
 
@@ -97,6 +100,10 @@ lib%.so: library/%.cpp libmickey.so
 
 libcross-platform-sdl.so: library/cross-platform-sdl.cpp libmickey.so
 	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) $(shell sdl-config --cflags --libs) -L. -lmickey $< -o $@
+
+libscheme-base.so: library/scheme-base.o library/scheme-base-math.o libmickey.so
+	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey \
+		library/scheme-base.o library/scheme-base-math.o -o $@
 
 mickey: mickey.cpp libmickey.so repl.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) repl.o -L. -lmickey -lreadline $< -o $@
