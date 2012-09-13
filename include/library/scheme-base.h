@@ -15,21 +15,26 @@ extern "C" {
 
 // Some selected procedures
 
-cons_t* proc_begin(cons_t*, environment_t*);
-cons_t* proc_case(cons_t*, environment_t*);
-cons_t* proc_cond(cons_t*, environment_t*);
-cons_t* proc_define(cons_t*, environment_t*);
-cons_t* proc_define_syntax(cons_t*, environment_t*);
-cons_t* proc_do(cons_t*, environment_t*);
-cons_t* proc_eqnump(cons_t*, environment_t*);
-cons_t* proc_let(cons_t*, environment_t*);
-cons_t* proc_letrec(cons_t*, environment_t*);
-cons_t* proc_letstar(cons_t*, environment_t*);
-cons_t* proc_map(cons_t*, environment_t*);
-cons_t* proc_set_car(cons_t*, environment_t*);
-cons_t* proc_set_cdr(cons_t*, environment_t*);
-cons_t* proc_to_string(cons_t*, environment_t*);
-cons_t* proc_vector(cons_t*, environment_t*);
-cons_t* proc_zerop(cons_t*, environment_t*);
+#define DECLARE(name) cons_t* name (cons_t*, environment_t*)
+
+DECLARE( proc_begin );
+DECLARE( proc_case );
+DECLARE( proc_cond );
+DECLARE( proc_define );
+DECLARE( proc_define_syntax );
+DECLARE( proc_do );
+DECLARE( proc_eqnump );
+DECLARE( proc_eqp );
+DECLARE( proc_equalp );
+DECLARE( proc_eqvp );
+DECLARE( proc_let );
+DECLARE( proc_letrec );
+DECLARE( proc_letstar );
+DECLARE( proc_map );
+DECLARE( proc_set_car );
+DECLARE( proc_set_cdr );
+DECLARE( proc_to_string );
+DECLARE( proc_vector );
+DECLARE( proc_zerop );
 
 }

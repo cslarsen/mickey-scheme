@@ -41,8 +41,9 @@ TARGETS_O =  \
             util.o
 
 TARGETS_LIB_O = \
-								library/scheme-base.o \
-								library/scheme-base-math.o
+								library/scheme-base-math.o \
+								library/scheme-base-predicates.o \
+								library/scheme-base.o
 LIB_DEPS =  \
             apply.o \
             arguments.o \
@@ -101,9 +102,11 @@ lib%.so: library/%.cpp libmickey.so
 libcross-platform-sdl.so: library/cross-platform-sdl.cpp libmickey.so
 	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) $(shell sdl-config --cflags --libs) -L. -lmickey $< -o $@
 
-libscheme-base.so: library/scheme-base.o library/scheme-base-math.o libmickey.so
+libscheme-base.so: library/scheme-base.o library/scheme-base-math.o library/scheme-base-predicates.o libmickey.so
 	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey \
-		library/scheme-base.o library/scheme-base-math.o -o $@
+		library/scheme-base.o \
+		library/scheme-base-math.o \
+		library/scheme-base-predicates.o -o $@
 
 mickey: mickey.cpp libmickey.so repl.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) repl.o -L. -lmickey -lreadline $< -o $@
