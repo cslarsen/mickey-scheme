@@ -81,6 +81,14 @@ To install Mickey Scheme, you need a C++ compiler, dlopen et al. and
 readline.  If you don't have readline, remove `-DUSE_READLINE` from
 `src/Makefile`.
 
+As the project is in its early stages, I haven't used any of the GNU
+autotools for building the project (you are welcome to do so, if you wish).
+
+Therefore, if you are missing some packages such as GNU readline, you need
+to disable these features.  Just remove `-DUSE_READLINE` for this purpose.
+There may be some additional tweaking necessary on non-OS X systems, but the
+last time I compiled for Linux it went quite smoothly.
+
 If you have both and reside on OS X, just type
 
     $ make -j run
