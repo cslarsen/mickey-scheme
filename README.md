@@ -29,16 +29,16 @@ Current Features
 
 Some of these are demonstrated in the [example code section](#examples).
 
-Extensions to standard Scheme and libraries
--------------------------------------------
+Extensions
+----------
 
-It's extremely easy to hack on Mickey Scheme.  Because of this it has some
-experimental extensions to normal R7RS scheme:
+Hacking on Mickey Scheme is extremely easy.  Because of this I couldn't
+resist adding:
 
   * First class environments via the library `(mickey environment)`
     ([see examples](#environments))
 
-Other libraries include:
+It's also easy to write wrapper code for using C libraries:
 
   * Dynamic loading of shared libraries via `(unix dlopen)`
     ([see dlopen example](#c-libraries))
@@ -47,7 +47,8 @@ Current Shortcomings
 --------------------
 
   * It's __slow__: The code is completely interpreted, without _any_
-    optimizations.  I have plans to change this.
+    optimizations.  I have plans to change this, but it's currently not a
+    priority.
 
   * It's __incomplete__: Some key Scheme features are still missing, and
     quite some R7RS library functions (currently it supports 195 of 335
