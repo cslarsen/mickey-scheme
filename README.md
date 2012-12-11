@@ -64,6 +64,16 @@ Current Shortcomings
     convert to continuation passing style for a proper implementation of
     this.
 
+  * Other missing features include dynamic-wind, exception handling and so
+    on.  These will be added when call/cc is implemented.
+
+Status of R7RS compliance
+-------------------------
+
+The 8th draft of R7RS was recently published.  This version of Mickey Scheme
+has not been updated to the latest draft.  It's currently somewhere between
+draft 5 and 6.
+
 Compiling
 ---------
 
