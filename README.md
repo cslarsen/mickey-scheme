@@ -82,12 +82,13 @@ readline.  If you don't have readline, remove `-DUSE_READLINE` from
 `src/Makefile`.
 
 As the project is in its early stages, I haven't used any of the GNU
-autotools for building the project (you are welcome to do so, if you wish).
+autotools for building the project (should you feel inclined to create the
+configure scripts needed, patches are warmly welcomed!).
 
 Therefore, if you are missing some packages such as GNU readline, you need
-to disable these features.  Just remove `-DUSE_READLINE` for this purpose.
-There may be some additional tweaking necessary on non-OS X systems, but the
-last time I compiled for Linux it went quite smoothly.
+to disable these features.  There may be some additional tweaking necessary
+on non-OS X systems, but the last time I compiled for Linux it went quite
+smoothly.
 
 If you have both and reside on OS X, just type
 
@@ -100,7 +101,7 @@ locate dynamic shared objects in your current directory:
     ...
     $ LD_LIBRARY_PATH=".:" ./mickey
 
-or, if you're feeling insecure, simply make it session-wide with
+or, alternatively just export it into your environment:
 
     $ export LD_LIBRARY_PATH=".:"
     $ ./mickey
