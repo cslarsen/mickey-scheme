@@ -478,8 +478,8 @@ But it should be available in the environment stored in `sub-environment`.
     #; mickey> (environment-bindings sub-environment)
     ((foo 123))
 
-Let's import `(scheme write)` so we can call `display`, and then
-only the `newline` function from `(scheme base)`.
+Let's import `(scheme write)` so we can call `display` and the `newline`
+function from `(scheme base)`.
 
     #; mickey> (import (scheme write))
     #; mickey> (import (only (scheme base) newline))
