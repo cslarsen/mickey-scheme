@@ -615,17 +615,12 @@ As an example, put this in a file `foo/bar.scm`:
         (define (tail x) (cdr x))
         (define (rest x) (cdr x))))
 
-Then add a line in `import.cpp`:
+Then add a line somewhere in `import.cpp`:
 
     static library_map_t library_map[] = {
-      {"(c stdio)", "c/stdio.scm"},
-      {"(cross-platform sdl)", "cross-platform/sdl.scm"},
-
-      // ... then add your library here:
-
+      // ...
       {"(foo bar)", "foo/bar.scm"},
-
-      // remember to end with NULLs
+      // ...
       {NULL, NULL}};
 
 You must now *recompile* Mickey so that it will recognize `(foo bar)` as a
