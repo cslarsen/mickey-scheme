@@ -1095,7 +1095,11 @@ cons_t* proc_string(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   assert_type(CHAR, car(p));
-  char s[2] = {car(p)->character, '\0'};
+
+  char s[2];
+  s[0] = car(p)->character;
+  s[1] = '\0';
+
   return string(s);
 }
 
