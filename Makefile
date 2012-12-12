@@ -10,8 +10,24 @@ all:
 	@cp src/mickey src/libmickey.so .
 	@cp src/lib*.so lib/
 	@echo ""
-	@echo "To run mickey on Linux, be sure to do"
-	@echo '$ LD_LIBRARY_PATH=".:" ./mickey'
+	@echo "------------------------------------------"
+	@echo "Compilation seems to have been successful!"
+	@echo "------------------------------------------"
+	@echo ""
+	@echo "To run mickey on Linux, be sure to do set the library path, e.g."
+	@echo ""
+	@echo '  $$ LD_LIBRARY_PATH=".:" ./mickey'
+	@echo ""
+	@echo "or simply"
+	@echo ""
+	@echo '  $$ export LD_LIBRARY_PATH=".:"'
+	@echo '  $$ ./mickey'
+	@echo ""
+	@echo "You can now try either of"
+	@echo ""
+	@echo "  make check      # for quick tests"
+	@echo "  make check-all  # for more tests"
+	@echo "  make run        # to enter the REPL"
 	@echo ""
 
 mickey:
@@ -19,16 +35,16 @@ mickey:
 	cp src/mickey src/libmickey.so .
 
 run: all
-	./mickey
+	LD_LIBRARY_PATH=".:" ./mickey
 
 runz: all
-	./mickey -z
+	LD_LIBRARY_PATH=".:" ./mickey -z
 
 check: all
-	./mickey -Itest test/tests.scm
+	LD_LIBRARY_PATH=".:" ./mickey -Itest test/tests.scm
 
 check-all: all
-	./mickey -Itest test/*.scm
+	LD_LIBRARY_PATH=".:" ./mickey -Itest test/*.scm
 
 check-diff: all
 	# mickey and chicken should have same output
