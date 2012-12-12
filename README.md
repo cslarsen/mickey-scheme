@@ -442,8 +442,8 @@ features.
 Here is an example on how to use it.
 
 First, let's start up mickey with an empty environment (the -z argument).
-An empty environment means that the REPL only has one definition, that of
-`import`.
+An empty environment means that the REPL only has one bound definition, that
+of `import`.
 
     $ ./mickey -z
     #|                                                                 _
