@@ -443,10 +443,9 @@ Here is an example on how to use it.
 
 First, let's start up mickey with an empty environment (the -z argument).
 An empty environment means that the REPL only has one definition, that of
-`import`.  We need `import` because to do anything, we need to be able to
-import libraries.
+`import`.
 
-    csl$ ./mickey -z
+    $ ./mickey -z
     #|                                                                 _
        Mickey Scheme (C) 2011-2012 Christian Stigen Larsen              \
        4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)   /\
@@ -474,13 +473,12 @@ We still should not see `foo` in the current environment:
     #; mickey> foo
     Unbound definition: foo
 
-But it should be available in the environment we have stored in the variable
-`sub-environment`.
+But it should be available in the environment stored in `sub-environment`.
 
     #; mickey> (environment-bindings sub-environment)
     ((foo 123))
 
-Let's import the `(scheme write)` library so we can call `display`, and then
+Let's import `(scheme write)` so we can call `display`, and then
 only the `newline` function from `(scheme base)`.
 
     #; mickey> (import (scheme write))
