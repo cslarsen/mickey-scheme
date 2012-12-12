@@ -86,12 +86,10 @@ As the project is in its early stages, I haven't used any of the GNU
 autotools for building the project (should you feel inclined to create the
 configure scripts needed, patches are warmly welcomed!).
 
-Therefore, if you are missing some packages such as GNU readline, you need
-to disable these features.  There may be some additional tweaking necessary
-on non-OS X systems, but the last time I compiled for Linux it went quite
-smoothly.
+The code has been developed on OS X and Linux, so if you have the packages
+mentioned above, compilation should go smoothly.
 
-If you have both and reside on OS X, just type
+To compile and run, just type
 
     $ make -j run
 
