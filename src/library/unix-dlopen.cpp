@@ -108,9 +108,12 @@ cons_t* proc_dlopen(cons_t* p, environment_t*)
  */
 cons_t* proc_dlopen_self(cons_t* p, environment_t*)
 {
-  void *h = static_cast<void*>(
-              dlopen(NULL, length(p)==0 ?
-                NULL : parse_dlopen_mode(cdr(p))));
+  int mode = RTLD_GLOBAL | RTLD_LAZY; // default
+
+  if ( length(p) > 0 )
+    mode = parse_dlopen_mode(cdr(p));
+
+  void *h = dlopen(NULL, mode);
 
   return h!=NULL?
     pointer(new pointer_t(TYPE_TAG, h)) :
