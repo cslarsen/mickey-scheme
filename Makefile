@@ -5,10 +5,7 @@ PORTABLE_TESTS = test/hello.scm \
                  test/math.scm  \
                  test/strings.scm
 
-all:
-	@cd src ; make all
-	@cp src/mickey src/libmickey.so .
-	@cp src/lib*.so lib/
+all-w/message: all
 	@echo ""
 	@echo "------------------------------------------"
 	@echo "Compilation seems to have been successful!"
@@ -29,6 +26,11 @@ all:
 	@echo "  make check-all  # for more tests"
 	@echo "  make run        # to enter the REPL"
 	@echo ""
+
+all:
+	@cd src ; make all
+	@cp src/mickey src/libmickey.so .
+	@cp src/lib*.so lib/
 
 mickey:
 	cd src ; make mickey
