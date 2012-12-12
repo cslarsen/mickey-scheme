@@ -9,6 +9,7 @@
  *
  */
 
+#include <stdlib.h>
 #include <libgen.h>
 #include <ctype.h>
 #include <stdarg.h>

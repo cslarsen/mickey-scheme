@@ -6,9 +6,10 @@
  *                                                        \
  * Distributed under the LGPL 2.1; see LICENSE            /\
  * Please post bugfixes and suggestions to the author.   /  \_
- *                                                          
+ *
  */
 
+#include <stdlib.h>
 #include <stdio.h>
 
 #ifdef USE_READLINE

@@ -115,7 +115,6 @@ cons_t* proc_case(cons_t *p, environment_t*)
    *
    */
 
-  bool has_else = false;
   cons_t *key = cadr(p);
   cons_t *clauses = cons(NULL);
 
@@ -133,7 +132,6 @@ cons_t* proc_case(cons_t *p, environment_t*)
       } else
         clauses = append(clauses, c);
 
-      has_else = true;
       break;
     }
 

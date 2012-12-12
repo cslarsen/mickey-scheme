@@ -9,6 +9,7 @@
  *
  */
 
+#include <unistd.h>
 #include <stdint.h>
 #include <vector>
 

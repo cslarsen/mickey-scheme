@@ -9,8 +9,10 @@
  *
  */
 
-#include <stdint.h> // limits
-#include <math.h> // floor
+#include <stdlib.h>
+#include <stdint.h>
+#include <limits.h>
+#include <math.h>
 #include "mickey.h"
 
 /*
@@ -499,9 +501,10 @@ extern "C" bool zerop(const cons_t* p)
     case ENVIRONMENT:
     case POINTER:
       assert_number(p);
-      return false;
       break;
   }
+
+  return false;
 }
 
 cons_t* append(cons_t *h, cons_t *t)

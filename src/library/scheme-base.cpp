@@ -9,6 +9,7 @@
  *
  */
 
+#include <stdlib.h>
 #include <cmath>
 #include "library/scheme-base.h"
 

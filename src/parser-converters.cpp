@@ -9,6 +9,7 @@
  *
  */
 
+#include <stdlib.h>
 #include <ctype.h>
 #include "exceptions.h"
 #include "parser.h"
