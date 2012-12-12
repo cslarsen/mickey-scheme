@@ -1,33 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Mickey-scheme by cslarsen</title>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Mickey R7RS Scheme : Mickey Scheme is an interpreter for R7RS Scheme written in C++" />
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Mickey R7RS Scheme</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Mickey-scheme</h1>
-        <p>Mickey Scheme is an interpreter for R7RS Scheme written in C++</p>
 
-        <p class="view"><a href="https://github.com/cslarsen/mickey-scheme">View the Project on GitHub <small>cslarsen/mickey-scheme</small></a></p>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/cslarsen/mickey-scheme">View on GitHub</a>
 
+          <h1 id="project_title">Mickey R7RS Scheme</h1>
+          <h2 id="project_tagline">Mickey Scheme is an interpreter for R7RS Scheme written in C++</h2>
 
-        <ul>
-          <li><a href="https://github.com/cslarsen/mickey-scheme/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/cslarsen/mickey-scheme/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/cslarsen/mickey-scheme">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/cslarsen/mickey-scheme/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/cslarsen/mickey-scheme/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
         <h1>Mickey R7RS Scheme</h1>
 
 <p>Mickey Scheme is an incomplete, slow and buggy implementation of R7RS Scheme
@@ -59,15 +62,15 @@ The name will change as the project matures.</p>
 <li>Tail call eliminiation</li>
 </ul><p>Some of these are demonstrated in the <a href="#examples">example code section</a>.</p>
 
-<h2>Extensions to standard Scheme and libraries</h2>
+<h2>Extensions</h2>
 
-<p>It's extremely easy to hack on Mickey Scheme.  Because of this it has some
-experimental extensions to normal R7RS scheme:</p>
+<p>Hacking on Mickey Scheme is extremely easy.  Because of this I couldn't
+resist adding:</p>
 
 <ul>
 <li>First class environments via the library <code>(mickey environment)</code>
 (<a href="#environments">see examples</a>)</li>
-</ul><p>Other libraries include:</p>
+</ul><p>It's also easy to write wrapper code for using C libraries:</p>
 
 <ul>
 <li>Dynamic loading of shared libraries via <code>(unix dlopen)</code>
@@ -76,7 +79,8 @@ experimental extensions to normal R7RS scheme:</p>
 
 <ul>
 <li><p>It's <strong>slow</strong>: The code is completely interpreted, without <em>any</em>
-optimizations.  I have plans to change this.</p></li>
+optimizations.  I have plans to change this, but it's currently not a
+priority.</p></li>
 <li><p>It's <strong>incomplete</strong>: Some key Scheme features are still missing, and
 quite some R7RS library functions (currently it supports 195 of 335
 R7RS definitinos).</p></li>
@@ -88,13 +92,28 @@ I'll get to it once I think it's important enough.</p></li>
 <li><p>It doesn't support <strong>continuations</strong> (yet):  I think I'll have to
 convert to continuation passing style for a proper implementation of
 this.</p></li>
-</ul><h2>Compiling</h2>
+<li><p>Other missing features include dynamic-wind, exception handling and so
+on.  These will be added when call/cc is implemented.</p></li>
+</ul><h2>Status of R7RS compliance</h2>
+
+<p>The 8th draft of R7RS was recently published.  This version of Mickey Scheme
+has not been updated to the latest draft.  It's currently somewhere between
+draft 5 and 6.</p>
+
+<h2>Compiling</h2>
 
 <p>To install Mickey Scheme, you need a C++ compiler, dlopen et al. and
 readline.  If you don't have readline, remove <code>-DUSE_READLINE</code> from
 <code>src/Makefile</code>.</p>
 
-<p>If you have both and reside on OS X, just type</p>
+<p>As the project is in its early stages, I haven't used any of the GNU
+autotools for building the project (should you feel inclined to create the
+configure scripts needed, patches are warmly welcomed!).</p>
+
+<p>The code has been developed on OS X and Linux, so if you have the packages
+mentioned above, compilation should go smoothly.</p>
+
+<p>To compile and run, just type</p>
 
 <pre><code>$ make -j run
 </code></pre>
@@ -107,7 +126,7 @@ locate dynamic shared objects in your current directory:</p>
 $ LD_LIBRARY_PATH=".:" ./mickey
 </code></pre>
 
-<p>or, if you're feeling insecure, simply make it session-wide with</p>
+<p>or, alternatively just export it into your environment:</p>
 
 <pre><code>$ export LD_LIBRARY_PATH=".:"
 $ ./mickey
@@ -477,11 +496,10 @@ features.</p>
 <p>Here is an example on how to use it.</p>
 
 <p>First, let's start up mickey with an empty environment (the -z argument).
-An empty environment means that the REPL only has one definition, that of
-<code>import</code>.  We need <code>import</code> because to do anything, we need to be able to
-import libraries.</p>
+An empty environment means that the REPL only has one bound definition, that
+of <code>import</code>.</p>
 
-<pre><code>csl$ ./mickey -z
+<pre><code>$ ./mickey -z
 #|                                                                 _
    Mickey Scheme (C) 2011-2012 Christian Stigen Larsen              \
    4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)   /\
@@ -513,15 +531,14 @@ environment that is a child of the current one.</p>
 Unbound definition: foo
 </code></pre>
 
-<p>But it should be available in the environment we have stored in the variable
-<code>sub-environment</code>.</p>
+<p>But it should be available in the environment stored in <code>sub-environment</code>.</p>
 
 <pre><code>#; mickey&gt; (environment-bindings sub-environment)
 ((foo 123))
 </code></pre>
 
-<p>Let's import the <code>(scheme write)</code> library so we can call <code>display</code>, and then
-only the <code>newline</code> function from <code>(scheme base)</code>.</p>
+<p>Let's import <code>(scheme write)</code> so we can call <code>display</code> and the <code>newline</code>
+function from <code>(scheme base)</code>.</p>
 
 <pre><code>#; mickey&gt; (import (scheme write))
 #; mickey&gt; (import (only (scheme base) newline))
@@ -649,7 +666,7 @@ root:xnu-2050.7.9~1/RELEASE_X86_64")
 
 <p>Easy!</p>
 
-<h2>Scheme-libraries in R7RS</h2>
+<h2>Custom Scheme-libraries in R7RS</h2>
 
 <p><em>NOTE:</em> Currently, for Mickey to load custom libraries you have to add load
 instructions to <code>import.cpp</code> so that <code>(your library name)</code> will be recognized.</p>
@@ -657,7 +674,7 @@ instructions to <code>import.cpp</code> so that <code>(your library name)</code>
 <p>To create a small library, use the <code>define-library</code> form as described in the
 R7RS draft over at <a href="http://scheme-reports.org">http://scheme-reports.org</a></p>
 
-<p>As an example, put this in a file:</p>
+<p>As an example, put this in a file <code>foo/bar.scm</code>:</p>
 
 <pre><code>(define-library (foo bar)
   (import (only (scheme base) car cdr define))
@@ -670,18 +687,49 @@ R7RS draft over at <a href="http://scheme-reports.org">http://scheme-reports.org
     (define (rest x) (cdr x))))
 </code></pre>
 
+<p>Then add a line somewhere in <code>import.cpp</code>:</p>
+
+<pre><code>static library_map_t library_map[] = {
+  // ...
+  {"(foo bar)", "foo/bar.scm"},
+  // ...
+  {NULL, NULL}};
+</code></pre>
+
+<p>You must now <em>recompile</em> Mickey so that it will recognize <code>(foo bar)</code> as a
+library and know where to load it from!  (I <em>said</em> it was currently
+cumbersome...)</p>
+
 <p>There really isn't more to it.  You can take a look in the <code>lib/</code> directory
 for some ideas.  Note that you <em>have</em> to import primitive functions to be
 able to use them, even core forms such as <code>define</code>.  Also note that even
 though we define <code>rest</code> above, it is not exported, and thus not available
 <em>outside</em> of the library.</p>
+
+<p>The library system <em>mostly</em> complete, but lacks some intricate features that
+can be found in R7RS.  One thing is that I don't think Mickey gracefully
+handles circular dependencies.</p>
+
+<h2>(define-library ...)</h2>
+
+<p>Note that in R7RS, you cannot simply open up a REPL and start writing your
+own library using <code>(define-library (foo schmoo) ...)</code>.  That means, the
+standard doesn't say much about it, so it is most likely up to implementors.</p>
+
+<p>I think this may turn out to be surprising to many newcomers to R7RS, so I
+will probably allow it in Mickey.</p>
       </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/cslarsen">cslarsen</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Mickey R7RS Scheme maintained by <a href="https://github.com/cslarsen">cslarsen</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
+
     
+
   </body>
 </html>
