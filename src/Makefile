@@ -33,6 +33,7 @@ TARGETS_O =  \
             primitives.o \
             print.o \
             rational_t.o \
+            real_t.o \
             repl.o \
             strings.o \
             syntax-rules.o \
@@ -68,6 +69,7 @@ LIB_DEPS =  \
             primitives.o \
             print.o \
             rational_t.o \
+            real_t.o \
             strings.o \
             syntax-rules.o \
             system-features.o \

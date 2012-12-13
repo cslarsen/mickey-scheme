@@ -97,6 +97,20 @@
 (test (zero? 1/2) #f)
 (test (zero? 0.2) #f)
 
+;; Positive and negative infinities
+
+(test (< -inf.0 0) #t)
+(test (> -inf.0 0) #f)
+
+(test (> +inf.0 0) #t)
+(test (< +inf.0 0) #f)
+
+(test (- -inf.0) +inf.0)
+(test (- +inf.0) -inf.0)
+
+(test (log 0) -inf.0)
+(test (- (log 0)) +inf.0)
+
 ;; Number radix / prefix
 (testq #xFF 255)
 (testq #xFFF 4095)

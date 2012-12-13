@@ -9,6 +9,7 @@
  *
  */
 
+#include "types/real_t.h"
 #include "print.h"
 #include "util.h"
 #include "primitives.h"
@@ -137,6 +138,9 @@ std::string to_s(rational_t n)
 
 std::string to_s(real_t n)
 {
+  if ( is_neg_inf(n) ) return "-inf.0";
+  if ( is_pos_inf(n) ) return "+inf.0";
+
   char buf[64];
   sprintf(buf, "%g", n);
   return std::string(buf);

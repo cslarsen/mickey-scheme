@@ -59,7 +59,6 @@ PARSER TODO
 - Suffices: 10e3 ==> 1000, 3.1415926535F0, etc.
 - Literals: (define (|square number| x) (* x x)) --> (|square number| 12) ==> 144
 - make sure |\t\t| and |\x9;\x9;| are the same
-- Inf: +inf0.0 -inf0.0 etc.
 
 SCHEME BASE
 

@@ -9,14 +9,15 @@
  *
  */
 
-#include "strings.h"
+#include "debug.h"
 #include "exceptions.h"
 #include "parser.h"
 #include "primitives.h"
 #include "print.h"
-#include "util.h"
+#include "strings.h"
 #include "types/radix_t.h"
-#include "debug.h"
+#include "types/real_t.h"
+#include "util.h"
 
 static cons_t* parse_bytevector(environment_t* e);
 static cons_t* parse_quasiquote(environment_t* e);
@@ -96,6 +97,12 @@ static bool parse_exact_prefix(const char* s)
 cons_t* type_convert(const char* token)
 {
   const char* token_start = token;
+
+  if ( !strcmp(token, "-inf.0") )
+    return real(minus_infinity());
+
+  if ( !strcmp(token, "+inf.0") )
+    return real(plus_infinity());
 
   bool has_exact_prefix = false;
   bool has_radix_prefix = false;
