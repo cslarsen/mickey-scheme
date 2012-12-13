@@ -39,7 +39,7 @@ void execute(const char* file)
      */
     fflush(stdout);
 
-    fprintf(stderr, "\nError%s%s: %s\n",
+    fprintf(stderr, "\nError%s%s: %s\n\n",
       has_file? " in " : "",
       has_file? file : "",
       e.what());
