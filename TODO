@@ -1,4 +1,4 @@
-- Add line and column numbers in parser
+- Add column numbers in parser
 
 - BUG: (display `(a #;(foo bar) c)) -> does not eat up parenthesis
 
