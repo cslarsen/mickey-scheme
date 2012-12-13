@@ -111,6 +111,11 @@
 (test (log 0) -inf.0)
 (test (- (log 0)) +inf.0)
 
+(test (infinite? -inf.0) #t)
+(test (infinite? +inf.0) #t)
+(test (infinite? 123) #f)
+(test (infinite? -123) #f)
+
 ;; Number radix / prefix
 (testq #xFF 255)
 (testq #xFFF 4095)
