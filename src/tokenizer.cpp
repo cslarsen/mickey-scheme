@@ -19,6 +19,18 @@
 static const char* source = NULL;
 static bool inside_string = false;
 static bool fold_case_flag = false;
+static int line = 1;
+
+int current_line_number()
+{
+  return line;
+}
+
+static inline void checkline(const char ch)
+{
+  if ( ch == '\n' )
+    ++line;
+}
 
 bool fold_case()
 {
@@ -29,6 +41,7 @@ void set_source(const char* program)
 {
   source = program;
   inside_string = false;
+  line = 1;
 }
 
 static bool string_or_non_delimiter(const char* s)
@@ -49,7 +62,11 @@ static bool string_or_non_delimiter(const char* s)
 
 static const char* skip_space(const char* s)
 {
-  while ( isspace(*s) ) ++s;
+  while ( isspace(*s) ) {
+    checkline(*s);
+    ++s;
+  }
+
   return s;
 }
 
