@@ -104,6 +104,9 @@ cons_t* type_convert(const char* token)
   if ( !strcmp(token, "+inf.0") )
     return real(plus_infinity());
 
+  if ( !strcmp(token, "+nan.0") )
+    return real(make_nan());
+
   bool has_exact_prefix = false;
   bool has_radix_prefix = false;
 

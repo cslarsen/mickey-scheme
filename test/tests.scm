@@ -116,6 +116,11 @@
 (test (infinite? 123) #f)
 (test (infinite? -123) #f)
 
+; negative infinity
+(test (number->string (/ 10 -inf.0)) "-0")
+
+(test (+ 1 +nan.0) +nan.0)
+
 ;; Number radix / prefix
 (testq #xFF 255)
 (testq #xFFF 4095)

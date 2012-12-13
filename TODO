@@ -232,11 +232,9 @@ Should return (1 . 2) or the same as (cons 1 2).
 
 * BUG: Should be false: (list? '(a . b)) but is true b/c "." is considered an atom
 * BUG: Can't do negative modulus operations
-* BUG: Can't parse +nan.0
 * BUG: Should be true: mickey> (integer? 3.0)
 * BUG: Can't parse complex number -2.5+0.0i
 * BUG: Can't parse real number #e1e10
-* BUG: Can't parse +inf.0
 * BUG: Can't parse infix integer expression 8/4
 * BUG: This must work: `(a `(b ,foo)) ==> (a (quasiquote (b (unquote * foo))))
 * BUG: Hangs: mickey> 'a

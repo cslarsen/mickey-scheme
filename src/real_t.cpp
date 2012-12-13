@@ -31,3 +31,17 @@ bool is_pos_inf(const real_t& n)
 {
   return isinf(n) && n>0;
 }
+
+real_t make_nan()
+{
+#ifdef NAN
+  return NAN;
+#else
+  return sqrt(-1);
+#endif
+}
+
+bool is_nan(const real_t& n)
+{
+  return isnan(n);
+}
