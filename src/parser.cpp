@@ -18,6 +18,15 @@
 #include "types/radix_t.h"
 #include "debug.h"
 
+static cons_t* parse_bytevector(environment_t* e);
+static cons_t* parse_quasiquote(environment_t* e);
+static cons_t* parse_quote(environment_t* e);
+static cons_t* parse_token(const char* tok, bool paren, environment_t* env);
+static cons_t* parse_unquote(const char* t, bool paren, environment_t* e);
+static cons_t* parse_unquote_splicing(environment_t* e);
+static cons_t* parse_vector(environment_t* e);
+static long int parens = 0;
+
 static bool hasradix(const char* s)
 {
   if ( s[0] != '#' )
@@ -62,7 +71,9 @@ static radix_t parse_radix(const char* s)
   }
 
   raise(parser_exception(format(
-    "Invalid radix specifier: %s", s)));
+    "Invalid radix specifier on line %d: %s",
+      current_line_number(), s)));
+
   return BINARY; // to make compiler happy
 }
 
@@ -76,7 +87,9 @@ static bool parse_exact_prefix(const char* s)
   }
 
   raise(parser_exception(format(
-    "Invalid exactness prefix: %s", s)));
+    "Invalid exactness prefix on line %d: %s",
+      current_line_number(), s)));
+
   return false; // to make compiler happy
 }
 
@@ -141,7 +154,8 @@ cons_t* type_convert(const char* token)
    */
   if ( has_radix_prefix || has_exact_prefix )
     raise(parser_exception(format(
-      "Invalid use of prefix with non-number: %s", token_start)));
+      "Invalid use of prefix with non-number on line %d: %s",
+        current_line_number(), token_start)));
 
   if ( isstring(token) )
     return parse_string(token);
@@ -162,21 +176,15 @@ cons_t* type_convert(const char* token)
   return symbol(!fold_case()? token : string_foldcase(token).c_str());
 }
 
-static cons_t* parse_quote(environment_t* e);
-static cons_t* parse_quasiquote(environment_t* e);
-static cons_t* parse_unquote(environment_t* e);
-static cons_t* parse_unquote_splicing(environment_t* e);
-static cons_t* parse_vector(environment_t* e);
-static cons_t* parse_bytevector(environment_t* e);
-
-static long int parens = 0;
-
 static bool isdot(const char* s)
 {
   return s[0] == '.' && s[1] == '\0';
 }
 
-static cons_t* parse_token(const char* token, bool paren, environment_t* env);
+static bool isparen(const char* s)
+{
+  return *s == '(' || isvector(s) || isbytevector(s);
+}
 
 /*
  * TODO: Get rid of append() here.  It's extremely slow.
@@ -195,7 +203,7 @@ static cons_t* parse_list(environment_t *env, bool quoting = false)
      * Detect all tokens that require a matching closing
      * parenthesis, such as "(" and "#(", "#u8("etc.
      */
-    bool paren = (*t == '(' || isvector(t) || isbytevector(t) );
+    bool paren = isparen(t);
 
     // Track matching of parens
     if ( paren )
@@ -213,7 +221,8 @@ static cons_t* parse_list(environment_t *env, bool quoting = false)
     else {
       if ( performed_cdr_dot )
         raise(runtime_exception(format(
-          "Parser error: Invalid use of dot on '%s'", t)));
+          "Parser error on line %d: Invalid use of dot on '%s'",
+            current_line_number(), t)));
 
       { /*
          * Find end of p and set its cdr.
@@ -236,7 +245,7 @@ static cons_t* parse_list(environment_t *env, bool quoting = false)
      * translated to "(quote (1 2 3) 4)", which is wrong
      */
     if ( quoting )
-      return p;//break;
+      return p;
   }
 
   if ( t && *t==')' )
@@ -253,9 +262,9 @@ static cons_t* parse_token(const char* t, bool paren, environment_t* env)
     add = parse_quote(env);
   else if ( isquasiquote(t) )
     add = parse_quasiquote(env);
-  else if ( isunquote(t) )
-    add = parse_unquote(env);
-  else if ( isunquote_splicing(t) )
+  else if ( isunquote(t) ) {
+    add = parse_unquote(t, paren, env);
+  } else if ( isunquote_splicing(t) )
     add = parse_unquote_splicing(env);
   else if ( isvector(t) )
     add = parse_vector(env);
@@ -281,6 +290,26 @@ static cons_t* parse_quote(environment_t* e)
     return cons(symbol("list"));
 
   return cons(symbol("quote"), expr);
+}
+
+static cons_t* parse_unquote(const char* t, bool paren, environment_t* e)
+{
+  /*
+   * Replace ,<expr> with (unquote <expr>)
+   *
+   * TODO: It is an error to perform this outside of
+   *       quasiquotation.
+   */
+  cons_t* s = *(t+1)!='\0'?
+    parse_token(t+1, paren, e) : /* form ",<token>" */
+    car(parse_list(e, true)); /* form ",(<token (s)>)" */
+
+  if ( nullp(s) )
+    raise(runtime_exception(format(
+      "Parser error on line %d: Empty (unquote) form",
+        current_line_number())));
+
+  return cons(symbol("unquote"), cons(s));
 }
 
 static cons_t* parse_vector(environment_t* e)
@@ -313,17 +342,6 @@ static cons_t* parse_quasiquote(environment_t* e)
     return cons(symbol("list"));
 
   return cons(symbol("quasiquote"), expr);
-}
-
-static cons_t* parse_unquote(environment_t* e)
-{
-  /*
-   * Replace ,<expr> with (unquote <expr>)
-   *
-   * TODO: It is an error to perform this outside of
-   *       quasiquotation.
-   */
-  return cons(symbol("unquote"), parse_list(e, true));
 }
 
 static cons_t* parse_unquote_splicing(environment_t* e)
