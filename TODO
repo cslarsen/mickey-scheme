@@ -1,6 +1,17 @@
-- Add column numbers in parser
+- Note that ignore-next-datum is treated like a token in Mickey,
+  but probably not in other schemes:
 
-- BUG: (display `(a #;(foo bar) c)) -> does not eat up parenthesis
+  #; mickey> '(a b dee#;fee)
+  (a b dee)
+
+  Chicken-scheme (hmm, seems it handles this very early in the parsing):
+  #;1> '(a b dee#;fee)
+  )
+  (a b dee#)
+
+  EXACT same happens with Chibi.
+
+- Add column numbers in parser
 
 - boer ha en ny cons_t type som er cons_t-pointer,
   saa kan man slaa opp symbol i environment og sette

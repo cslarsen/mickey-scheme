@@ -695,6 +695,11 @@
 (testq (list) '())
 (testq (list) '())
 
+;; Test "#;", or "Ignore next form":
+(test `(a #;(this should be ignored) b c) '(a b c))
+(test `(a #; (this should also be ignored) b c) '(a b c))
+(test `(a #; zz b c) '(a b c))
+
 ;; Vectors
 (testq (vector-length (vector 1 2 3)) 3)
 (testq (vector-length (vector)) 0)

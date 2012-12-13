@@ -186,6 +186,11 @@ static bool isparen(const char* s)
   return *s == '(' || isvector(s) || isbytevector(s);
 }
 
+static bool is_ignore_next_datum(const char* s)
+{
+  return s[0]=='#' && s[1]==';';
+}
+
 /*
  * TODO: Get rid of append() here.  It's extremely slow.
  *       See evlis() for hints.
@@ -211,6 +216,12 @@ static cons_t* parse_list(environment_t *env, bool quoting = false)
 
     if ( isdot(t) ) {
       prev_dot = true;
+      continue;
+    }
+
+    if ( is_ignore_next_datum(t) ) {
+      // parse but ignore next datum
+      parse_list(env, true);
       continue;
     }
 

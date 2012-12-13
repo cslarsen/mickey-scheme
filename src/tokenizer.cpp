@@ -47,6 +47,11 @@ void set_source(const char* program)
 static bool string_or_non_delimiter(const char* s)
 {
   char ch = *s;
+
+  // ignore next datum symbol #; is a token
+  if ( s[0]=='#' && s[1]==';' )
+    return false;
+
   bool open_paren = (ch=='('        /* normal paren */
       || (s[0]=='#' && s[1]=='(')   /* vector form #( ... ) */
       || (s[0]=='#' && s[1]=='u' && /* bytevector form #u8( ... ) */
@@ -138,24 +143,19 @@ const char* get_token()
       return token;
     }
 
+    // ignore-next-datum form "#;"
+    if ( source[0]=='#' && source[1]==';' ) {
+      strcpy(token, "#;");
+      source += 2;
+      return token;
+    }
+
     if ( char_in(*source, "()'") )
       // tokens ( and )
       token[0] = *source++;
     else
       // other tokens
       source = copy_while(token, source, string_or_non_delimiter);
-
-    // commented datums "#;"
-    if ( token[0]=='#' && token[1]==';' ) {
-
-      // token begins with "#;", so skip it
-      if ( token[2] != '\0' )
-        continue;
-
-      // skip current token AND next, then continue
-      get_token();
-      continue;
-    }
 
     // emit NULL when finished
     return !empty(token) ? token : NULL;
