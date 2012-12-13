@@ -619,6 +619,7 @@
 ; Quasiquoting with unquote-splicing ",@"
 ;(testq (quote (define foo '(11 22 33)) `(1 2 3 foo ,foo ,@foo)) (quote (1 2 3 foo (11 22 33) 11 22 33)))
 (test `(1 2 ,@(list 3 4 5) 6 7) (list 1 2 3 4 5 6 7))
+(test (let ((a '(11 22 33))) `(+ ,@a 44)) '(+ 11 22 33 44))
 
 ;; Math module
 (testq (ceiling 3.0) 3.0)

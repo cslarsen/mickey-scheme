@@ -63,17 +63,6 @@ SCHEME BASE
 object files.  Moved all eval-internal procs to this module and make it 100%
 dynamically loaded.
 
-QUASIQUOTATION
-
-- This does not work:
-#; mickey> (define a '(1 2 3))
-#; mickey> `(+ ,@a 10)
-(+ 10)
-
-Should return (+ 1 2 3 10)
-
-It works by doing it literally, `(+ ,@(list 1 2 3) 10) gives (+ 1 2 3 10)
-
 RANDOM STUFF
 
 - Funker i chibi men ikke i mickey

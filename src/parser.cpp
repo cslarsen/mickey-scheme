@@ -23,7 +23,7 @@ static cons_t* parse_quasiquote(environment_t* e);
 static cons_t* parse_quote(environment_t* e);
 static cons_t* parse_token(const char* tok, bool paren, environment_t* env);
 static cons_t* parse_unquote(const char* t, bool paren, environment_t* e);
-static cons_t* parse_unquote_splicing(environment_t* e);
+static cons_t* parse_unquote_splicing(const char*, bool, environment_t*);
 static cons_t* parse_vector(environment_t* e);
 static long int parens = 0;
 
@@ -265,7 +265,7 @@ static cons_t* parse_token(const char* t, bool paren, environment_t* env)
   else if ( isunquote(t) ) {
     add = parse_unquote(t, paren, env);
   } else if ( isunquote_splicing(t) )
-    add = parse_unquote_splicing(env);
+    add = parse_unquote_splicing(t, paren, env);
   else if ( isvector(t) )
     add = parse_vector(env);
   else if ( isbytevector(t) )
@@ -312,6 +312,28 @@ static cons_t* parse_unquote(const char* t, bool paren, environment_t* e)
   return cons(symbol("unquote"), cons(s));
 }
 
+static cons_t* parse_unquote_splicing(
+    const char* t, bool paren, environment_t* e)
+{
+  /*
+   * Replace ,@<expr> with (unquote-splicing <expr>)
+   *
+   * TODO: It is an error to perform this outside of
+   *       quasiquotation.
+   */
+  cons_t* s = *(t+2)!='\0'?
+    parse_token(t+2, paren, e) : /* form ",@<token>" */
+    car(parse_list(e, true)); /* form ",@(<token (s)>)" */
+
+  if ( nullp(s) )
+    raise(runtime_exception(format(
+      "Parser error on line %d: Empty (unquote-splicing) form",
+        current_line_number())));
+
+  return cons(symbol("unquote-splicing"), cons(s));
+}
+
+
 static cons_t* parse_vector(environment_t* e)
 {
   /*
@@ -342,17 +364,6 @@ static cons_t* parse_quasiquote(environment_t* e)
     return cons(symbol("list"));
 
   return cons(symbol("quasiquote"), expr);
-}
-
-static cons_t* parse_unquote_splicing(environment_t* e)
-{
-  /*
-   * Replace ,@<expr> with (unquote-splicing <expr>)
-   *
-   * TODO: It is an error to perform this outside of
-   *       quasiquotation.
-   */
-  return cons(symbol("unquote-splicing"), parse_list(e, true));
 }
 
 program_t* parse(const std::string& program, environment_t *env)
