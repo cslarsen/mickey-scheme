@@ -176,6 +176,8 @@ static bool isdot(const char* s)
   return s[0] == '.' && s[1] == '\0';
 }
 
+static cons_t* parse_token(const char* token, bool paren, environment_t* env);
+
 /*
  * TODO: Get rid of append() here.  It's extremely slow.
  *       See evlis() for hints.
@@ -199,25 +201,12 @@ static cons_t* parse_list(environment_t *env, bool quoting = false)
     if ( paren )
       ++parens;
 
-    cons_t *add = NULL;
-
     if ( isdot(t) ) {
       prev_dot = true;
       continue;
-    } else if ( issinglequote(t) )
-      add = parse_quote(env);
-    else if ( isquasiquote(t) )
-      add = parse_quasiquote(env);
-    else if ( isunquote(t) )
-      add = parse_unquote(env);
-    else if ( isunquote_splicing(t) )
-      add = parse_unquote_splicing(env);
-    else if ( isvector(t) )
-      add = parse_vector(env);
-    else if ( isbytevector(t) )
-      add = parse_bytevector(env);
-    else
-      add = paren? parse_list(env) : type_convert(t);
+    }
+
+    cons_t *add = parse_token(t, paren, env);
 
     if ( !prev_dot )
       p = nullp(p)? cons(add) : append(p, cons(add));
@@ -254,6 +243,28 @@ static cons_t* parse_list(environment_t *env, bool quoting = false)
     --parens;
 
   return p;
+}
+
+static cons_t* parse_token(const char* t, bool paren, environment_t* env)
+{
+  cons_t* add = NULL;
+
+  if ( issinglequote(t) )
+    add = parse_quote(env);
+  else if ( isquasiquote(t) )
+    add = parse_quasiquote(env);
+  else if ( isunquote(t) )
+    add = parse_unquote(env);
+  else if ( isunquote_splicing(t) )
+    add = parse_unquote_splicing(env);
+  else if ( isvector(t) )
+    add = parse_vector(env);
+  else if ( isbytevector(t) )
+    add = parse_bytevector(env);
+  else
+    add = paren? parse_list(env) : type_convert(t);
+
+  return add;
 }
 
 static cons_t* parse_quote(environment_t* e)
