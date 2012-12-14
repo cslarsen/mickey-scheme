@@ -146,11 +146,6 @@ bool isstring(const char* s)
   return false;
 }
 
-static int isalnumpipe(int c)
-{
-  return isalnum(c) || c=='|';
-}
-
 /*
  * ATOM := <alpha> <alphanum>* |
  *         '|' <alpha | space> <alphanum | space>* '|'
