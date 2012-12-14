@@ -797,6 +797,13 @@
 (test (exact .0000002) 1/5000000)
 (test (exact .0000003) 3/10000000)
 
+;; Symbols enclosed in pipes, format "|a b c|"
+(test (let ((|a b| 123)) |a b|) 123)
+(test (let ((|a  b | 123) (|c d e| 876)) (+ |a  b | |c d e|)) 999)
+(test (symbol->string '|foo bar  baz |) "|foo bar  baz |")
+(test (let ((|squared number| (lambda (x) (* x x))))
+        (|squared number| 12)) 144)
+
 (display "\nResults\n")
 (display (string-append
   "  Total: " (number->string (cadr (assq 'total (result))))

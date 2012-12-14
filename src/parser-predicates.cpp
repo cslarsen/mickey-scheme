@@ -146,9 +146,33 @@ bool isstring(const char* s)
   return false;
 }
 
+static int isalnumpipe(int c)
+{
+  return isalnum(c) || c=='|';
+}
+
+/*
+ * ATOM := <alpha> <alphanum>* |
+ *         '|' <alpha | space> <alphanum | space>* '|'
+ */
 bool isatom(const char* s)
 {
-  return isalpha(s[0]) && (empty(s+1) ? true : all(s+1, isalnum));
+  // normal atom
+  if ( s[0]!='|' )
+    return isalpha(s[0]) && (empty(s+1) ? true : all(s+1, isalnum));
+
+  const size_t l = strlen(s);
+
+  // format: |long atom form|
+  if ( s[1]!='|' && s[l-1]=='|' ) {
+    char* t = strdup(s);
+    t[l-1]='\0';
+    bool r = isatom(t+1);
+    free(t);
+    return r;
+  }
+
+  return false;
 }
 
 bool isvector(const char* s)

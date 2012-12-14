@@ -9,10 +9,12 @@
  *
  */
 
+#include <stdlib.h>
 #include <stdio.h>
-#include <stdlib.h> // NULL
 #include <string.h>
-#include <ctype.h> // isspace, et al
+#include <ctype.h>
+#include "exceptions.h"
+#include "print.h"
 #include "tokenizer.h"
 #include "util.h"
 
@@ -42,6 +44,11 @@ void set_source(const char* program)
   source = program;
   inside_string = false;
   line = 1;
+}
+
+static bool not_pipe(const char* s)
+{
+  return *s!='\0' && *s!='|';
 }
 
 static bool string_or_non_delimiter(const char* s)
@@ -153,9 +160,26 @@ const char* get_token()
     if ( char_in(*source, "()'") )
       // tokens ( and )
       token[0] = *source++;
-    else
-      // other tokens
-      source = copy_while(token, source, string_or_non_delimiter);
+    else {
+      // long-form-symbol w/format "|foo bar baz|"
+      if ( source[0]=='|' ) {
+        const char* start = source;
+        token[0]='|';
+        source = copy_while(token+1, source+1, not_pipe);
+
+        if ( *source =='|' )
+          ++source;
+        else
+          raise(parser_exception(format(
+            "Invalid |long symbol| on line %d: %s\n", line, start)));
+
+        const size_t l = strlen(token);
+        token[l] = '|';
+        token[l+1] = '\0';
+      } else
+        // other tokens
+        source = copy_while(token, source, string_or_non_delimiter);
+    }
 
     // emit NULL when finished
     return !empty(token) ? token : NULL;

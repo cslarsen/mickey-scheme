@@ -1,3 +1,5 @@
+- Allow |spaced symbol| for symbol names
+
 - Note that ignore-next-datum is treated like a token in Mickey,
   but probably not in other schemes:
 
