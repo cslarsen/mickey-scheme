@@ -58,7 +58,7 @@ cons_t* proc_make_string(cons_t *p, environment_t*)
   assert_length(p, 1, 2);
   assert_type(INTEGER, car(p));
 
-  size_t len = car(p)->integer;
+  size_t len = car(p)->number.integer;
   char   ch  = length(p)==1? ' ' : cadr(p)->character;
 
   return string(std::string(len, ch).c_str());
@@ -207,7 +207,7 @@ cons_t* proc_make_vector(cons_t* p, environment_t*)
   assert_length(p, 1, 2);
   assert_type(INTEGER, car(p));
 
-  size_t k = car(p)->integer;
+  size_t k = car(p)->number.integer;
   cons_t *fill = length(p)>1? cadr(p) : NULL;
 
   return !fill? vector(p, k) : vector(p, k, fill);
@@ -218,7 +218,7 @@ cons_t* proc_make_bytevector(cons_t* p, environment_t*)
   assert_length(p, 1, 2);
   assert_type(INTEGER, car(p));
 
-  size_t k = car(p)->integer;
+  size_t k = car(p)->number.integer;
   cons_t *fill = length(p)>1? cadr(p) : NULL;
 
   if ( !fill ) {
@@ -229,10 +229,10 @@ cons_t* proc_make_bytevector(cons_t* p, environment_t*)
     case BOOLEAN: u8fill = fill->boolean; break;
     case CHAR:    u8fill = fill->character; break;
     case INTEGER: {
-      if ( fill->integer < 0 || fill->integer > 255 )
+      if ( fill->number.integer < 0 || fill->number.integer > 255 )
         raise(runtime_exception(
           "make-vector only accepts unsigned 8-bit bytes"));
-      u8fill = static_cast<uint8_t>(fill->integer);
+      u8fill = static_cast<uint8_t>(fill->number.integer);
       break;
     }
 
@@ -260,7 +260,7 @@ cons_t* proc_vector_ref(cons_t* p, environment_t*)
   assert_type(INTEGER, cadr(p));
 
   vector_t *v = car(p)->vector;
-  int ref = cadr(p)->integer;
+  int ref = cadr(p)->number.integer;
 
   if ( ref<0 || static_cast<size_t>(ref) >= v->vector.size() )
     raise(runtime_exception("vector-ref index out of range: " + to_s(ref)));
@@ -275,7 +275,7 @@ cons_t* proc_vector_set(cons_t* p, environment_t*)
   assert_type(INTEGER, cadr(p));
 
   vector_t *v = car(p)->vector;
-  int ref = cadr(p)->integer;
+  int ref = cadr(p)->number.integer;
   cons_t *set = caddr(p);
 
   if ( ref<0 || static_cast<size_t>(ref) >= v->vector.size() )
@@ -372,7 +372,7 @@ cons_t* proc_bytevector_u8_ref(cons_t* p, environment_t*)
   assert_type(INTEGER, cadr(p));
 
   bytevector_t *v = car(p)->bytevector;
-  int k = cadr(p)->integer;
+  int k = cadr(p)->number.integer;
 
   if ( k<0 || static_cast<size_t>(k) >= v->bytevector.size() )
     raise(runtime_exception("bytevector-u8-ref out of range"));
@@ -394,8 +394,8 @@ cons_t* proc_bytevector_copy_partial(cons_t* p, environment_t*)
   assert_type(INTEGER, cadr(p));
   assert_type(INTEGER, caddr(p));
 
-  int start = cadr(p)->integer;
-  int end = caddr(p)->integer;
+  int start = cadr(p)->number.integer;
+  int end = caddr(p)->number.integer;
 
   bytevector_t *v = car(p)->bytevector;
 
@@ -420,9 +420,9 @@ cons_t* proc_bytevector_copy_partial_bang(cons_t* p, environment_t*)
   assert_type(BYTEVECTOR, cadddr(p));
   assert_type(INTEGER, caddddr(p));
 
-  int start = cadr(p)->integer;
-  int end   = caddr(p)->integer;
-  int at    = caddddr(p)->integer;
+  int start = cadr(p)->number.integer;
+  int end   = caddr(p)->number.integer;
+  int at    = caddddr(p)->number.integer;
 
   bytevector_t *from = car(p)->bytevector;
   bytevector_t *to = cadddr(p)->bytevector;
@@ -453,8 +453,8 @@ cons_t* proc_bytevector_u8_set_bang(cons_t* p, environment_t*)
   assert_type(INTEGER, caddr(p));
 
   bytevector_t *v = car(p)->bytevector;
-  int k = cadr(p)->integer;
-  int val = caddr(p)->integer;
+  int k = cadr(p)->number.integer;
+  int val = caddr(p)->number.integer;
 
   if ( k<0 || static_cast<size_t>(k) >= v->bytevector.size() )
     raise(runtime_exception("bytevector-u8-set! index out of range"));
@@ -947,7 +947,7 @@ cons_t* proc_integer_to_char(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   assert_type(INTEGER, car(p));
-  return character(static_cast<char>(car(p)->integer));
+  return character(static_cast<char>(car(p)->number.integer));
 }
 
 cons_t* proc_list_to_string(cons_t* p, environment_t*)
@@ -973,7 +973,7 @@ cons_t* proc_list_tail(cons_t* p, environment_t*)
   assert_type(PAIR, car(p));
   assert_type(INTEGER, cadr(p));
 
-  size_t n = cadr(p)->integer;
+  size_t n = cadr(p)->number.integer;
   p = car(p);
 
   if ( n > length(p) )
@@ -997,12 +997,12 @@ cons_t* proc_list_set(cons_t* p, environment_t*)
   assert_type(INTEGER, cadr(p));
 
   cons_t *l = car(p);
-  size_t k = cadr(p)->integer;
+  size_t k = cadr(p)->number.integer;
   cons_t *obj = caddr(p);
 
-  if ( cadr(p)->integer < 0 || k >= length(l) )
+  if ( cadr(p)->number.integer < 0 || k >= length(l) )
     raise(runtime_exception(format(
-      "Invalid list index: %d", cadr(p)->integer)));
+      "Invalid list index: %d", cadr(p)->number.integer)));
 
   // skip down to location
   for ( size_t n=0; n<k; ++n )
@@ -1116,8 +1116,8 @@ cons_t* proc_substring(cons_t* p, environment_t*)
   assert_type(INTEGER, len);
 
   return string(std::string(str->string).
-      substr(start->integer,
-             len->integer).c_str());
+      substr(start->number.integer,
+             len->number.integer).c_str());
 }
 
 cons_t* proc_string_ref(cons_t* p, environment_t*)
@@ -1126,10 +1126,10 @@ cons_t* proc_string_ref(cons_t* p, environment_t*)
   assert_type(STRING, car(p));
   assert_type(INTEGER, cadr(p));
 
-  if ( static_cast<size_t>(cadr(p)->integer) >= strlen(car(p)->string) )
+  if ( static_cast<size_t>(cadr(p)->number.integer) >= strlen(car(p)->string) )
     raise(runtime_exception("string-ref argument out of bounds"));
 
-  return character(car(p)->string[ cadr(p)->integer]);
+  return character(car(p)->string[ cadr(p)->number.integer]);
 }
 
 cons_t* proc_do(cons_t* p, environment_t*)

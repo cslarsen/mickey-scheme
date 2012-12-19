@@ -56,8 +56,8 @@ cons_t* integer(integer_t n, bool exact)
 {
   cons_t *p = new cons_t();
   p->type = INTEGER;
-  p->integer = n;
-  p->exact = exact;
+  p->number.integer = n;
+  p->number.exact = exact;
   return p;
 }
 
@@ -68,15 +68,15 @@ cons_t* rational(rational_t r, bool exact, bool promote_to_int)
 
   cons_t *p = new cons_t();
   p->type = RATIONAL;
-  p->rational = simplify(r);
-  p->exact = exact;
+  p->number.rational = simplify(r);
+  p->number.exact = exact;
 
   /*
    * Can we promote to an integer?
    */
-  if ( promote_to_int && p->rational.denominator == 1 ) {
+  if ( promote_to_int && p->number.rational.denominator == 1 ) {
     p->type = INTEGER;
-    p->integer = r.numerator;
+    p->number.integer = r.numerator;
   }
 
   return p;
@@ -118,8 +118,8 @@ cons_t* real(real_t n)
 {
   cons_t *p = new cons_t();
   p->type = REAL;
-  p->real = n;
-  p->exact = false;
+  p->number.real = n;
+  p->number.exact = false;
   return p;
 }
 
@@ -127,9 +127,9 @@ cons_t* real(rational_t r)
 {
   cons_t *p = new cons_t();
   p->type = REAL;
-  p->exact = false;
-  p->real = static_cast<real_t>(r.numerator) /
-            static_cast<real_t>(r.denominator);
+  p->number.exact = false;
+  p->number.real = static_cast<real_t>(r.numerator) /
+                   static_cast<real_t>(r.denominator);
   return p;
 }
 
@@ -210,7 +210,8 @@ cons_t* bytevector(cons_t* p)
   for ( int i=0; !nullp(p); p = cdr(p), ++i ) {
     assert_type(INTEGER, car(p));
 
-    int n = car(p)->integer;
+    int n = car(p)->number.integer;
+
     if ( n<0 || n>255 )
       raise(runtime_exception(
         "Bytevector elements must be integers in the range [0..255]"));
@@ -450,12 +451,12 @@ bool eqvp(const cons_t* l, const cons_t* r)
   case SYMBOL:        return l->symbol == r->symbol
                              || *(l->symbol) == *(r->symbol);
                       // TODO: Above, do we need *(l->symbol) check?
-  case INTEGER:       return l->integer == r->integer;
+  case INTEGER:       return l->number.integer == r->number.integer;
                       // TODO: Should we also check exactness?
                          //    && l->exact == r->exact;
 
   case REAL:          // Check both exact/both inexact
-                      return l->real == r->real;
+                      return l->number.real == r->number.real;
   case CHAR:          return l->character == r->character;
   case PAIR:          return nullp(l) && nullp(r)? true : l == r;
   case VECTOR:        return l == r;
@@ -482,9 +483,9 @@ bool eqvp(const cons_t* l, const cons_t* r)
 extern "C" bool zerop(const cons_t* p)
 {
   switch ( type_of(p) ) {
-    case INTEGER:  return p->integer == 0;
-    case RATIONAL: return p->rational.numerator == 0;
-    case REAL:     return p->real == 0.0;
+    case INTEGER:  return p->number.integer == 0;
+    case RATIONAL: return p->number.rational.numerator == 0;
+    case REAL:     return p->number.real == 0.0;
 
     case NIL:
     case BOOLEAN:
@@ -602,11 +603,11 @@ real_t number_to_real(const cons_t* p)
   switch ( type_of(p) ) {
   default:
     raise(runtime_exception("Unsupported number->double conversion: " + sprint(p)));
-  case INTEGER: return static_cast<real_t>(p->integer);
-  case REAL:    return static_cast<real_t>(p->real);
+  case INTEGER: return static_cast<real_t>(p->number.integer);
+  case REAL:    return static_cast<real_t>(p->number.real);
   case RATIONAL: {
-    real_t n = p->rational.numerator;
-    real_t d = p->rational.denominator;
+    real_t n = p->number.rational.numerator;
+    real_t d = p->number.rational.denominator;
     return n / d;
   }}
 }
@@ -757,17 +758,17 @@ cons_t* make_exact(cons_t* z)
   assert_number(z);
 
   if ( rationalp(z) )
-    return rational(z->rational, true);
+    return rational(z->number.rational, true);
 
   if ( integerp(z) )
-    return integer(z->integer, true);
+    return integer(z->number.integer, true);
 
   if ( realp(z) ) {
-    integer_t decimals = decimals_in(z->real);
+    integer_t decimals = decimals_in(z->number.real);
     integer_t magnitude = pow10(decimals);
 
     rational_t r;
-    r.numerator = z->real * magnitude;
+    r.numerator = z->number.real * magnitude;
     r.denominator = magnitude;
 
     return rational(r, true);
@@ -782,14 +783,14 @@ cons_t* make_inexact(cons_t* z)
   assert_number(z);
 
   if ( rationalp(z) )
-    return real(static_cast<real_t>(z->rational.numerator) /
-                static_cast<real_t>(z->rational.denominator));
+    return real(static_cast<real_t>(z->number.rational.numerator) /
+                static_cast<real_t>(z->number.rational.denominator));
 
   if ( integerp(z) )
-    return real(static_cast<real_t>(z->integer));
+    return real(static_cast<real_t>(z->number.integer));
 
   if ( realp(z) )
-    return real(z->real);
+    return real(z->number.real);
 
   raise(runtime_exception("Not a number: " + sprint(z)));
   return unspecified();
@@ -811,10 +812,10 @@ rational_t make_rational(const rational_t& n)
 rational_t make_rational(const cons_t* n)
 {
   if ( type_of(n) == INTEGER )
-    return make_rational(n->integer);
+    return make_rational(n->number.integer);
 
   if ( type_of(n) == RATIONAL )
-    return make_rational(n->rational);
+    return make_rational(n->number.rational);
 
   raise(runtime_exception(format("Cannot make rational of %s",
     indef_art(to_s(n)).c_str())));

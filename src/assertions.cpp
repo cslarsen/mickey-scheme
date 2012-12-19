@@ -98,14 +98,14 @@ void assert_proper_list(const cons_t* p)
 
 void assert_exact(const cons_t* p)
 {
-  if ( p->exact == false )
+  if ( p->number.exact == false )
     raise(runtime_exception(format(
       "Not exact: %s", sprint(p).c_str())));
 }
 
 void assert_inexact(const cons_t* p)
 {
-  if ( p->exact == true )
+  if ( p->number.exact == true )
     raise(runtime_exception(format(
       "Not inexact: %s", sprint(p).c_str())));
 }

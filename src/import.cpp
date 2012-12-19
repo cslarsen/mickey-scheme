@@ -140,7 +140,7 @@ static cons_t* verify_library_name(cons_t* p)
       continue;
 
     // ... and exact nonnegative integers.
-    if ( type_of(car(q)) == INTEGER && car(q)->integer >= 0 )
+    if ( type_of(car(q)) == INTEGER && car(q)->number.integer >= 0 )
       continue;
 
     raise(syntax_error("Invalid library name: " + sprint(p)));

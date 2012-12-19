@@ -26,7 +26,7 @@ cons_t* proc_integerp(cons_t* p, environment_t*)
    * integers.
    */
   if ( realp(car(p)) ) {
-    real_t n = car(p)->real;
+    real_t n = car(p)->number.real;
     return boolean((real_t)((int)n) == n);
   }
 
@@ -193,11 +193,11 @@ cons_t* proc_eqnump(cons_t* p, environment_t*)
     return boolean(number_to_real(l) == number_to_real(r));
 
   if ( rationalp(l) && rationalp(r) )
-    return boolean(l->rational.numerator == r->rational.numerator &&
-                   l->rational.denominator == r->rational.denominator);
+    return boolean(l->number.rational.numerator == r->number.rational.numerator &&
+                   l->number.rational.denominator == r->number.rational.denominator);
 
   if ( integerp(l) && integerp(r) )
-    return boolean(l->integer == r->integer);
+    return boolean(l->number.integer == r->number.integer);
 
   raise(runtime_exception("Cannot compare " + sprint(l)
         + " with " + sprint(r)));

@@ -81,9 +81,9 @@ cons_t* proc_exit(cons_t* p, environment_t*)
 
   if ( length(p) == 1 ) {
     if ( integerp(car(p)) )
-      code = car(p)->integer;
+      code = car(p)->number.integer;
     else if ( realp(car(p)) )
-      code = static_cast<int>(car(p)->real);
+      code = static_cast<int>(car(p)->number.real);
     else
       code = !boolean_false(car(p))? EXIT_SUCCESS : EXIT_FAILURE;
   }

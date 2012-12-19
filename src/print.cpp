@@ -24,9 +24,9 @@ std::string sprint(const cons_t* p, std::string& s, bool escape)
   case NIL:          return s;
   case BOOLEAN:      return s + to_s(p->boolean);
   case CHAR:         return s + to_s(p->character, escape);
-  case REAL:         return s + to_s(p->real);
-  case INTEGER:      return s + to_s(p->integer);
-  case RATIONAL:     return s + to_s(p->rational);
+  case REAL:         return s + to_s(p->number.real);
+  case INTEGER:      return s + to_s(p->number.integer);
+  case RATIONAL:     return s + to_s(p->number.rational);
   case CLOSURE:      return s + (escape? to_s(p->closure) : "");
   case SYMBOL:       return s + *p->symbol;
   case STRING:       return s + (escape? "\"" + encode_str(p->string) + "\"" : p->string);
@@ -193,9 +193,9 @@ std::string to_s(cons_t *p)
   case NIL:      return "#<nil>";
   case BOOLEAN:  return to_s(p->boolean);
   case CHAR:     return to_s(p->character, false);
-  case REAL:     return to_s(p->real);
-  case INTEGER:  return to_s(p->integer);
-  case RATIONAL: return to_s(p->rational);
+  case REAL:     return to_s(p->number.real);
+  case INTEGER:  return to_s(p->number.integer);
+  case RATIONAL: return to_s(p->number.rational);
   case CLOSURE:  return format("#<closure %p>", p->closure);
   case PAIR:     return to_s(car(p)) + " . " + to_s(cdr(p));
   case SYMBOL:   return *p->symbol;

@@ -21,11 +21,11 @@ cons_t* proc_abs(cons_t* p, environment_t*)
   assert_number(car(p));
 
   if ( realp(car(p)) ) {
-    real_t n = car(p)->real;
+    real_t n = car(p)->number.real;
     return real(n<0.0? -n : n);
   }
 
-  int n = car(p)->integer;
+  int n = car(p)->number.integer;
   return integer(n<0? -n : n);
 }
 
@@ -37,11 +37,11 @@ cons_t* proc_addf(cons_t *p, environment_t*)
     cons_t *i = listp(p)? car(p) : p;
 
     if ( integerp(i) )
-      sum += static_cast<real_t>(i->integer);
+      sum += static_cast<real_t>(i->number.integer);
     else if ( realp(i) )
-      sum += i->real;
+      sum += i->number.real;
     else if ( rationalp(i) )
-      sum += real(i->rational)->real;
+      sum += real(i->number.rational)->number.real;
     else
       raise(runtime_exception("Cannot add real with " + to_s(type_of(i)) + ": " + sprint(i)));
   }
@@ -66,11 +66,11 @@ cons_t* proc_add(cons_t *p, environment_t* env)
     cons_t *i = listp(p)? car(p) : p;
 
     if ( integerp(i) ) {
-      if ( !i->exact ) exact = false;
-      sum += i->integer;
+      if ( !i->number.exact ) exact = false;
+      sum += i->number.integer;
     } else if ( rationalp(i) ) {
-      if ( !i->exact ) exact = false;
-      sum += i->rational;
+      if ( !i->number.exact ) exact = false;
+      sum += i->number.rational;
     } else if ( realp(i) ) {
       // automatically convert; perform rest of computation in floats
       exact = false;
@@ -92,7 +92,7 @@ cons_t* proc_sub(cons_t *p, environment_t*)
 
   real_t d = number_to_real(car(p));
 
-  if ( !car(p)->exact )
+  if ( !car(p)->number.exact )
     exact = false;
 
   // (- x) => -x, instead of +x
@@ -100,7 +100,7 @@ cons_t* proc_sub(cons_t *p, environment_t*)
     d = -d;
 
   while ( !nullp(p = cdr(p)) ) {
-    if ( !car(p)->exact )
+    if ( !car(p)->number.exact )
       exact = false;
     d -= number_to_real(car(p));
   }
@@ -115,8 +115,8 @@ cons_t* proc_divf(cons_t *p, environment_t*)
   cons_t *a = car(p);
   cons_t *b = cadr(p);
 
-  real_t x = (type_of(a) == REAL)? a->real : a->integer;
-  real_t y = (type_of(b) == REAL)? b->real : b->integer;
+  real_t x = (type_of(a) == REAL)? a->number.real : a->number.integer;
+  real_t y = (type_of(b) == REAL)? b->number.real : b->number.integer;
 
   // Automatically convert back to int if possible
   real_t q = x / y;
@@ -133,7 +133,7 @@ cons_t* proc_div(cons_t *p, environment_t *e)
   assert_number(a);
   assert_number(b);
 
-  bool exact = (a->exact && b->exact);
+  bool exact = (a->number.exact && b->number.exact);
 
   if ( zerop(b) )
     raise(runtime_exception(format(
@@ -142,14 +142,14 @@ cons_t* proc_div(cons_t *p, environment_t *e)
   if ( type_of(a) == type_of(b) ) {
     if ( integerp(a) ) {
       // division yields integer?
-      if ( gcd(a->integer, b->integer) == 0)
-        return integer(a->integer / b->integer, exact);
+      if ( gcd(a->number.integer, b->number.integer) == 0)
+        return integer(a->number.integer / b->number.integer, exact);
       else
         return rational(make_rational(a) /= make_rational(b), exact);
     } else if ( realp(a) )
-      return real(a->real / b->real);
+      return real(a->number.real / b->number.real);
     else if ( rationalp(a) )
-      return rational(a->rational / b->rational, exact);
+      return rational(a->number.rational / b->number.rational, exact);
     else
       raise(runtime_exception(format("Cannot perform division on %s",
         indef_art(to_s(type_of(a))).c_str())));
@@ -174,10 +174,10 @@ cons_t* proc_mulf(cons_t *p, environment_t*)
     cons_t *i = listp(p)? car(p) : p;
 
     if ( integerp(i) )
-      product *= static_cast<real_t>(i->integer);
+      product *= static_cast<real_t>(i->number.integer);
     else if ( realp(i) )
       // automatically convert; perform rest of computation in floats
-      product *= i->real;
+      product *= i->number.real;
     else
       raise(runtime_exception("Cannot multiply integer with " + to_s(type_of(i)) + ": " + sprint(i)));
   }
@@ -196,11 +196,11 @@ cons_t* proc_mul(cons_t *p, environment_t *env)
     cons_t *i = listp(p)? car(p) : p;
 
     if ( integerp(i) ) {
-      product *= i->integer;
-      if ( !i->exact ) exact = false;
+      product *= i->number.integer;
+      if ( !i->number.exact ) exact = false;
     } else if ( rationalp(i) ) {
-      if ( !i->exact ) exact = false;
-      product *= i->rational;
+      if ( !i->number.exact ) exact = false;
+      product *= i->number.rational;
     } else if ( realp(i) ) {
       // automatically convert; perform rest of computation in floats
       exact = false;
@@ -218,8 +218,8 @@ cons_t* proc_less(cons_t* p, environment_t*)
   assert_number(car(p));
   assert_number(cadr(p));
 
-  real_t x = (type_of(car(p)) == INTEGER)? car(p)->integer : car(p)->real;
-  real_t y = (type_of(cadr(p)) == INTEGER)? cadr(p)->integer : cadr(p)->real;
+  real_t x = (type_of(car(p)) == INTEGER)? car(p)->number.integer : car(p)->number.real;
+  real_t y = (type_of(cadr(p)) == INTEGER)? cadr(p)->number.integer : cadr(p)->number.real;
 
   return boolean(x < y);
 }
@@ -230,8 +230,8 @@ cons_t* proc_greater(cons_t* p, environment_t*)
   assert_number(car(p));
   assert_number(cadr(p));
 
-  real_t x = (type_of(car(p)) == INTEGER)? car(p)->integer : car(p)->real;
-  real_t y = (type_of(cadr(p)) == INTEGER)? cadr(p)->integer : cadr(p)->real;
+  real_t x = (type_of(car(p)) == INTEGER)? car(p)->number.integer : car(p)->number.real;
+  real_t y = (type_of(cadr(p)) == INTEGER)? cadr(p)->number.integer : cadr(p)->number.real;
 
   return boolean(x > y);
 }
@@ -244,7 +244,7 @@ cons_t* proc_number_to_string(cons_t* p, environment_t* e)
 //  int radix = 10;
   if ( !nullp(cadr(p)) ) {
     assert_type(INTEGER, cadr(p));
-    //radix = cadr(p)->integer;
+    //radix = cadr(p)->number.integer;
   }
 
   // TODO: Implement use of radix
@@ -265,30 +265,30 @@ cons_t* proc_evenp(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   assert_type(INTEGER, car(p));
-  return boolean(!(car(p)->integer & 1));
+  return boolean(!(car(p)->number.integer & 1));
 }
 
 cons_t* proc_oddp(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   assert_type(INTEGER, car(p));
-  return boolean(car(p)->integer & 1);
+  return boolean(car(p)->number.integer & 1);
 }
 
 cons_t* proc_negativep(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   assert_number(car(p));
-  return boolean(integerp(car(p)) ? car(p)->integer < 0 :
-                                    car(p)->real < 0);
+  return boolean(integerp(car(p)) ? car(p)->number.integer < 0 :
+                                    car(p)->number.real < 0);
 }
 
 cons_t* proc_positivep(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   assert_number(car(p));
-  return boolean(integerp(car(p)) ? car(p)->integer > 0 :
-                                    car(p)->real > 0);
+  return boolean(integerp(car(p)) ? car(p)->number.integer > 0 :
+                                    car(p)->number.real > 0);
 }
 
 cons_t* proc_round(cons_t* p, environment_t*)
@@ -297,12 +297,12 @@ cons_t* proc_round(cons_t* p, environment_t*)
   assert_number(car(p));
 
   if ( integerp(car(p)) )
-    return integer(car(p)->integer);
+    return integer(car(p)->number.integer);
   else if ( rationalp(car(p)) )
-    return real(roundf(make_inexact(car(p))->real));
+    return real(roundf(make_inexact(car(p))->number.real));
 
   assert_type(REAL, car(p));
-  return real(roundf(car(p)->real));
+  return real(roundf(car(p)->number.real));
 }
 
 cons_t* proc_truncate(cons_t* p, environment_t*)
@@ -311,9 +311,9 @@ cons_t* proc_truncate(cons_t* p, environment_t*)
   assert_number(car(p));
 
   if ( integerp(car(p)) )
-    return integer(car(p)->integer);
+    return integer(car(p)->number.integer);
   else
-    return real(truncf(car(p)->real));
+    return real(truncf(car(p)->number.real));
 }
 
 cons_t* proc_min(cons_t* p, environment_t*)
@@ -363,8 +363,8 @@ cons_t* proc_expt(cons_t* p, environment_t*)
   bool exact = integerp(base) && integerp(expn);
 
   if ( exact ) {
-    int a = base->integer,
-        n = expn->integer,
+    int a = base->number.integer,
+        n = expn->number.integer,
         r = a;
 
     // Per definition
@@ -415,13 +415,13 @@ cons_t* proc_modulo(cons_t* p, environment_t*)
   assert_type(INTEGER, a);
   assert_type(INTEGER, b);
 
-  if ( b->integer == 0 )
+  if ( b->number.integer == 0 )
     raise(runtime_exception("Division by zero"));
 
-  if ( b->integer < 0 )
+  if ( b->number.integer < 0 )
     raise(runtime_exception("Negative modulus operations not implemented")); // TODO
 
-  return integer(a->integer % b->integer);
+  return integer(a->number.integer % b->number.integer);
 }
 
 cons_t* proc_lcm(cons_t* p, environment_t* e)
@@ -432,13 +432,13 @@ cons_t* proc_lcm(cons_t* p, environment_t* e)
 
   case 1:
     assert_type(INTEGER, car(p));
-    return integer(abs(car(p)->integer));
+    return integer(abs(car(p)->number.integer));
 
   case 2: {
     assert_type(INTEGER, cadr(p));
 
-    int a = abs(car(p)->integer),
-        b = abs(cadr(p)->integer);
+    int a = abs(car(p)->number.integer),
+        b = abs(cadr(p)->number.integer);
 
     return integer(lcm(a, b));
   }
@@ -456,7 +456,7 @@ cons_t* proc_lcm(cons_t* p, environment_t* e)
       p = cdr(p);
     }
 
-    return integer(r->integer);
+    return integer(r->number.integer);
   } }
 }
 
@@ -468,7 +468,7 @@ cons_t* proc_nanp(cons_t* p, environment_t*)
   if ( type_of(car(p)) == INTEGER )
     return boolean(false);
 
-  return boolean(std::isnan(car(p)->real));
+  return boolean(std::isnan(car(p)->number.real));
 }
 
 cons_t* proc_infinitep(cons_t* p, environment_t*)
@@ -479,7 +479,7 @@ cons_t* proc_infinitep(cons_t* p, environment_t*)
   if ( type_of(car(p)) == INTEGER )
     return boolean(false);
 
-  return boolean(std::fpclassify(car(p)->real) == FP_INFINITE);
+  return boolean(std::fpclassify(car(p)->number.real) == FP_INFINITE);
 }
 
 cons_t* proc_finitep(cons_t* p, environment_t*)
@@ -490,7 +490,7 @@ cons_t* proc_finitep(cons_t* p, environment_t*)
   if ( type_of(car(p)) == INTEGER )
     return boolean(true);
 
-  return boolean(std::isfinite(car(p)->real));
+  return boolean(std::isfinite(car(p)->number.real));
 }
 
 cons_t* proc_gcd(cons_t* p, environment_t* e)
@@ -501,14 +501,14 @@ cons_t* proc_gcd(cons_t* p, environment_t* e)
 
   case 1:
     assert_type(INTEGER, car(p));
-    return integer(abs(car(p)->integer));
+    return integer(abs(car(p)->number.integer));
 
   case 2: {
     assert_type(INTEGER, car(p));
     assert_type(INTEGER, cadr(p));
 
-    int a = abs(car(p)->integer),
-        b = abs(cadr(p)->integer);
+    int a = abs(car(p)->number.integer),
+        b = abs(cadr(p)->number.integer);
 
     return integer(gcd(a, b));
   }
@@ -526,7 +526,7 @@ cons_t* proc_gcd(cons_t* p, environment_t* e)
       p = cdr(p);
     }
 
-    return integer(r->integer);
+    return integer(r->number.integer);
   } }
 }
 
@@ -534,14 +534,14 @@ cons_t* proc_exactp(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   assert_number(car(p));
-  return boolean(car(p)->exact == true);
+  return boolean(car(p)->number.exact == true);
 }
 
 cons_t* proc_inexactp(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   assert_number(car(p));
-  return boolean(car(p)->exact == false);
+  return boolean(car(p)->number.exact == false);
 }
 
 cons_t* proc_exact_to_inexact(cons_t* p, environment_t*)
@@ -554,7 +554,7 @@ cons_t* proc_exact_to_inexact(cons_t* p, environment_t*)
 
   cons_t *r = new cons_t();
   *r = *q;
-  r->exact = false;
+  r->number.exact = false;
   return r;
 }
 

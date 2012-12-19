@@ -87,10 +87,10 @@ cons_t* proc_fread(cons_t* p, environment_t*)
   assert_type(INTEGER, car(p));
   assert_pointer("FILE*", cadr(p));
 
-  if ( car(p)->integer < 0 )
+  if ( car(p)->number.integer < 0 )
     raise(runtime_exception("Size must be a positive integer"));
 
-  size_t size = static_cast<size_t>(car(p)->integer);
+  size_t size = static_cast<size_t>(car(p)->number.integer);
   FILE *f = reinterpret_cast<FILE*>(cadr(p)->pointer->value);
 
   char *buf = static_cast<char*>(malloc(sizeof(char)*(size+1)));

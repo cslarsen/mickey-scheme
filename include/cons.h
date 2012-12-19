@@ -16,19 +16,20 @@
 #include "types/character_t.h"
 #include "types/closure_t.h"
 #include "types/continuation_t.h"
-#include "types/real_t.h"
 #include "types/dict_t.h"
 #include "types/environment_t.h"
 #include "types/integer_t.h"
 #include "types/lambda_t.h"
+#include "types/number_t.h"
 #include "types/pointer_t.h"
 #include "types/port_t.h"
+#include "types/radix_t.h"
 #include "types/rational_t.h"
+#include "types/real_t.h"
 #include "types/symbol_t.h"
 #include "types/syntax_t.h"
 #include "types/type_t.h"
 #include "types/vector_t.h"
-#include "types/radix_t.h"
 
 /*
  * A variant variable.  Called a cons-cell, but that's incorrect.
@@ -40,17 +41,7 @@ struct cons_t {
   union {
     bool boolean;
     character_t character;
-
-    // numbers
-    struct {
-      bool exact;
-      union {
-        integer_t integer;
-        real_t real;
-        rational_t rational;
-      };
-    };
-
+    number_t number;
     struct { cons_t *car, *cdr; }; // pair
     closure_t* closure;
     syntax_t* syntax;
