@@ -96,7 +96,7 @@ TARGETS = $(TARGETS_O) $(TARGETS_SO) $(TARGETS_LIB_O) libmickey.so mickey
 all: $(TARGETS)
 
 libmickey.so: $(LIB_DEPS)
-	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) $^ -L. -o $@
+	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) $^ -L. -ldl -o $@
 
 lib%.so: library/%.cpp libmickey.so
 	$(CXX) $(CXXFLAGS) $(LIB_FLAGS) -L. -lmickey $< -o $@
