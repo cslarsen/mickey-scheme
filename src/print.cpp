@@ -9,6 +9,7 @@
  *
  */
 
+#include <stdarg.h>
 #include "types/real_t.h"
 #include "print.h"
 #include "util.h"
