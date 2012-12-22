@@ -103,7 +103,13 @@ const char* get_token()
 
     // comment? skip to end of line
     if ( *source == ';' ) {
-      while ( *source != '\n' ) ++source;
+      while ( *source != '\n' ) {
+        ++source;
+
+        if ( *source == '\0' )
+          return NULL;
+      }
+
       continue;
     }
 
