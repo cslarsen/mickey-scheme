@@ -24,3 +24,7 @@
 (display "Expect (2 1): ")
 (display (cons 2 (cons 1 '())))
 (newline)
+
+(display "Expect (()): ")
+(display (cons '() '()))
+(newline)
