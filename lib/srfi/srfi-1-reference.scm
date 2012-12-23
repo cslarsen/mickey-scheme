@@ -113,7 +113,14 @@
     xcons
     zip)
   (begin
+
+    (define (check-arg pred val caller)
+      (let lp ((val val))
+        (if (pred val) val
+          (lp (error "Bad argument" val pred caller)))))
+
     ;;; SRFI-1 list-processing library 			-*- Scheme -*-
+    ;;;
     ;;; Reference implementation
     ;;;
     ;;; Copyright (c) 1998, 1999 by Olin Shivers. You may do as you please with
