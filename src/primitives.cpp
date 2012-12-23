@@ -23,6 +23,14 @@ cons_t* unspecified(cons_t* p)
   return p;
 }
 
+/*
+ * Produces the empty list.
+ */
+cons_t* emptylist()
+{
+  return list(NULL);
+}
+
 cons_t* cons(const cons_t* h, const cons_t* t)
 {
   cons_t *p = new cons_t();

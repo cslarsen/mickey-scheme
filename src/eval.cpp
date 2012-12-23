@@ -242,6 +242,13 @@ cons_t* eval(cons_t* p, environment_t* e)
       }
 
       if ( name == "lambda" ) {
+        /*
+         * Problemet her er IKKE at vi trenger en (begin ...) sak, men
+         * at hvis (lambda () a b c) får flere linjer så tar den og
+         * setter "args" til a.
+         *
+         * Så egentlig er feilen at () ikke blir tolket som en tom liste?
+         */
         cons_t *args = cadr(p);
         cons_t *body = cddr(p);
 
@@ -249,7 +256,7 @@ cons_t* eval(cons_t* p, environment_t* e)
         if ( nullp(body) && !nullp(args) ) {
           // We have a `(lambda () <body>)` form
           args = list(NULL);
-          body = cons(cadr(p));
+          body = cadr(p);
         }
 
         return make_closure(args, body, e->extend());

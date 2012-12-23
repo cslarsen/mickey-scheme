@@ -23,6 +23,7 @@ cons_t* cons(const cons_t* head, const cons_t* tail = NULL);
 cons_t* list(const cons_t* head = NULL, const cons_t* tail = NULL);
 cons_t* append(cons_t*, cons_t*);
 cons_t* splice(cons_t*, cons_t*);
+cons_t* emptylist();
 
 /*
  * Splice one list directly into the other and

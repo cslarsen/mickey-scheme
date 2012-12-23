@@ -1,3 +1,11 @@
+- Printing of emptylist does not work:
+  > '()
+  > ()
+  > (display '(lambda () 1 2))
+  Look in print.cpp, not enough to test for emptylistp(), because
+  we terminate lists with NULL.  So type must be explicitly PAIR with
+  both cells NULL, but list-termination should be simply type=NIL.
+
 - Note that ignore-next-datum is treated like a token in Mickey,
   but probably not in other schemes:
 

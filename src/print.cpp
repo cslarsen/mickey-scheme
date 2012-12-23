@@ -39,6 +39,15 @@ std::string sprint(const cons_t* p, std::string& s, bool escape)
   case ENVIRONMENT:  return s + sprint(p->environment, s, escape);
   case POINTER:      return s + sprint(p->pointer, s, escape);
   case PAIR: {
+    /*
+     * The following works for single empty lists, but not for
+     * lists that end with NULL; because they will be printed like
+     * (a b c ()) instead of (a b c)
+     *
+     * if ( emptylistp(p) )
+     *   return "()";
+     */
+
     std::string head = sprint(car(p), s, escape);
     std::string tail = (atomp(cdr(p)) && !nullp(cdr(p)) ?
                         ". " : "") + sprint(cdr(p), s, escape);

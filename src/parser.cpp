@@ -265,12 +265,20 @@ static cons_t* parse_list(environment_t *env, bool quoting = false)
      * mickey> '(1 2 3) 4
      * translated to "(quote (1 2 3) 4)", which is wrong
      */
-    if ( quoting )
+    if ( quoting ) {
+      if ( type_of(p) == NIL ) // special handling of the emptylist
+        p = emptylist();
       return p;
+    }
   }
 
-  if ( t && *t==')' )
+  if ( t && *t==')' ) {
+    // special handling of the empty list "()", as in e.g. "(lambda () 1 2)"
+    if ( type_of(p) == NIL )
+      p = emptylist();
+
     --parens;
+  }
 
   return p;
 }
@@ -308,7 +316,7 @@ static cons_t* parse_quote(environment_t* e)
    * Special handling of the empty list, or '().
    */
   if ( nullp(expr) )
-    return cons(symbol("list"));
+    return emptylist();
 
   return cons(symbol("quote"), expr);
 }

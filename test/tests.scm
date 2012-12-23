@@ -797,6 +797,12 @@
 (test (exact .0000002) 1/5000000)
 (test (exact .0000003) 3/10000000)
 
+;; Empty list and open-output-string
+;; (note, we don't support open-output-string yet)
+;(test (let ((s (open-output-string)))
+;        (display '(lambda () 1 2) s)
+;        (get-output-string s)) "(lambda () 1 2)")
+
 ;; Symbols enclosed in pipes, format "|a b c|"
 (test (let ((|a b| 123)) |a b|) 123)
 (test (let ((|a  b | 123) (|c d e| 876)) (+ |a  b | |c d e|)) 999)
