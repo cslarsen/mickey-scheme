@@ -1,3 +1,5 @@
+- Bug: '(() () ()) ==> (() () ()) but doesn't work (works in chibi)
+
 - Printing of emptylist does not work:
   > '()
   > ()
