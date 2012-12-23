@@ -802,6 +802,16 @@
 ;(test (let ((s (open-output-string)))
 ;        (display '(lambda () 1 2) s)
 ;        (get-output-string s)) "(lambda () 1 2)")
+(test (cons 1 '()) '(1))
+(test (cons 1 '()) (list 1))
+(test (cons 2 (cons 1 (list))) '(2 1))
+(test (cons 2 (cons 1 (list))) (list 2 1))
+(test (cons 2 (cons 1 '())) '(2 1))
+(test (cons 2 (cons 1 '())) (list 2 1))
+(test (length (cons 1 '())) 1)
+(test (length (cons 2 (cons 1 '()))) 2)
+(test (length (list '())) 1)
+(test (length (list '() '())) 2)
 
 ;; Symbols enclosed in pipes, format "|a b c|"
 (test (let ((|a b| 123)) |a b|) 123)

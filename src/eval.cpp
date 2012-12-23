@@ -106,6 +106,13 @@ static cons_t* eval_quasiquote(cons_t* p, environment_t* e)
         t->car = eval_quasiquote(car(p), e);
     }
 
+    // `(1 2) ==> (1 2) instead of (1 2 ())
+    // so do not cons on last piece
+    if ( nullp(cdr(p)) ) {
+      t = NULL;
+      break;
+    }
+
     t = t->cdr = cons(NULL);
   }
 

@@ -310,15 +310,7 @@ static cons_t* parse_quote(environment_t* e)
   /*
    * Replace '<expr> with (quote <expr>)
    */
-  cons_t *expr = parse_list(e, true);
-
-  /*
-   * Special handling of the empty list, or '().
-   */
-  if ( nullp(expr) )
-    return emptylist();
-
-  return cons(symbol("quote"), expr);
+  return cons(symbol("quote"), parse_list(e, true));
 }
 
 static cons_t* parse_unquote(const char* t, bool paren, environment_t* e)

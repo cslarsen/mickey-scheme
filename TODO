@@ -1,4 +1,10 @@
-- Bug: '(() () ()) ==> (() () ()) but doesn't work (works in chibi)
+- Bug: '(() () ()) !==> (() () ()) but doesn't work (works in chibi)
+- Same with
+#; mickey> (list '())
+(())
+#; mickey> (list '() '())
+((()) . (()))
+- These are only errors in the printing system
 
 - Printing of emptylist does not work:
   > '()
