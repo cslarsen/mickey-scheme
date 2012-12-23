@@ -49,6 +49,7 @@ static library_map_t library_map[] = {
   {"(scheme process-context)", "scheme/process-context.scm"},
   {"(scheme repl)",        "scheme/repl.scm"},
   {"(scheme write)",       "scheme/write.scm"},
+  {"(srfi 1)",             "srfi/srfi-1-reference.scm"},
   {"(test unit-test)",     "test/unit-test.scm"},
   {"(unix dlopen)",        NULL},
   {"(unix uname)",         "unix/uname.scm"},
