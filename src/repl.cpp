@@ -322,7 +322,7 @@ int repl()
           end->cdr = cons(nil());
           printf("%s\n", sprint(l).c_str());
         } else {
-          std::string s = sprint(result);
+          std::string s = print(result);
 
           if ( !s.empty() )
             printf("%s\n", s.c_str());

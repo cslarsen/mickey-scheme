@@ -17,10 +17,6 @@
 
 std::string sprint(const cons_t* p, std::string& s, bool escape)
 {
-  // special handling of the empty list
-  //if ( emptylistp(p) )
-  //  return s + "()";
-
   switch ( type_of(p) ) {
   case NIL:          return s;
   case BOOLEAN:      return s + to_s(p->boolean);
@@ -39,21 +35,11 @@ std::string sprint(const cons_t* p, std::string& s, bool escape)
   case ENVIRONMENT:  return s + sprint(p->environment, s, escape);
   case POINTER:      return s + sprint(p->pointer, s, escape);
   case PAIR: {
-   if ( emptylistp(p) )
-     return "()";
-
     std::string head = sprint(car(p), s, escape);
+    std::string tail = sprint(cdr(p), s, escape);
 
-    bool dotted = atomp(cdr(p)) && !nullp(cdr(p));
-    bool paren = type_of(car(p))==PAIR && !emptylistp(car(p));
-
-    std::string tail;
-
-    if ( emptylistp(cadr(p)) )
-      dotted = false;
-
-    if ( !emptylistp(cdr(p)) )
-      tail = sprint(cdr(p), s, escape);
+    bool paren = type_of(car(p))==PAIR;
+    bool dotted = atomp(cdr(p)) && !nullp(cdr(p)) && !emptylistp(cadr(p));
 
     return s
       + (paren? "(" : "")
