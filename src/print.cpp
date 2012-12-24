@@ -42,18 +42,26 @@ std::string sprint(const cons_t* p, std::string& s, bool escape)
    if ( emptylistp(p) )
      return "()";
 
-    std::string head= sprint(car(p), s, escape);
+    std::string head = sprint(car(p), s, escape);
+
+    bool dotted = atomp(cdr(p)) && !nullp(cdr(p));
+    bool paren = type_of(car(p))==PAIR && !emptylistp(car(p));
 
     std::string tail;
+
+    if ( emptylistp(cadr(p)) )
+      dotted = false;
+
     if ( !emptylistp(cdr(p)) )
-      tail = (atomp(cdr(p)) && !nullp(cdr(p)) ?  ". " : "")
-             + sprint(cdr(p), s, escape);
+      tail = sprint(cdr(p), s, escape);
 
     return s
-      + (type_of(car(p))==PAIR ? "(" : "")
+      + (paren? "(" : "")
       + head
-      + (type_of(car(p))==PAIR ? ")" : "")
-      + (!tail.empty() ? " " : "") + tail;
+      + (paren? ")" : "")
+      + (!tail.empty() ? " " : "")
+      + (dotted? ". " : "")
+      + tail;
   }}
 
   return s;
