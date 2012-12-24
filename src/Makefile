@@ -79,6 +79,7 @@ LIB_DEPS =  \
 TARGETS_SO = \
 						 libc-stdio.so \
 						 libmickey-environment.so \
+						 libmickey-gensym.so \
 						 libmickey-internals.so \
 						 libmickey-misc.so \
 						 libscheme-base.so \
