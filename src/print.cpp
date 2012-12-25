@@ -64,7 +64,7 @@ std::string print(const cons_t* p)
   // the ?-operator below is a dirty trick to be
   // able to print lists with parenthesis
   std::string s;
-  return sprint(list(p) ? cons(p) : p, s, false);
+  return sprint(listp(p) ? cons(p) : p, s, false);
 }
 
 std::string sprint(const vector_t* v, std::string& r, bool)
