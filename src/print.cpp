@@ -56,7 +56,7 @@ std::string sprint(const cons_t* p, std::string& s, bool escape)
 std::string sprint(const cons_t* p)
 {
   std::string s;
-  return sprint(pairp(p) ? cons(p) : p, s, true);
+  return sprint(listp(p) ? cons(p) : p, s, true);
 }
 
 std::string print(const cons_t* p)
