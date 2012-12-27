@@ -17,7 +17,8 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
     eq
     explode
     exploden
-    implode)
+    implode
+    numberp)
   (begin
     (define base 8)
 
@@ -74,4 +75,8 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
             (map string->list (map atom->string atoms))))))
 
     ;; EQ is the same as eq?
-    (define eq eq?)))
+    (define eq eq?)
+
+    ;; TODO: a "(<expr>) is the same as (quasiquote <expr>)
+
+    (define numberp number?)))
