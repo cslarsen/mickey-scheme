@@ -20,7 +20,8 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
     get
     implode
     nil
-    numberp)
+    numberp
+    t)
   (begin
     (define base 8)
 
@@ -87,6 +88,11 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
 
     ;; we just define it as #f
     (define nil #f)
+
+    ;; used for else clause in cond, this is NOT
+    ;; the correct way to do it -- the correcty way would
+    ;; be to reimplemend cond as a macro, allowing (cond (...) (t <clause>))
+    (define t #t)
 
     ;; See CLTL, 2nd ed, page 240, or
     ;; http://www.maclisp.info/pitmanual/symbol.html#10.6.3

@@ -17,3 +17,6 @@
   (test (get foo 'baz) 3)
   (test (get foo 'hunoz) "Huh?")
   (test (get foo 'zoo) nil))
+
+(test (cond (#f 'broken) (t 'works)) 'works)
+(test (cond (#t 'works) (t 'broken)) 'works)
