@@ -17,7 +17,9 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
     eq
     explode
     exploden
+    get
     implode
+    nil
     numberp)
   (begin
     (define base 8)
@@ -77,6 +79,17 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
     ;; EQ is the same as eq?
     (define eq eq?)
 
-    ;; TODO: a "(<expr>) is the same as (quasiquote <expr>)
+    ;; TODO: the reader form "(<expr>) is the same as (quasiquote <expr>)
+    ;; but requires changes to the reader, which is not available in mickey
 
-    (define numberp number?)))
+    ;; same as number?
+    (define numberp number?)
+
+    ;; we just define it as #f
+    (define nil #f)
+
+    ;; See CLTL, 2nd ed, page 240, or
+    ;; http://www.maclisp.info/pitmanual/symbol.html#10.6.3
+    (define (get sym indicator)
+      (let ((found (member indicator sym)))
+        (if found (cadr found) nil)))

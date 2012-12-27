@@ -12,3 +12,8 @@
 (test (numberp 123) #t)
 (test (numberp 'abc) #f)
 (test (exploden 'abba) '(97 98 98 97))
+
+(let ((foo '(bar t baz 3 hunoz "Huh?")))
+  (test (get foo 'baz) 3)
+  (test (get foo 'hunoz) "Huh?")
+  (test (get foo 'zoo) nil))
