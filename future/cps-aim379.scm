@@ -1,31 +1,28 @@
-#|
-
-The code below was taken from
-
-  Guy L. Steele Jr., AI MEMO 379,
-    "LAMBDA: The Ultimate Declarative" (November 1976), Appendix A, p. 30:
-    http://dspace.mit.edu/bitstream/handle/1721.1/6091/AIM-379.pdf
-
-Translated to Mickey R7RS Scheme by Christian Stigen Larsen, December 2012
-
-It relies on the (maclisp) library, which is a subset of MacLisp.
-
-I've tried adding a (maclisp) library, but some forms cannot be parsed, like
-the "(,CONT ,SEXPR) form, without modifying the reader, and there is no such
-support in Mickey yet.
-
-Note that the (maclisp) library has some bugs in it, and more to the point,
-the PUTPROP and GET functions are currently incorrect, and does not work for
-general purpose objects.  Therefore, the code as-is does not run properly.
-
-|#
+; The code below was taken from
+;
+;   Guy L. Steele Jr., AI MEMO 379,
+;     "LAMBDA: The Ultimate Declarative" (November 1976), Appendix A, p. 30:
+;     http://dspace.mit.edu/bitstream/handle/1721.1/6091/AIM-379.pdf
+;
+; Translated to Mickey R7RS Scheme by Christian Stigen Larsen, December 2012
+;
+; It relies on the (maclisp) library, which is a subset of MacLisp.
+;
+; I've tried adding a (maclisp) library, but some forms cannot be parsed, like
+; the "(,CONT ,SEXPR) form, without modifying the reader, and there is no such
+; support in Mickey yet.
+;
+; Note that the (maclisp) library has some bugs in it, and more to the point,
+; the PUTPROP and GET functions are currently incorrect, and does not work for
+; general purpose objects.  Therefore, the code as-is does not run properly.
 
 (import (maclisp)
         (scheme base)
         (scheme write)
         (scheme cxr))
 
-(define gentempnum '()) ;; required because of a macro environment bug
+;; Must define gentempnum because of a macro environment bug
+(define gentempnum '())
 
 #!fold-case
 
@@ -227,7 +224,6 @@ general purpose objects.  Therefore, the code as-is does not run properly.
 ;; for variables even though variables evaluate trivially.  This would only
 ;; obscure the examples presented below, however, and so this was omitted.)
 
-
 (LABELS ((BAR
           (LAMBDA (DUMMY X Y)
                   (IF (NULL X) '|CPS ready to go!|
@@ -253,10 +249,10 @@ general purpose objects.  Therefore, the code as-is does not run properly.
 
 ;; Applying CPS to the LAMBDA expression for FACT yields:
 
-;(DISPLAY (CPS (QUOTE
-;  (DEFINE FACT
-;         (LAMBDA (N)
-;                 (LABELS ((FACT1 (LAMBDA (M A)
-;                                         (IF (= M 0) A
-;                                             (FACT1 (- M 1) (* M A))))))
-;                         (FACT1 N 1)))))))
+(DISPLAY (CPS (QUOTE
+  (DEFINE FACT
+         (LAMBDA (N)
+                 (LABELS ((FACT1 (LAMBDA (M A)
+                                         (IF (= M 0) A
+                                             (FACT1 (- M 1) (* M A))))))
+                         (FACT1 N 1)))))))
