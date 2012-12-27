@@ -14,6 +14,7 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
           (portable flatten))
   (export
     aset'
+    base
     eq
     explode
     exploden
@@ -23,9 +24,11 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
     nil
     null
     numberp
+    progn
     putprop
     t)
   (begin
+    ;; TODO: use this variable with (exploden) below
     (define base 8)
 
     #|
@@ -111,9 +114,14 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
       (syntax-rules ()
         ((_ ...) (letrec ...))))
 
+    ;; same as (begin ...)
+    (define-syntax progn
+      (syntax-rules ()
+        ((_ ...) (begin ...))))
+
+    ;; http://maclisp.info/pitmanual/symbol.html#10.6.2
     (define-syntax putprop
       (syntax-rules ()
         ((putprop sym val indicator)
-         (begin
-          (set! sym (append sym (list indicator val)))
-          val))))))
+         (set! sym (append sym (list indicator val))))
+         val))))
