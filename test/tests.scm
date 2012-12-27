@@ -814,6 +814,8 @@
 (test (length (list '() '())) 2)
 (test (pair? '()) #f)
 (test (pair? '(())) #t)
+(test (pair? (list (list))) #t)
+(test (pair? (list)) #f)
 (test (null? '()) #f)
 (test (null? '(())) #f)
 
