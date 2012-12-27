@@ -10,7 +10,8 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
 |#
 (define-library (maclisp)
   (import (scheme base)
-          (portable atom))
+          (portable atom)
+          (portable flatten))
   (export
     aset'
     explode
@@ -68,5 +69,5 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
     (define (implode atoms)
       (string->symbol
         (list->string
-          (map car
+          (flatten
             (map string->list (map atom->string atoms))))))
