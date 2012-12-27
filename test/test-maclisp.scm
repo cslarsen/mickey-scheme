@@ -20,3 +20,4 @@
 
 (test (cond (#f 'broken) (t 'works)) 'works)
 (test (cond (#t 'works) (t 'broken)) 'works)
+(test (null nil) t)

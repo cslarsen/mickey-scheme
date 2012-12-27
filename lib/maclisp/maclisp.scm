@@ -20,6 +20,7 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
     get
     implode
     nil
+    null
     numberp
     t)
   (begin
@@ -86,7 +87,7 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
     ;; same as number?
     (define numberp number?)
 
-    ;; we just define it as #f
+    ;; we just define it as #f, but it could be defined as 'NIL or '()
     (define nil #f)
 
     ;; used for else clause in cond, this is NOT
@@ -99,3 +100,6 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
     (define (get sym indicator)
       (let ((found (member indicator sym)))
         (if found (cadr found) nil)))
+
+    (define (null q)
+      (if (eq? q nil) t nil))))
