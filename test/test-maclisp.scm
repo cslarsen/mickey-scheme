@@ -26,3 +26,7 @@
         ((x 'x)
          (y 'y))
         (list x y)) '(x y))
+
+(define foo2 '(bar t))
+(test (putprop foo2 3 'bazz) 3)
+(test (get foo2 'bazz) 3)

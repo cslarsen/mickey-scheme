@@ -23,6 +23,7 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
     nil
     null
     numberp
+    putprop
     t)
   (begin
     (define base 8)
@@ -108,4 +109,11 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
     ;; (labels ...) is the same as (letrec ...)
     (define-syntax labels
       (syntax-rules ()
-        ((_ ...) (letrec ...))))))
+        ((_ ...) (letrec ...))))
+
+    (define-syntax putprop
+      (syntax-rules ()
+        ((putprop sym val indicator)
+         (begin
+          (set! sym (append sym (list indicator val)))
+          val))))))
