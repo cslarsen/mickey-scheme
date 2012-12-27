@@ -43,6 +43,7 @@ static library_map_t library_map[] = {
   {"(mickey library)",     "mickey/library.scm"},
   {"(mickey misc)",        "mickey/misc.scm"},
   {"(portable atom)",      "portable/atom.scm"},
+  {"(portable flatten)",   "portable/flatten.scm"},
   {"(scheme base)",        "scheme/base.scm"},
   {"(scheme char)",        "scheme/char.scm"},
   {"(scheme cxr)",         "scheme/cxr.scm"},
