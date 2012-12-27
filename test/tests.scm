@@ -816,7 +816,7 @@
 (test (pair? '(())) #t)
 (test (pair? (list (list))) #t)
 (test (pair? (list)) #f)
-(test (null? '()) #f)
+(test (null? '()) #t)
 (test (null? '(())) #f)
 
 ;; Symbols enclosed in pipes, format "|a b c|"

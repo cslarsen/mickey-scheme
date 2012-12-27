@@ -393,6 +393,10 @@ bool nullp(const cons_t* p)
 
 bool pairp(const cons_t* p)
 {
+  // (0) special case where we have '(()) or (list (list))
+  if ( type_of(p)==PAIR && length(p)>=1 )
+    return true;
+
   // (1) A pair is a list, (2) except for the empty list '()
   return type_of(p) == PAIR &&         // (1)
     !(nullp(car(p)) && nullp(cdr(p))); // (2)
