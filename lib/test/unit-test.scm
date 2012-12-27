@@ -6,7 +6,7 @@ http://csl.sublevel3.org
 Distributed under the LGPL 2.1; see LICENSE
 
 |#
-(define-library (test unit-testint)
+(define-library (test unit-testing)
   (import (scheme base))
   (export
     testq
