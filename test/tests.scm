@@ -812,6 +812,10 @@
 (test (length (cons 2 (cons 1 '()))) 2)
 (test (length (list '())) 1)
 (test (length (list '() '())) 2)
+(test (pair? '()) #f)
+(test (pair? '(())) #t)
+(test (null? '()) #f)
+(test (null? '(())) #f)
 
 ;; Symbols enclosed in pipes, format "|a b c|"
 (test (let ((|a b| 123)) |a b|) 123)
