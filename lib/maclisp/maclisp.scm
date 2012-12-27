@@ -19,6 +19,7 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
     exploden
     get
     implode
+    labels
     nil
     null
     numberp
@@ -102,4 +103,9 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
         (if found (cadr found) nil)))
 
     (define (null q)
-      (if (eq? q nil) t nil))))
+      (if (eq? q nil) t nil))
+
+    ;; (labels ...) is the same as (letrec ...)
+    (define-syntax labels
+      (syntax-rules ()
+        ((_ ...) (letrec ...))))))
