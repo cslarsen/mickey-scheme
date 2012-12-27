@@ -36,6 +36,7 @@ static library_map_t library_map[] = {
   {"(c stdio)",            "c/stdio.scm"},
   {"(cross-platform sdl)", "cross-platform/sdl.scm"},
   {"(experimental endianness)", "experimental/endianness.scm"},
+  {"(maclisp)",            "maclisp/maclisp.scm"},
   {"(mickey environment)", "mickey/environment.scm"},
   {"(mickey gensym)",      "mickey/gensym.scm"},
   {"(mickey internals)",   "mickey/internals.scm"},
