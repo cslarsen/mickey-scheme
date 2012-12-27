@@ -14,6 +14,7 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
           (portable flatten))
   (export
     aset'
+    eq
     explode
     exploden
     implode)
@@ -71,3 +72,6 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
         (list->string
           (flatten
             (map string->list (map atom->string atoms))))))
+
+    ;; EQ is the same as eq?
+    (define eq eq?)))
