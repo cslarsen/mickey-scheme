@@ -1,8 +1,10 @@
 #|
 
-Implementation of *some* MacLisp functions.
+This is not an implementation of MacLisp.  It is an implementation of the
+very first Scheme language, as defined in AI MEMO 349, but sprinkled with
+MacLisp functions.
 
-They don't behave exactly the same was as in the original MacLisp.
+Here be bugs.
 
 Copyright (C) 2012 Christian Stigen Larsen
 Distributed under the GNU LGPL 2.1; see LICENSE.
