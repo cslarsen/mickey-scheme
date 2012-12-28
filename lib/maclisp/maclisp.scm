@@ -10,26 +10,69 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
 |#
 (define-library (maclisp)
   (import (scheme base)
+          (scheme write)
+          (scheme cxr)
           (portable atom)
           (portable flatten))
+
+  ;; Missing:
+  ;;   PRINT and friends
+  ;;   More core forms
+  ;;   Reader macros...
+  ;;
   (export
+    *
+    +
+    -
+    /
+    =
+    and
+    append
     aset'
+    atom
     base
+    caar
+    cadar
+    cadddr
+    caddr
+    cadr
+    car
+    cddr
+    cdr
+    cond
+    cons
+    define
+    do
     eq
     explode
     exploden
+    funcall
     get
+    if
     implode
     labels
+    lambda
+    list
+    memq
     nil
+    not
     null
     numberp
+    or
     progn
     putprop
+    quasiquote
+    quote
+    reverse
+    set
+    setq
+    sprinter
     t)
   (begin
     ;; TODO: use this variable with (exploden) below
     (define base 8)
+
+    (define atom atom?)
 
     #|
 
@@ -83,6 +126,14 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
           (flatten
             (map string->list (map atom->string atoms))))))
 
+    (define sprinter display)
+
+    (define-syntax funcall
+      (syntax-rules ()
+        ((funcall f ...)
+         (let ((proc (string->symbol (cddr (symbol->string f)))))
+           (apply proc ...)))))
+
     ;; EQ is the same as eq?
     (define eq eq?)
 
@@ -118,6 +169,13 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
     (define-syntax progn
       (syntax-rules ()
         ((_ ...) (begin ...))))
+
+    (define (set sym val)
+      (set! sym val))
+
+    (define-syntax setq
+      (syntax-rules ()
+        ((setq sym val) (set! sym val))))
 
     ;; http://maclisp.info/pitmanual/symbol.html#10.6.2
     (define-syntax putprop

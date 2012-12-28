@@ -6,8 +6,6 @@
 ;
 ; Translated to Mickey R7RS Scheme by Christian Stigen Larsen, December 2012
 ;
-; It relies on the (maclisp) library, which is a subset of MacLisp.
-;
 ; I've tried adding a (maclisp) library, but some forms cannot be parsed, like
 ; the "(,CONT ,SEXPR) form, without modifying the reader, and there is no such
 ; support in Mickey yet.
@@ -16,10 +14,7 @@
 ; the PUTPROP and GET functions are currently incorrect, and does not work for
 ; general purpose objects.  Therefore, the code as-is does not run properly.
 
-(import (maclisp)
-        (scheme base)
-        (scheme write)
-        (scheme cxr))
+(import (maclisp))
 
 ;; Must define gentempnum because of a macro environment bug
 (define gentempnum '())
@@ -249,10 +244,10 @@
 
 ;; Applying CPS to the LAMBDA expression for FACT yields:
 
-(DISPLAY (CPS (QUOTE
+(CPS (QUOTE
   (DEFINE FACT
          (LAMBDA (N)
                  (LABELS ((FACT1 (LAMBDA (M A)
                                          (IF (= M 0) A
                                              (FACT1 (- M 1) (* M A))))))
-                         (FACT1 N 1)))))))
+                         (FACT1 N 1))))))
