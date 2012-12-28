@@ -251,3 +251,10 @@
                                          (IF (= M 0) A
                                              (FACT1 (- M 1) (* M A))))))
                          (FACT1 N 1))))))
+
+;; {Note PLASMA CPS}
+;;
+;; Hewitt has performed similar experimentso n PLASMA programs [Hewitt 76],
+;; by converting PLASMA programs to a form which uses only ==> and <==
+;; transmission arrows.  A subsequent uniform replacement of these arrows by
+;; => and <= preserves the semantics of the programs.
