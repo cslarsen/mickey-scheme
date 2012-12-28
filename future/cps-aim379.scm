@@ -21,8 +21,8 @@
 
 #!fold-case
 
-;; Appendix A.  Conversion to Continuaion-Passing Style
-;; ----------------------------------------------------
+;; Appendix A.  Conversion to Continuation-Passing Style
+;; -----------------------------------------------------
 ;;
 ;; Here we present a set of functions, written in SCHEME, which convert a
 ;; SCHEME expression form functional style to pure continuation-passing
