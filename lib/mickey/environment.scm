@@ -55,7 +55,7 @@
 
     (open-internal-library "libmickey-environment.so" 'lazy 'global)
 
-    (define bound?                  (bind-syntax    "proc_boundp"))
+    (define bound?                  (bind-procedure "proc_boundp"))
     (define environment-assign!     (bind-procedure "proc_env_assign"))
     (define environment-assignable? (bind-procedure "proc_env_assignablep"))
     (define environment-bindings    (bind-procedure "proc_env_bindings"))
