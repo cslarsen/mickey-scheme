@@ -10,10 +10,18 @@
  */
 
 #include <stdlib.h>
+#include <ctype.h>
 #include <cmath>
 #include "library/scheme-base.h"
 
 extern "C" {
+
+cons_t* proc_base_char_foldcase(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_type(CHAR, car(p));
+  return character(tolower(car(p)->character));
+}
 
 cons_t* proc_current_output_port(cons_t *p, environment_t*)
 {

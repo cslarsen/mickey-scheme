@@ -1,3 +1,6 @@
+- char=? should accept 2 or more parameters (same for most char*?
+  predicates)
+
 - TODO: add test that checks that '(lambda () 1 2) written to a
   string is indeed '(lambda () 1 2)
 

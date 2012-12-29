@@ -510,6 +510,16 @@
 (testq (char=? #\h #\e) #f)
 (testq (char=? #\r #\w) #f)
 
+;; case-insensitive character predicates
+(testq (char-ci=? #\A #\a) #t)
+(testq (char-ci=? #\A #\A) #t)
+(testq (char-ci=? #\a #\A) #t)
+(testq (char-ci=? #\a #\a) #t)
+(testq (char-ci=? #\a #\b) #f)
+(testq (char-ci=? #\a #\b) #f)
+(testq (char-ci=? #\A #\B) #f)
+(testq (char-ci=? #\A #\b) #f)
+
 ;; conversion
 (testq (integer->char 65) (quote #\A))
 (testq (integer->char 97) (quote #\a))

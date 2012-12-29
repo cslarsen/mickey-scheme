@@ -52,6 +52,11 @@ The larger part of this library resides in libscheme-base.so.
     cddr
     cdr
     char->integer
+    char-ci<=?
+    char-ci<?
+    char-ci=?
+    char-ci>=?
+    char-ci>?
     char<=?
     char<?
     char=?
@@ -87,8 +92,8 @@ The larger part of this library resides in libscheme-base.so.
     gcd
     get-features
     if
-    inexact?
     inexact
+    inexact?
     infinite?
     input-port?
     integer->char
@@ -438,6 +443,31 @@ The larger part of this library resides in libscheme-base.so.
     ;; TODO: Add (complex?)
     (define (number? n)
       (or (real? n) (integer? n) (rational? n)))
+
+    (define internal-char-foldcase (bind-procedure "proc_base_char_foldcase"))
+
+    (define (char-ci=? char1 char2 . charN)
+      (let* ((chars `(,char1 ,char2 ,@charN))
+             (folded-chars (map internal-char-foldcase chars)))
+        (apply char=? folded-chars)))
+
+    (define (char-ci<? char1 char2 . charN)
+      (let* ((chars `(,char1 ,char2 ,@charN))
+             (folded-chars (map internal-char-foldcase chars)))
+        (apply char<? folded-chars)))
+
+    (define (char-ci>? char1 char2 . charN)
+      (let* ((chars `(,char1 ,char2 ,@charN))
+             (folded-chars (map internal-char-foldcase chars)))
+        (apply char>? folded-chars)))
+
+    (define (char-ci>=? char1 char2 . charN)
+      (let ((chars `(,char1 ,char2 ,@charN)))
+        (or (char-ci=? chars) (char-ci>? chars))))
+
+    (define (char-ci<=? char1 char2 . charN)
+      (let ((chars `(,char1 ,char2 ,@charN)))
+        (or (char-ci=? chars) (char-ci<? chars))))
 
     ;; open libmickey.so
     (open-self 'global)
