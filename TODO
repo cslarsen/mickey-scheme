@@ -1,3 +1,7 @@
+BUGS
+
+- While (list #\) #\)) works, (list #\)#\)) does not.
+
 TESTS
 
 - TODO: Make test that checks that '(lambda () 1 2) written to a
