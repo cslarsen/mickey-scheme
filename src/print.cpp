@@ -240,7 +240,7 @@ std::string to_s(port_t* p)
 std::string to_s(char p, bool escape)
 {
   return escape?
-    format("#\\x%x;", static_cast<int>(p)) :
+    format("#\\x%x", static_cast<int>(p)) :
     format("%c", p);
 }
 
