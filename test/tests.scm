@@ -240,6 +240,12 @@
     v)
   (cons 1 3))
 
+(test
+  (let ((v (list 1 2 3)))
+    (set-cdr! (cdr v) 99)
+    v)
+  (cons 1 (cons 2 99))) ; (1 2 . 99)
+
 (testq
   (begin
     (set-car! (list 1 2) 3)

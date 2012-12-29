@@ -38,6 +38,61 @@ static cons_t* let(cons_t *bindings, cons_t *body)
   return cons(symbol("let"), cons(bindings, cons(body)));
 }
 
+/*
+ * See comments in proc_set_cdr.
+ */
+cons_t* proc_set_car(cons_t* p, environment_t* e)
+{
+  cons_t *target = car(p);
+  cons_t *source = cadr(p);
+
+  if ( type_of(target) == SYMBOL )
+    target = e->lookup_or_throw(*target->symbol);
+  else
+    target = eval(target, e);
+
+  if ( type_of(target) != PAIR )
+    assert_type(PAIR, target); // raise error
+
+  if ( type_of(source) == SYMBOL )
+    source = e->lookup_or_throw(*source->symbol);
+  else // constant, or whatever
+    source = eval(source, e);
+
+  target->car = source;
+  return unspecified();
+}
+
+/*
+ * set-cdr! is intercepted by eval, so we can look up
+ * addresses ourselves.
+ *
+ * We do it this way so we can create circular cells.
+ */
+cons_t* proc_set_cdr(cons_t* p, environment_t* e)
+{
+  cons_t *target = car(p);
+  cons_t *source = cadr(p);
+
+  if ( type_of(target) == SYMBOL )
+    target = e->lookup_or_throw(*target->symbol);
+  else
+    // need to support the situation:
+    // (define a (list 1 2 3)) (set-cdr! (cdr a) 99) a
+    target = eval(target, e); // e.g. "(cdr foo)"
+
+  if ( type_of(target) != PAIR )
+    assert_type(PAIR, target); // raise error
+
+  if ( type_of(source) == SYMBOL )
+    source = e->lookup_or_throw(*source->symbol);
+  else // constant, or whatever
+    source = eval(source, e);
+
+  target->cdr = source;
+  return unspecified();
+}
+
 cons_t* proc_cond(cons_t* p, environment_t* e)
 {
   /*
@@ -423,55 +478,6 @@ cons_t* proc_letstar(cons_t* p, environment_t* e)
   }
 
   return inner;
-}
-
-/*
- * See comments in proc_set_cdr.
- */
-cons_t* proc_set_car(cons_t* p, environment_t* e)
-{
-  cons_t *target = car(p);
-  cons_t *source = cadr(p);
-
-  if ( type_of(target) == SYMBOL )
-    target = e->lookup_or_throw(*target->symbol);
-
-  if ( type_of(target) != PAIR )
-    assert_type(PAIR, target); // raise error
-
-  if ( type_of(source) == SYMBOL )
-    source = e->lookup_or_throw(*source->symbol);
-  else // constant, or whatever
-    source = eval(source, e);
-
-  target->car = source;
-  return unspecified();
-}
-
-/*
- * set-cdr! is intercepted by eval, so we can look up
- * addresses ourselves.
- *
- * We do it this way so we can create circular cells.
- */
-cons_t* proc_set_cdr(cons_t* p, environment_t* e)
-{
-  cons_t *target = car(p);
-  cons_t *source = cadr(p);
-
-  if ( type_of(target) == SYMBOL )
-    target = e->lookup_or_throw(*target->symbol);
-
-  if ( type_of(target) != PAIR )
-    assert_type(PAIR, target); // raise error
-
-  if ( type_of(source) == SYMBOL )
-    source = e->lookup_or_throw(*source->symbol);
-  else // constant, or whatever
-    source = eval(source, e);
-
-  target->cdr = source;
-  return unspecified();
 }
 
 cons_t* proc_vector(cons_t* p, environment_t*)

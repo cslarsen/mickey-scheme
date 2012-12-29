@@ -1,8 +1,13 @@
-- char=? should accept 2 or more parameters (same for most char*?
-  predicates)
+TESTS
 
-- TODO: add test that checks that '(lambda () 1 2) written to a
+- TODO: Make test that checks that '(lambda () 1 2) written to a
   string is indeed '(lambda () 1 2)
+
+PARSER
+
+- Suffices: 10e3 ==> 1000, 3.1415926535F0, etc.
+- Make sure |\t\t| and |\x9;\x9;| are the same
+- Add column numbers in parser
 
 - Note that ignore-next-datum is treated like a token in Mickey,
   but probably not in other schemes:
@@ -17,74 +22,24 @@
 
   EXACT same happens with Chibi.
 
-- Add column numbers in parser
-
-- boer ha en ny cons_t type som er cons_t-pointer,
-  saa kan man slaa opp symbol i environment og sette
-  den til aa peke paa cons_t-en som staar i mappen, men
-  det krever vel egentlig at vi bruker map<symbol_t, value_t**>
-  saa kan fekd (define a 123) (display a) endres til
-  map<symbol_t, value_t**> <- "a", new value_t** <- new value_t*(123)
-  saa blir (display a) altsaa (value_t** -> display, value_t** a)
-  som peker rett inn i symbol-table.
-  (trenger vel ikke endre symboltable, den er som den er, men
-  looked-up saker er cons_t** som peker til symbol table.
-
-- lookup_symbols(program_t*) for aa slaa opp saant, kjoeres foer
-  hvert program og bruker lexical scoping rules..
-  merk (define a 123) (display a) (set! a 456) funker fortsatt
-  pga vi peker bare til riktig storage location direkte inn i
-  symboltabellen.
-  dette boer gi en heftig speedup da vi ikke lenger trenger aa
-  slaa opp ting med lookup() runtime.
-
-- lag parser-bnf.cpp som er en recursive descent parser som
-  direkte speiler informasjonen i r7rs draften om bnf.
-
-- lag assert-symbol(a ...) som sjekker at hver sak lagt inn er
-  symbol, brukes i feks base.scm
-
-- sjekk ut c++ muligheter for slikt:
-  class value { value(int)... value(std::string).. value(float) osv
-  og da value* proc(...) { return 123; } om det gaar an.
-  Problemet er pekerne og ikke eksplisitt oversetting, feks
-  veldig mye hives inn som char-pointer, og float kan fint havne som
-  int.. saa kanskje explicit constructors..
-  Fremdeles problem med pekerne, men hadde vaert nice.
-
-- (begin ...) boer ikke extende environment, saa den maa interceptes
-  paa en eller annen maate.. kanskje det er syntaktisk form og dermed
-  ikke skal extende?  saan ideelt boer man ikke ha saa mange extends,
-  dvs man boer ha 1:1 forhold mellom antall env->outer hopp og
-  scope-antall i kildekoden, saan at (let () let () <body>) har i
-  <body> to env->outer, altsaa env->outer peker til foerste let og
-  env->outer->outer peker til toplevel.
-
-PARSER TODO
-
-- Suffices: 10e3 ==> 1000, 3.1415926535F0, etc.
-- make sure |\t\t| and |\x9;\x9;| are the same
-
-SCHEME BASE
+LIBRARY: SCHEME BASE
 
 - Complete (c stdio) and use it to implement various procedures in (scheme
-  base) and other (scheme) libraries.
-  ==> move stuff out of scheme-base.cpp to scheme/base.scm
+  base) and other (scheme) libraries.  ==> move stuff out of scheme-base.cpp
+  to scheme/base.scm
 
 - In define-library export list, check that we actually DO have definitions
   for those that are listed.
 
 - libscheme-base.so is both loaded dynamically and statically linked in via
-object files.  Moved all eval-internal procs to this module and make it 100%
-dynamically loaded.
+  object files.  Move all eval-internal procs to this module and make it
+  100% dynamically loaded.
+
+- char=? should accept 2 or more parameters (same for most char*?
+  predicates)
+
 
 RANDOM STUFF
-
-- Funker i chibi men ikke i mickey
-> (define a (list 1 2 3))
-> (set-cdr! (cdr a) 99)
-> a
-(1 2 . 99)
 
 - "define" and friends should be exported by (scheme base), so that e.g.
   prefixing them with base: would mean you would have to do (base:define
@@ -343,3 +298,43 @@ implement functions as llvm primitives, e.g.:
 Some functions must be built-in, I guess, like "no", "null?", "->c_string"
 and so on.  But perhaps later on, these can as well become something that
 can be implemented (?).  (At least many of them).
+
+
+
+MISCELLANEOUS THOUGHTS
+
+- boer ha en ny cons_t type som er cons_t-pointer, saa kan man slaa opp
+  symbol i environment og sette den til aa peke paa cons_t-en som staar i
+  mappen, men det krever vel egentlig at vi bruker map<symbol_t, value_t**>
+  saa kan fekd (define a 123) (display a) endres til map<symbol_t,
+  value_t**> <- "a", new value_t** <- new value_t*(123) saa blir (display a)
+  altsaa (value_t** -> display, value_t** a) som peker rett inn i
+  symbol-table.  (trenger vel ikke endre symboltable, den er som den er, men
+  looked-up saker er cons_t** som peker til symbol table.
+
+- lookup_symbols(program_t*) for aa slaa opp saant, kjoeres foer hvert
+  program og bruker lexical scoping rules..  merk (define a 123) (display a)
+  (set! a 456) funker fortsatt pga vi peker bare til riktig storage location
+  direkte inn i symboltabellen.  dette boer gi en heftig speedup da vi ikke
+  lenger trenger aa slaa opp ting med lookup() runtime.
+
+- lag parser-bnf.cpp som er en recursive descent parser som
+  direkte speiler informasjonen i r7rs draften om bnf.
+
+- lag assert-symbol(a ...) som sjekker at hver sak lagt inn er
+  symbol, brukes i feks base.scm
+
+- Sjekk ut c++ muligheter for slikt: class value { value(int)...
+  value(std::string).. value(float) osv og da value* proc(...) { return 123;
+  } om det gaar an.  Problemet er pekerne og ikke eksplisitt oversetting,
+  feks veldig mye hives inn som char-pointer, og float kan fint havne som
+  int.. saa kanskje explicit constructors..  Fremdeles problem med pekerne,
+  men hadde vaert nice.
+
+- (begin ...) boer ikke extende environment, saa den maa interceptes paa en
+  eller annen maate.. kanskje det er syntaktisk form og dermed ikke skal
+  extende?  saan ideelt boer man ikke ha saa mange extends, dvs man boer ha
+  1:1 forhold mellom antall env->outer hopp og scope-antall i kildekoden,
+  saan at (let () let () <body>) har i <body> to env->outer, altsaa
+  env->outer peker til foerste let og env->outer->outer peker til toplevel.
+
