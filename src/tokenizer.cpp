@@ -53,7 +53,20 @@ static bool not_pipe(const char* s)
 
 static bool string_or_non_delimiter(const char* s)
 {
+  static bool escape_char_signalled = false; // e.g. '\\' and then '\"'
+  static bool stop_signalled = false;
+
+  if ( stop_signalled ) {
+    stop_signalled = false;
+    return false;
+  }
+
   char ch = *s;
+
+  if ( escape_char_signalled && !isspace(ch) ) {
+    escape_char_signalled = false;
+    return true;
+  }
 
   // ignore next datum symbol #; is a token
   if ( s[0]=='#' && s[1]==';' )
@@ -64,8 +77,18 @@ static bool string_or_non_delimiter(const char* s)
       || (s[0]=='#' && s[1]=='u' && /* bytevector form #u8( ... ) */
           s[2]=='8' && s[3]=='('));
 
-  if ( ch == '\"' )
-    inside_string = !inside_string;
+  if ( ch == '\\' && inside_string ) {
+    escape_char_signalled = true;
+    return true;
+  }
+
+  if ( ch == '\"' ) {
+    if ( !escape_char_signalled ) {
+      inside_string = !inside_string;
+      if ( !inside_string ) // just parsed a string
+        stop_signalled = true; // so signal token end
+    }
+  }
 
   return ch!='\0'
     && (inside_string? true :

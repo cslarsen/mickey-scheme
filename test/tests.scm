@@ -819,6 +819,16 @@
 (test (null? '()) #t)
 (test (null? '(())) #f)
 
+;; Tokenizer should recognize "a""b" as two tokens "a" and "b"
+(test '("1""2""3") (list "1" "2" "3"))
+(test '("foo""bar""baz") (list "foo" "bar" "baz"))
+(test (length '("foo""bar""baz")) 3)
+;; Escaped characters should still work
+(test (string-length "Say: \"Hello!\".") 14)
+(test (length (list "Backslash: \\""Another string")) 2)
+(test (length (list "Backslash: \\""Another string")) 2)
+(test (string-ref (car (list "Backslash: \\""Another string")) 11) #\x5c)
+
 ;; Symbols enclosed in pipes, format "|a b c|"
 (test (let ((|a b| 123)) |a b|) 123)
 (test (let ((|a  b | 123) (|c d e| 876)) (+ |a  b | |c d e|)) 999)

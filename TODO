@@ -1,12 +1,3 @@
-- Bug: '(() () ()) !==> (() () ()) but doesn't work (works in chibi)
-  - Have collected these in test/emptylist-1.scm
-    - Same with
-    #; mickey> (list '())
-    (())
-    #; mickey> (list '() '())
-    ((()) . (()))
-    - These are only errors in the printing system
-
 - TODO: add test for:
   > (display '(lambda () 1 2))
   It displays correctly now, but add test for it.
