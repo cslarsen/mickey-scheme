@@ -11,15 +11,19 @@ Please post bugfixes and suggestions to the author.   /  \_
 |#
 
 (define-library (scheme char)
-  (import (only (scheme base) defien)
+  (import (only (scheme base) define not cadr memv if)
           (mickey library))
 
   (export
-    char-alphabetic? char-downcase
-    char-lower-case? char-numeric?
-    char-upcase char-upper-case?
+    char-alphabetic?
+    char-downcase
+    char-foldcase
+    char-lower-case?
+    char-numeric?
+    char-upcase
+    char-upper-case?
     char-whitespace?
-    char-foldcase)
+    digit-value)
 
   (begin
     #|
@@ -35,6 +39,14 @@ Please post bugfixes and suggestions to the author.   /  \_
     (define char-upcase      (bind-procedure "proc_char_upcase"))
     (define char-upper-case? (bind-procedure "proc_char_uppercasep"))
     (define char-whitespace? (bind-procedure "proc_char_whitespacep"))
+
+    (define (digit-value ch)
+      (if (not (char-numeric? ch)) #f
+          (cadr (memv ch '(#\0 0 #\1 1
+                           #\2 2 #\3 3
+                           #\4 4 #\5 5
+                           #\6 6 #\7 7
+                           #\8 8 #\9 9)))))
 
     #|
        From R7RS draft 6:
