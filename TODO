@@ -1,3 +1,5 @@
+- Character literal for #\( and #\) does not work.
+
 - TODO: add test for:
   > (display '(lambda () 1 2))
   It displays correctly now, but add test for it.
