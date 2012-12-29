@@ -1,4 +1,7 @@
-- Character literal for #\( and #\) does not work.
+- The following character literals do not work:
+  - #\(
+  - #\)
+  - "#\ " (space))
 
 - TODO: add test for:
   > (display '(lambda () 1 2))
