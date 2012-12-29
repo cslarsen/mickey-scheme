@@ -722,6 +722,10 @@
 (testq (string-length (make-string 3 #\x0)) 3) ; <- TODO/BUG: Fix code!
 (testq (string-length (make-string 3 #\null)) 3) ; <- TODO/BUG: Fix code!
 
+;; Special character literals
+(testq (length (list #\( #\))) 2)
+(testq (vector-length #(1 2 3 #\))) 4)
+
 ;; Comment-out datum
 (testq (+ 1 #; 2 3) 4)
 (testq (+ 1 #;2 3) 4)

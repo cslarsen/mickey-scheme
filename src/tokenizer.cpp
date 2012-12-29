@@ -18,10 +18,22 @@
 #include "tokenizer.h"
 #include "util.h"
 
+static const char* source_start = NULL;
 static const char* source = NULL;
 static bool inside_string = false;
 static bool fold_case_flag = false;
 static int line = 1;
+
+static bool hasprefix(const char* str, const char* prefix)
+{
+  size_t len = strlen(prefix);
+
+  while ( len-- )
+    if ( *str++ != *prefix++ )
+      return false;
+
+  return true;
+}
 
 int current_line_number()
 {
@@ -41,7 +53,7 @@ bool fold_case()
 
 void set_source(const char* program)
 {
-  source = program;
+  source_start = source = program;
   inside_string = false;
   line = 1;
 }
@@ -63,7 +75,11 @@ static bool string_or_non_delimiter(const char* s)
 
   char ch = *s;
 
-  if ( escape_char_signalled && !isspace(ch) ) {
+  /*
+   * If we have been told to parse an escaped character, then parse it as
+   * long as the character is not null or space.
+   */
+  if ( escape_char_signalled && !isspace(ch) && ch!='\0' ) {
     escape_char_signalled = false;
     return true;
   }
@@ -72,16 +88,41 @@ static bool string_or_non_delimiter(const char* s)
   if ( s[0]=='#' && s[1]==';' )
     return false;
 
-  bool open_paren = (ch=='('        /* normal paren */
-      || (s[0]=='#' && s[1]=='(')   /* vector form #( ... ) */
-      || (s[0]=='#' && s[1]=='u' && /* bytevector form #u8( ... ) */
-          s[2]=='8' && s[3]=='('));
+  /*
+   * Check for:
+   *
+   *   (1) Normal list form, (...), and NOT #\( character literal
+   *   (2) Vector form, #(...)
+   *   (3) Bytevector form, #u8(...)
+   *   (4) Closing of normal list form but NOT a #\) character literal
+   *
+   */
+  bool char_literal  = (source - source_start) > 2 && hasprefix(s-2, "#\\");
+  bool open_list     = ch=='(' && !char_literal;  // (1)
+  bool open_vector   = hasprefix(s, "#(");        // (2)
+  bool open_u8vector = hasprefix(s, "#u8(");      // (3)
+  bool close_list    = ch==')' && !char_literal;  // (4)
 
+  // Now determine if we should look for a closing paren
+  bool require_close_list = open_list || open_vector || open_u8vector;
+
+  /*
+   * If we are parsing a string and the current character is backspace, then
+   * we need to remember that for the next character, because it could be an
+   * escaped character like "in \"this\" string".
+   */
   if ( ch == '\\' && inside_string ) {
     escape_char_signalled = true;
     return true;
   }
 
+  /*
+   * If we find a " character there are three possible situations:
+   *
+   *   - We will start parsing a new string
+   *   - We are parsing en escaped "-character inside a string
+   *   - We are ending the parsing of a string
+   */
   if ( ch == '\"' ) {
     if ( !escape_char_signalled ) {
       inside_string = !inside_string;
@@ -92,7 +133,7 @@ static bool string_or_non_delimiter(const char* s)
 
   return ch!='\0'
     && (inside_string? true :
-          !open_paren && ch!=')' && !isspace(ch));
+          !require_close_list && !close_list && !isspace(ch));
 }
 
 static const char* skip_space(const char* s)

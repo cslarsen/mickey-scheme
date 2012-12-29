@@ -1,13 +1,5 @@
-- The following character literals do not work:
-  - #\(
-  - #\)
-  - "#\ " (space))
-
-- TODO: add test for:
-  > (display '(lambda () 1 2))
-  It displays correctly now, but add test for it.
-
-- TODO: Doing "a""b""c" should be parsed like "a" "b" "c"
+- TODO: add test that checks that '(lambda () 1 2) written to a
+  string is indeed '(lambda () 1 2)
 
 - Note that ignore-next-datum is treated like a token in Mickey,
   but probably not in other schemes:
