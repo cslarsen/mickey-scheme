@@ -391,7 +391,7 @@
         sym "\n")))
     definitions))
 
-(display "The following list shows the R7RS library definitions")
+(display "The following list shows the R7RS library definitions ")
 (display "that are available in Mickey Scheme.")
 (newline)
 
