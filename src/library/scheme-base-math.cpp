@@ -218,10 +218,11 @@ cons_t* proc_mul(cons_t *p, environment_t *env)
 cons_t* proc_less(cons_t* p, environment_t*)
 {
   assert_length_min(p, 2);
-  assert_number(car(p));
-  assert_number(cadr(p));
 
   for ( ; !nullp(cdr(p)); p = cdr(p) ) {
+    assert_number(car(p));
+    assert_number(cadr(p));
+
     real_t x = integerp(car(p))? car(p)->number.integer :
                                  car(p)->number.real;
 
@@ -240,10 +241,11 @@ cons_t* proc_less(cons_t* p, environment_t*)
 cons_t* proc_greater(cons_t* p, environment_t*)
 {
   assert_length_min(p, 2);
-  assert_number(car(p));
-  assert_number(cadr(p));
 
   for ( ; !nullp(cdr(p)); p = cdr(p) ) {
+    assert_number(car(p));
+    assert_number(cadr(p));
+
     real_t x = integerp(car(p))? car(p)->number.integer :
                                  car(p)->number.real;
 
