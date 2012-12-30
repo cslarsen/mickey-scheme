@@ -63,6 +63,10 @@ void remove_feature(const char* s)
 
 /*
  * Comments taken from R7RS.
+ *
+ * Some compiler macros taken from:
+ * - http://sourceforge.net/p/predef/wiki/OperatingSystems/
+ * - http://nadeausoftware.com/articles/2012/01/c_c_tip_how_use_compiler_predefined_macros_detect_operating_system
  */
 void detect_features()
 {
@@ -165,6 +169,9 @@ void detect_features()
  *
  * Some predefined macros can be found at:
  * http://sourceforge.net/apps/mediawiki/predef/index.php?title=Operating_Systems
+ *
+ * A good list is:
+ * http://nadeausoftware.com/articles/2012/01/c_c_tip_how_use_compiler_predefined_macros_detect_operating_system
  */
 bool detect_operating_system()
 {
@@ -194,7 +201,7 @@ bool detect_operating_system()
   /*
    * Operating system flags (more than one may apply).
    */
-#ifdef __unix
+#if !defined(_WIN32) && (defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__)))
   add_feature("unix");
 #endif
 
