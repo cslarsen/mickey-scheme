@@ -12,6 +12,9 @@ LIBRARY
 - Clean up the library index parser mess in src/import.cpp
   (move it to another file)
 
+- For large libraries in lib/, split up into several files and use
+  (include ...) forms.
+
 FEATURES
 
 - Add lib/index.scm that contains a list of libraries
