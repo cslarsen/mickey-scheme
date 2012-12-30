@@ -1,5 +1,6 @@
 ;; Mickey Scheme library structure
 
+;; Libraries loaded by REPL
 (define-repl-imports
   (scheme base)
   (scheme cxr)
@@ -9,6 +10,7 @@
   (scheme process-context)
   (scheme repl))
 
+;; List of available libraries and their locations
 (define-library-index
   ((c stdio)                 "c/stdio.scm")
   ((cross-platform sdl)      "cross-platform/sdl.scm")
