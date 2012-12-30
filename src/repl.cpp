@@ -269,9 +269,13 @@ int repl()
           printf("   To quit, hit CTRL+D or type (exit).  Use (help) for an introduction.\n");
           printf("   Distributed under the LGPL 2.1; see LICENSE\n");
           printf("|#\n\n");
+
           import_defaults(env);
-          import(env, exports_repl, "(scheme repl)");
           imported_defaults = true;
+
+          // import (help) and (top-level) etc.
+          if ( !global_opts.empty_repl_env )
+            import(env, exports_repl, "(scheme repl)");
         }
       }
 

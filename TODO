@@ -1,7 +1,3 @@
-MISC
-
-- Remove top-level / help when doing mickey -z
-
 LIBRARY
 
 - Allow (define ...) outside of (begin ...) blocks in (define-library ...)
