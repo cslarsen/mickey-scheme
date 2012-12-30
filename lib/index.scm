@@ -23,6 +23,7 @@
   ((mickey misc)             "mickey/misc.scm")
   ((portable atom)           "portable/atom.scm")
   ((portable flatten)        "portable/flatten.scm")
+  ((portable print)          "portable/print.scm")
   ((scheme base)             "scheme/base.scm")
   ((scheme char)             "scheme/char.scm")
   ((scheme cxr)              "scheme/cxr.scm")
