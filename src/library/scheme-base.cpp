@@ -13,6 +13,7 @@
 #include <ctype.h>
 #include <cmath>
 #include "library/scheme-base.h"
+#include "system-features.h"
 
 extern "C" {
 
@@ -880,7 +881,7 @@ cons_t* proc_newline(cons_t* p, environment_t*)
     raise(runtime_exception("Port is not writable: " + to_s(po)));
 
   if ( po->fileport() ) {
-    fprintf(po->file(), "\n");
+    fprintf(po->file(), !supports_feature("win32")? "\n" : "\r\n");
 
     /*
      * Can just as well flush it when we have
