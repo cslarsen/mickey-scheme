@@ -1,4 +1,9 @@
-CLEANUP
+LIBRARY
+
+- Allow (define ...) outside of (begin ...) blocks in (define-library ...)
+
+- In lib/index.scm, do not include (library name) in list, just filenames,
+  and build that index in-memory.
 
 - Clean up the library index parser mess in src/import.cpp
   (move it to another file)
