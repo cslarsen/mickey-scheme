@@ -12,9 +12,10 @@
 #ifndef INC_MICKEY_TOKENIZER_H
 #define INC_MICKEY_TOKENIZER_H
 
-bool fold_case();
+bool get_fold_case();
 const char* get_token();
 int current_line_number();
+void set_fold_case(bool setting);
 void set_source(const char* program);
 
 #endif

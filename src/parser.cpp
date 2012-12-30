@@ -171,7 +171,7 @@ cons_t* type_convert(const char* token)
     return parse_string(token);
 
   if ( isatom(token) )
-    return symbol(!fold_case()? token : string_foldcase(token).c_str());
+    return symbol(!get_fold_case()? token : string_foldcase(token).c_str());
 
   if ( isbool(token) )
     return boolean(to_b(token));
@@ -183,7 +183,7 @@ cons_t* type_convert(const char* token)
     return nil();
 
   // probably a function called "+" or something
-  return symbol(!fold_case()? token : string_foldcase(token).c_str());
+  return symbol(!get_fold_case()? token : string_foldcase(token).c_str());
 }
 
 static bool isdot(const char* s)

@@ -337,23 +337,27 @@ static cons_t* include(cons_t* p, environment_t* e)
 {
   cons_t *code = list();
   /*
-   * TODO: Search the directory containing file is in
+   * TODO: Paths should be relative (or under) the directory
+   *       that the library file is in.
    */
   for ( ; !nullp(p); p = cdr(p) ) {
     assert_type(STRING, car(p));
     const char* filename = car(p)->string;
 
-    program_t *p = parse(slurp(open_file(filename)), e);
+    program_t *p = parse(slurp(open_file(library_file(filename))), e);
     code = append(code, p->root);
   }
 
   return code;
 }
 
-static cons_t* include_ci(cons_t*, environment_t*)
+static cons_t* include_ci(cons_t* p, environment_t* e)
 {
-  raise(unsupported_error("include-ci is unsupported"));
-  return unspecified();
+  bool flag = get_fold_case();
+  set_fold_case(true);
+  cons_t *code = include(p, e);
+  set_fold_case(flag);
+  return code;
 }
 
 /*
@@ -370,7 +374,7 @@ static cons_t* include_ci(cons_t*, environment_t*)
  * - (begin <command or definition> ...)
  * - (include <filename1> <filename2> ...)
  * - (include-ci <filename1> <filename2> ...)
- * - (conf-expand <cond-expand clause> ...)
+ * - (cond-expand <cond-expand clause> ...)
  */
 static library_t* define_library(cons_t* p, const char* file)
 {
@@ -409,12 +413,16 @@ static library_t* define_library(cons_t* p, const char* file)
     }
 
     if ( s == "include" ) {
-      eval(include(body, r->internals), r->internals);
+      eval(splice(list(symbol("begin")),
+                  include(body, r->internals)),
+           r->internals);
       continue;
     }
 
     if ( s == "include-ci" ) {
-      eval(include_ci(body, r->internals), r->internals);
+      eval(splice(list(symbol("begin")),
+                  include_ci(body, r->internals)),
+           r->internals);
       continue;
     }
 

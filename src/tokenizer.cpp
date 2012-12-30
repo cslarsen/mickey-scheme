@@ -24,6 +24,11 @@ static bool inside_string = false;
 static bool fold_case_flag = false;
 static int line = 1;
 
+void set_fold_case(bool setting)
+{
+  fold_case_flag = setting;
+}
+
 static bool hasprefix(const char* str, const char* prefix)
 {
   size_t len = strlen(prefix);
@@ -46,7 +51,7 @@ static inline void checkline(const char ch)
     ++line;
 }
 
-bool fold_case()
+bool get_fold_case()
 {
   return fold_case_flag;
 }
