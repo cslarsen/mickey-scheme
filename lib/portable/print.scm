@@ -10,7 +10,7 @@
 |#
 (define-library (portable print)
   (import (scheme base)
-          (only (scheme write) newline))
+          (scheme write))
   (export print println prints printsln)
   (begin
     ; Calls display on each element.
