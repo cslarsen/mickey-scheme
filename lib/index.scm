@@ -34,6 +34,7 @@
   ((scheme repl)             "scheme/repl.scm")
   ((scheme write)            "scheme/write.scm")
   ((srfi 1)                  "srfi/srfi-1-reference.scm")
+  ((srfi 98)                 "srfi/srfi-98.scm")
   ((test unit-test)          "test/unit-test.scm")
   ((unix dlopen)             "")
   ((unix uname)              "unix/uname.scm"))
