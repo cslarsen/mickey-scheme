@@ -182,26 +182,43 @@ cons_t* proc_equalp(cons_t* p, environment_t*)
 
 cons_t* proc_eqnump(cons_t* p, environment_t*)
 {
-  assert_length(p, 2);
-  assert_number(car(p));
-  assert_number(cadr(p));
+  assert_length_min(p, 2);
 
-  cons_t *l = car(p),
-         *r = cadr(p);
+  for ( ; !nullp(cdr(p)); p = cdr(p) ) {
+    assert_number(car(p));
+    assert_number(cadr(p));
 
-  if ( realp(l) || realp(r) )
-    return boolean(number_to_real(l) == number_to_real(r));
+    cons_t *l = car(p),
+           *r = cadr(p);
 
-  if ( rationalp(l) && rationalp(r) )
-    return boolean(l->number.rational.numerator == r->number.rational.numerator &&
-                   l->number.rational.denominator == r->number.rational.denominator);
+    if ( realp(l) || realp(r) ) {
+      if ( number_to_real(l) == number_to_real(r) )
+        continue;
 
-  if ( integerp(l) && integerp(r) )
-    return boolean(l->number.integer == r->number.integer);
+      return boolean(false);
+    }
 
-  raise(runtime_exception("Cannot compare " + sprint(l)
-        + " with " + sprint(r)));
-  return unspecified(boolean(false));
+    if ( rationalp(l) && rationalp(r) ) {
+      if ( l->number.rational.numerator == r->number.rational.numerator &&
+           l->number.rational.denominator == r->number.rational.denominator )
+        continue;
+
+      return boolean(false);
+    }
+
+    if ( integerp(l) && integerp(r) ) {
+      if ( l->number.integer == r->number.integer )
+        continue;
+      return boolean(false);
+    }
+
+    std::string msg = "Don't know how to perform equal number comparison "
+      "with types " + sprint(l);
+    msg += " and " + sprint(r);
+    raise(runtime_exception(msg));
+  }
+
+  return boolean(true);
 }
 
 cons_t* proc_file_existsp(cons_t* p, environment_t*)
