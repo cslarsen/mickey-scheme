@@ -9,6 +9,7 @@
  *
  */
 
+#include <stdlib.h>
 #include <dlfcn.h>
 #include "cons.h"
 #include "primitives.h"
@@ -32,36 +33,92 @@ struct library_map_t {
  * libraries to a list of known libraries.  Use that to lookup library
  * names, and report errors (double library names, e.g.).
  */
-static library_map_t library_map[] = {
-  {"(c stdio)",            "c/stdio.scm"},
-  {"(cross-platform sdl)", "cross-platform/sdl.scm"},
-  {"(experimental endianness)", "experimental/endianness.scm"},
-  {"(maclisp)",            "maclisp/maclisp.scm"},
-  {"(mickey environment)", "mickey/environment.scm"},
-  {"(mickey gensym)",      "mickey/gensym.scm"},
-  {"(mickey internals)",   "mickey/internals.scm"},
-  {"(mickey library)",     "mickey/library.scm"},
-  {"(mickey misc)",        "mickey/misc.scm"},
-  {"(portable atom)",      "portable/atom.scm"},
-  {"(portable flatten)",   "portable/flatten.scm"},
-  {"(scheme base)",        "scheme/base.scm"},
-  {"(scheme char)",        "scheme/char.scm"},
-  {"(scheme cxr)",         "scheme/cxr.scm"},
-  {"(scheme lazy)",        "scheme/lazy.scm"},
-  {"(scheme load)",        "scheme/load.scm"},
-  {"(scheme math)",        "scheme/math.scm"},
-  {"(scheme process-context)", "scheme/process-context.scm"},
-  {"(scheme repl)",        "scheme/repl.scm"},
-  {"(scheme write)",       "scheme/write.scm"},
-  {"(srfi 1)",             "srfi/srfi-1-reference.scm"},
-  {"(test unit-test)",     "test/unit-test.scm"},
-  {"(unix dlopen)",        NULL},
-  {"(unix uname)",         "unix/uname.scm"},
-  {NULL, NULL}
-};
+static const char* library_index_file = "index.scm";
+static library_map_t* library_map = NULL;
+static const char** repl_libraries = NULL;
+
+static std::string library_file(const std::string& basename);
+
+static void invalid_index_format(const std::string& msg)
+{
+  raise(runtime_exception(format(
+    "Invalid format for library index file: %s", msg.c_str())));
+  exit(1);
+}
+
+static void load_library_index()
+{
+  if ( library_map != NULL )
+    return;
+
+  std::string filename = library_file(library_index_file);
+  environment_t *env = null_environment();
+  program_t *p = parse(slurp(open_file(filename)), env);
+
+  cons_t *index = p->root;
+
+  if ( !pairp(index) || !symbolp(caar(index)) )
+    invalid_index_format(filename + ": no list with symbols");
+
+  for ( ; !nullp(index); index = cdr(index) ) {
+    if ( symbol_name(caar(index)) == "define-library-index" ) {
+      if ( library_map != NULL )
+        invalid_index_format(filename + ": only one define-library-index allowed");
+
+      if ( !listp(cdar(index)) ) {
+        invalid_index_format(filename
+          + ": define-library-index is not a list");
+      }
+
+      size_t len = length(cdar(index));
+      library_map = (library_map_t*) malloc((1+len)*sizeof(library_map_t));
+
+      size_t i = 0;
+      for ( cons_t *lib = cdar(index); !nullp(lib); lib = cdr(lib), ++i ) {
+        cons_t *name = caar(lib);
+        cons_t *file = cadar(lib);
+
+        if ( !listp(name) || !stringp(file) )
+          invalid_index_format(filename + ": not list/string pair");
+
+        library_map[i].library_name = strdup(sprint(name).c_str());
+        library_map[i].source_file = strdup(file->string);
+      }
+
+      // important to signal end of list:
+      library_map[i].library_name = NULL;
+      library_map[i].source_file = NULL;
+
+      continue;
+    } else if ( symbol_name(caar(index)) == "define-repl-imports" ) {
+      if ( repl_libraries != NULL )
+        invalid_index_format(filename + ": only one define-repl-imports allowed");
+
+      if ( !listp(cdar(index)) ) {
+        invalid_index_format(filename
+          + ": define-repl-imports is not a list");
+      }
+
+      size_t len = length(cdar(index));
+      repl_libraries = (const char**) malloc((1+len)*sizeof(char*));
+
+      const char **s = repl_libraries;
+      for ( cons_t *lib = cdar(index); !nullp(lib); lib = cdr(lib), ++s ) {
+        cons_t *name = car(lib);
+        *s = strdup(sprint(name).c_str());
+      }
+      *s = NULL;
+      continue;
+    } else
+      invalid_index_format(filename + ": unknown label "
+        + sprint(caar(index)));
+  }
+}
 
 static bool supports_library(const char* s)
 {
+  load_library_index();
+
   for ( library_map_t *p = library_map; p->library_name != NULL; ++p ) {
     if ( !strcmp(s, p->library_name) )
       return true;
@@ -118,14 +175,11 @@ void load(const std::string& file, environment_t* target)
  */
 void import_defaults(environment_t *e)
 {
+  load_library_index();
+
   if ( !global_opts.empty_repl_env ) {
-    merge(e, import_library("(scheme base)"));
-    merge(e, import_library("(scheme cxr)"));
-    merge(e, import_library("(scheme write)"));
-    merge(e, import_library("(scheme char)"));
-    merge(e, import_library("(scheme load)"));
-    merge(e, import_library("(scheme process-context)"));
-    merge(e, import_library("(scheme repl)"));
+    for ( const char** s = repl_libraries; *s != NULL; ++s )
+      merge(e, import_library(*s));
   }
 }
 
@@ -485,6 +539,7 @@ static void import_unix_dlopen(environment_t* r)
 
 environment_t* import_library(const std::string& name)
 {
+  load_library_index();
   environment_t* r = null_environment();
 
   /*

@@ -597,9 +597,6 @@ Easy!
 
 ## Custom Scheme-libraries in R7RS
 
-*NOTE:* Currently, for Mickey to load custom libraries you have to add load
-instructions to `import.cpp` so that `(your library name)` will be recognized.
-
 To create a small library, use the `define-library` form as described in the
 R7RS draft over at http://scheme-reports.org
 
@@ -615,17 +612,12 @@ As an example, put this in a file `foo/bar.scm`:
         (define (tail x) (cdr x))
         (define (rest x) (cdr x))))
 
-Then add a line somewhere in `import.cpp`:
+Mickey needs to know where to find this library, so you need to add an entry
+in `lib/index.scm`:
 
-    static library_map_t library_map[] = {
-      // ...
-      {"(foo bar)", "foo/bar.scm"},
-      // ...
-      {NULL, NULL}};
-
-You must now *recompile* Mickey so that it will recognize `(foo bar)` as a
-library and know where to load it from!  (I _said_ it was currently
-cumbersome...)
+  ; ...
+  ((foo bar) "foo/bar.scm")
+  ; ...
 
 There really isn't more to it.  You can take a look in the `lib/` directory
 for some ideas.  Note that you _have_ to import primitive functions to be
