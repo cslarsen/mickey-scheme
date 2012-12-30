@@ -63,16 +63,6 @@
 (testq (= 0.51 1/2) #f)
 (testq 1000/200 5)
 
-;; Equal operator
-(testv (= 1 1 1 1 1) #t)
-(testv (= 1 1 1 1 1.0 1 1.0 1.0 1) #t)
-(testv (= 1 1 2 1 1.0 1 1.0 1.0 1) #f)
-(testv (= 1 1 2 1 1.0 1 1.0 1.01 1) #f)
-(testv (= 1 1 1 1 1.0 1 1.0 1.01 1) #f)
-(testv (= 0.51 0.51 0.51 0.51) #t)
-(testv (= 0.51 0.51 0.52 0.51) #f)
-(testv (= 1/2 1/2 1/2 0.5 10/20 11/22 (* 0.1 5)) #t)
-
 ;; Rational arithmetic
 (test (* 1/2 1/2) 1/4)
 (test (exact? (* 1/2 1/2)) #t)
@@ -199,7 +189,17 @@
 (testq (or #f #f #t) #t)
 (test (or 1 (/ 0)) 1)
 
-;; comparison operators
+;; Equal operator
+(testv (= 1 1 1 1 1) #t)
+(testv (= 1 1 1 1 1.0 1 1.0 1.0 1) #t)
+(testv (= 1 1 2 1 1.0 1 1.0 1.0 1) #f)
+(testv (= 1 1 2 1 1.0 1 1.0 1.01 1) #f)
+(testv (= 1 1 1 1 1.0 1 1.0 1.01 1) #f)
+(testv (= 0.51 0.51 0.51 0.51) #t)
+(testv (= 0.51 0.51 0.52 0.51) #f)
+(testv (= 1/2 1/2 1/2 0.5 10/20 11/22 (* 0.1 5)) #t)
+
+;; Comparison operators
 (testv (< 1 2) #t)
 (testv (< 2 1) #f)
 (testv (< 1 2 3) #t)
@@ -210,6 +210,7 @@
 (testv (< -2 -1 -1 1 2 3 4) #f)
 (testv (< -2 -1 -2 1 2 3 4) #f)
 (testv (< -2 -1 1 2 3 4) #t)
+(testv (< -2 -1 +nan.0 2 3 4) #f)
 
 (testv (> 2 1) #t)
 (testv (> 3 2 1) #t)
@@ -221,7 +222,23 @@
 (testv (> -1 -2) #t)
 (testv (> -10 -20) #t)
 (testv (> -10 -20 -30) #t)
+(testv (> -10 +nan.0 -30) #f)
 (testv (> -10 -20 -4) #f)
+
+(testv (<= 1 2 3 3 4 4 10 12 14 14) #t)
+(testv (<= 1 2 3 3 4 4 10 15 14 14) #f)
+(testv (<= 1 10 5) #f)
+(testv (<= 1 10 50) #t)
+
+(testv (>= 1 2 3 3 4 4 10 12 14 14) #f)
+(testv (>= 14 14 12 10 4 4 3 3 2 1) #t)
+(testv (>= 14 14 15 10 4 4 3 3 2 1) #f)
+(testv (>= 5 10 1) #f)
+(testv (>= 50 10 1) #t)
+
+(testv (nan? 1) #f)
+(testv (nan? 1.1) #f)
+(testv (nan? 1/2) #f)
 
 ;; here we show that (or) only evaluates as many arguments as is needed;
 ;; therefore we stick in a division by zero, which should not be evaluated,

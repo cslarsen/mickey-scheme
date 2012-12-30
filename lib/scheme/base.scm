@@ -193,10 +193,8 @@ The larger part of this library resides in libscheme-base.so.
     (define - (bind-procedure "proc_sub"))
     (define / (bind-procedure "proc_div"))
     (define < (bind-procedure "proc_less"))
-    (define <= (bind-procedure "proc_lteq"))
     (define = (bind-procedure "proc_eqnump"))
     (define > (bind-procedure "proc_greater"))
-    (define >= (bind-procedure "proc_gteq"))
     (define abs (bind-procedure "proc_abs"))
     (define and (bind-syntax "proc_dummy_placeholder"))
     (define append (bind-procedure "proc_append"))
@@ -339,6 +337,22 @@ The larger part of this library resides in libscheme-base.so.
     (define write (bind-procedure "proc_write"))
     (define xor (bind-procedure "proc_xor"))
     (define zero?  (bind-procedure "proc_zerop"))
+
+    (define (compare-all op v)
+      (let loop ((v v))
+        (if (null? (cadr v)) #t
+            (if (or (nan? (car v))
+                    (not (op (car v) (cadr v)))) #f
+                (loop (cdr v))))))
+
+    (define (>= x1 x2 . xn)
+      (compare-all (lambda (a b)
+                     (or (> a b) (= a b)))
+                   `(,x1 ,x2 ,@xn)))
+
+    (define (<= x1 x2 . xn)
+      (compare-all (lambda (a b) (or (< a b) (= a b)))
+                   `(,x1 ,x2 ,@xn)))
 
     (define-syntax when
       (syntax-rules ()

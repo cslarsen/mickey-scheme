@@ -220,6 +220,9 @@ cons_t* proc_less(cons_t* p, environment_t*)
   assert_length_min(p, 2);
 
   for ( ; !nullp(cdr(p)); p = cdr(p) ) {
+    if ( nanp(car(p)) || nanp(cadr(p)) )
+      return boolean(false);
+
     assert_number(car(p));
     assert_number(cadr(p));
 
@@ -243,6 +246,9 @@ cons_t* proc_greater(cons_t* p, environment_t*)
   assert_length_min(p, 2);
 
   for ( ; !nullp(cdr(p)); p = cdr(p) ) {
+    if ( nanp(car(p)) || nanp(cadr(p)) )
+      return boolean(false);
+
     assert_number(car(p));
     assert_number(cadr(p));
 
@@ -271,16 +277,6 @@ cons_t* proc_number_to_string(cons_t* p, environment_t* e)
 
   // TODO: Implement use of radix
   return proc_to_string(cons(car(p)), e);
-}
-
-cons_t* proc_gteq(cons_t* p, environment_t* e)
-{
-  return boolean(proc_eqnump(p, e)->boolean || proc_greater(p, e)->boolean);
-}
-
-cons_t* proc_lteq(cons_t* p, environment_t* e)
-{
-  return boolean(proc_eqnump(p, e)->boolean || proc_less(p, e)->boolean);
 }
 
 cons_t* proc_evenp(cons_t* p, environment_t*)
@@ -487,10 +483,10 @@ cons_t* proc_nanp(cons_t* p, environment_t*)
   assert_length(p, 1);
   assert_number(car(p));
 
-  if ( type_of(car(p)) == INTEGER )
-    return boolean(false);
+  if ( realp(car(p)) )
+    return boolean(std::isnan(car(p)->number.real));
 
-  return boolean(std::isnan(car(p)->number.real));
+  return boolean(false);
 }
 
 cons_t* proc_infinitep(cons_t* p, environment_t*)

@@ -335,6 +335,11 @@ bool integerp(const cons_t* p)
   return type_of(p) == INTEGER;
 }
 
+bool nanp(const cons_t* p)
+{
+  return realp(p) && isnan(p->number.real);
+}
+
 bool rationalp(const cons_t* p)
 {
   return type_of(p) == RATIONAL;

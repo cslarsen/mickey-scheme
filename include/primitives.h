@@ -88,6 +88,7 @@ bool eqp(const cons_t*, const cons_t*);
 bool equalp(const cons_t*, const cons_t*);
 bool eqvp(const cons_t*, const cons_t*);
 bool integerp(const cons_t*);
+bool nanp(const cons_t*);
 bool listp(const cons_t*);
 bool not_p(const cons_t*);
 bool nullp(const cons_t*);

@@ -185,6 +185,9 @@ cons_t* proc_eqnump(cons_t* p, environment_t*)
   assert_length_min(p, 2);
 
   for ( ; !nullp(cdr(p)); p = cdr(p) ) {
+    if ( nanp(car(p)) || nanp(cadr(p)) )
+      return boolean(false);
+
     assert_number(car(p));
     assert_number(cadr(p));
 
