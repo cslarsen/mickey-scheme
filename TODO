@@ -1,3 +1,17 @@
+PROPERLY TAIL-RECURSIVE
+
+- Although this doesn't break:
+
+  (define (a x)
+    (a x))
+
+  (a 1)
+
+  ... this DOES: (define (a x)
+                   (apply a x))
+
+  because (apply) is not properly tail recursive.  So fix that.
+
 LIBRARY
 
 - Allow (define ...) outside of (begin ...) blocks in (define-library ...)
