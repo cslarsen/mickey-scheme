@@ -1,4 +1,9 @@
-PROPERLY TAIL-RECURSIVE
+BINDING NULL-VALUES
+
+- ((lambda (a) '()) (cdr '())) does not bind anything to a;
+  an error should be explicitly signalled for this kind of case.
+
+PROPER TAIL-RECURSION FOR APPLY
 
 - Although this doesn't break:
 
