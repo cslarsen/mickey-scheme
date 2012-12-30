@@ -14,7 +14,10 @@ PROPERLY TAIL-RECURSIVE
 
 LIBRARY
 
+- Add (portable zip), (portable reduce) / (portable fold) w/foldr foldl
+
 - Allow (define ...) outside of (begin ...) blocks in (define-library ...)
+  (note, doesn't seem like R7RS allows it)
 
 - In lib/index.scm, do not include (library name) in list, just filenames,
   and build that index in-memory.
