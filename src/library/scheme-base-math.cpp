@@ -212,28 +212,48 @@ cons_t* proc_mul(cons_t *p, environment_t *env)
   return rational(product, exact);
 }
 
+/*
+ * True if number sequence is monotonically increasing.
+ */
 cons_t* proc_less(cons_t* p, environment_t*)
 {
-  assert_length(p, 2);
+  assert_length_min(p, 2);
   assert_number(car(p));
   assert_number(cadr(p));
 
-  real_t x = (type_of(car(p)) == INTEGER)? car(p)->number.integer : car(p)->number.real;
-  real_t y = (type_of(cadr(p)) == INTEGER)? cadr(p)->number.integer : cadr(p)->number.real;
+  for ( ; !nullp(cdr(p)); p = cdr(p) ) {
+    real_t x = integerp(car(p))? car(p)->number.integer :
+                                 car(p)->number.real;
 
-  return boolean(x < y);
+    real_t y = integerp(cadr(p))? cadr(p)->number.integer :
+                                  cadr(p)->number.real;
+    if ( !(x < y) )
+      return boolean(false);
+  }
+
+  return boolean(true);
 }
 
+/*
+ * True if number sequence is monotonically decreasing.
+ */
 cons_t* proc_greater(cons_t* p, environment_t*)
 {
-  assert_length(p, 2);
+  assert_length_min(p, 2);
   assert_number(car(p));
   assert_number(cadr(p));
 
-  real_t x = (type_of(car(p)) == INTEGER)? car(p)->number.integer : car(p)->number.real;
-  real_t y = (type_of(cadr(p)) == INTEGER)? cadr(p)->number.integer : cadr(p)->number.real;
+  for ( ; !nullp(cdr(p)); p = cdr(p) ) {
+    real_t x = integerp(car(p))? car(p)->number.integer :
+                                 car(p)->number.real;
 
-  return boolean(x > y);
+    real_t y = integerp(cadr(p))? cadr(p)->number.integer :
+                                  cadr(p)->number.real;
+    if ( !(x > y) )
+      return boolean(false);
+  }
+
+  return boolean(true);
 }
 
 cons_t* proc_number_to_string(cons_t* p, environment_t* e)
