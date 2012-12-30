@@ -436,16 +436,20 @@ static library_t* define_library(cons_t* p, const char* file)
   for ( p = exports; !nullp(p); p = cdr(p) ) {
 
     // handle renaming
-    if ( pairp(car(p)) ) {
-      assert_type(SYMBOL, caar(p));
-      assert_type(SYMBOL, cadr(p));
+    if ( listp(car(p)) && length(car(p))==3 &&
+         symbol_name(caar(p))=="rename" )
+    {
+      assert_type(SYMBOL, cadar(p));
+      assert_type(SYMBOL, caddar(p));
 
-      std::string internal_name = symbol_name(caar(p));
-      std::string external_name = symbol_name(cadr(p));
+      std::string internal_name = symbol_name(cadar(p));
+      std::string external_name = symbol_name(caddar(p));
 
       r->exports->define(external_name,
                          r->internals->lookup(internal_name));
-    } else if ( type_of(car(p)) == SYMBOL ) {
+    } else if ( listp(car(p)) )
+      raise(syntax_error("(export <spec> ...) only allows (rename x y)"));
+    else if ( type_of(car(p)) == SYMBOL ) {
       r->exports->define(symbol_name(car(p)),
                          r->internals->lookup(symbol_name(car(p))));
     } else
