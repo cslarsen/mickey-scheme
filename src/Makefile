@@ -90,6 +90,7 @@ TARGETS_SO = \
 						 libscheme-repl.so \
 						 libscheme-write.so \
 						 libunix-dlopen.so \
+						 libsrfi-4.so \
 						 libunix-uname.so \
 
 TARGETS = $(TARGETS_O) $(TARGETS_SO) $(TARGETS_LIB_O) libmickey.so mickey

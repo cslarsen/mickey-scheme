@@ -122,6 +122,11 @@ cons_t* pointer(const char* tag, void* value)
   return r;
 }
 
+bool pointerp(const char* tag, const cons_t* p)
+{
+  return type_of(p)==POINTER && !strcmp(p->pointer->tag, tag);
+}
+
 cons_t* real(real_t n)
 {
   cons_t *p = new cons_t();
