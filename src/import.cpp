@@ -11,6 +11,7 @@
 
 #include <stdlib.h>
 #include <dlfcn.h>
+#include <cassert>
 #include "cons.h"
 #include "primitives.h"
 #include "import.h"
@@ -38,6 +39,28 @@ static library_map_t* library_map = NULL;
 static const char** repl_libraries = NULL;
 
 static std::string library_file(const std::string& basename);
+
+/*
+ * Poor man's dirname().  For some reason beyond my understanding,
+ * using dirname() char *s = strdup(filename); std::string r = dirname(s);
+ * causes bugs.  Dunno why.
+ *
+ * So I'll just do it myself.
+ */
+static std::string sdirname(const char* filename)
+{
+  assert(filename != NULL);
+
+  char *s = strdup(filename);
+  for ( char *p = s+strlen(s); p>=s; --p )
+    if ( *p == '/' || *p == '\\' ) {
+      *p = '\0';
+      break;
+    }
+  std::string r(s);
+  free(s);
+  return r;
+}
 
 static void invalid_index_format(const std::string& msg)
 {
@@ -333,7 +356,7 @@ static cons_t* cond_expand(const cons_t* p, environment_t*)
   return list(symbol("begin"), r);
 }
 
-static cons_t* include(cons_t* p, environment_t* e)
+static cons_t* include(cons_t* p, environment_t* e, const char* basedir)
 {
   cons_t *code = list();
   /*
@@ -342,20 +365,21 @@ static cons_t* include(cons_t* p, environment_t* e)
    */
   for ( ; !nullp(p); p = cdr(p) ) {
     assert_type(STRING, car(p));
-    const char* filename = car(p)->string;
 
-    program_t *p = parse(slurp(open_file(library_file(filename))), e);
+    std::string file = format("%s/%s", basedir, car(p)->string);
+
+    program_t *p = parse(slurp(open_file(file)), e);
     code = append(code, p->root);
   }
 
   return code;
 }
 
-static cons_t* include_ci(cons_t* p, environment_t* e)
+static cons_t* include_ci(cons_t* p, environment_t* e, const char* basedir)
 {
   bool flag = get_fold_case();
   set_fold_case(true);
-  cons_t *code = include(p, e);
+  cons_t *code = include(p, e, basedir);
   set_fold_case(flag);
   return code;
 }
@@ -380,6 +404,9 @@ static library_t* define_library(cons_t* p, const char* file)
 {
   library_t *r = new library_t();
   cons_t *exports = nil();
+
+  // find current dir for resolving include and include-ci
+  std::string curdir = sdirname(file);
 
   // define-library
   if ( symbol_name(caar(p)) != "define-library" )
@@ -414,14 +441,14 @@ static library_t* define_library(cons_t* p, const char* file)
 
     if ( s == "include" ) {
       eval(splice(list(symbol("begin")),
-                  include(body, r->internals)),
+                  include(body, r->internals, curdir.c_str())),
            r->internals);
       continue;
     }
 
     if ( s == "include-ci" ) {
       eval(splice(list(symbol("begin")),
-                  include_ci(body, r->internals)),
+                  include_ci(body, r->internals, curdir.c_str())),
            r->internals);
       continue;
     }
