@@ -45,6 +45,17 @@ PROPER TAIL-RECURSION FOR APPLY
 
 LIBRARY
 
+- Rename many of the (mickey ...) libraries to (system ...) to signify
+  that many of them could potentially be portable interfaces to similar
+  functionality elsewhere, but contains stuff that pertains to the given
+  implementation system.
+
+  Only keep things that are completely specific to Mickey Scheme in (mickey
+  ...).
+
+- Rewrite (define-library ...) as Scheme code using macro expansion and the
+  support for first class environment.
+
 - When exporting, check that definitions exist
   (now, we can specify (export foo) without having defined any foo,
    but that should be an error.. same with renames)
