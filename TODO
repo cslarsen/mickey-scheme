@@ -1,3 +1,10 @@
+READER
+
+- Add simple reader macros:
+  - At least add a runtime possibility to inject a way to print
+    and parse pointer-tagged types, so we can create a nice looking
+    syntax for s64vector etc.
+
 CASE-LAMBDA
 
 - Implement as a simple macro. Convert
