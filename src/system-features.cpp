@@ -104,10 +104,9 @@ void detect_features()
    */
   // add_feature("full-unicode");
 
-#ifdef __posix
-  bool os_found = false;
-  os_found = detect_operating_system();
+  bool os_found = detect_operating_system();
 
+#ifdef __posix
   /*
    * Use uname to query system
    */
@@ -131,6 +130,9 @@ void detect_features()
      */
   }
 #endif
+
+  if ( !os_found )
+    add_feature("unknown-operating-system");
 
   /*
    * TODO: Detect all of the following

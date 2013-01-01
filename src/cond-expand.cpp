@@ -150,8 +150,10 @@ extern "C" cons_t* cond_expand(const cons_t* p, environment_t*)
            *req    = car(clause),
            *body   = cadr(clause);
 
+    cons_t *feature = lookup_feature_requirement(req);
+
     // if <feature request> evaluates to #t, add the body
-    if ( eval_feature_req(lookup_feature_requirement(req)) )
+    if ( eval_feature_req(feature) )
       r = append(r, body);
   }
 

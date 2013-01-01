@@ -13,7 +13,9 @@ The larger part of this library resides in libscheme-base.so.
 |#
 
 (define-library (scheme base)
-  (import (mickey library))
+  (import (mickey library)
+          (srfi 0)) ;; cond-expand
+
   (export
     *
     +
@@ -67,6 +69,7 @@ The larger part of this library resides in libscheme-base.so.
     close-output-port
     close-port
     cond
+    cond-expand
     cons
     current-error-port
     current-input-port

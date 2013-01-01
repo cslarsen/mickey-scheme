@@ -92,6 +92,7 @@ TARGETS_SO = \
 						 libscheme-repl.so \
 						 libscheme-write.so \
 						 libunix-dlopen.so \
+						 libsrfi-0.so \
 						 libsrfi-4.so \
 						 libunix-uname.so \
 
