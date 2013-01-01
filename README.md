@@ -29,7 +29,14 @@ Current Features
 
 Some of these are demonstrated in the [example code section](#examples).
 
-I've also added (experimental) support for `(srfi 1)` and `(srfi 4)`.
+SRFIs
+-----
+
+The supported SRFIs are
+
+  * List Library `(srfi 1)` http://srfi.schemers.org/srfi-1/srfi-1.html
+  * Homogeneous numeric vector datatypes `(srfi 4)`
+    http://srfi.schemers.org/srfi-4/srfi-4.html
 
 Extensions
 ----------
