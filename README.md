@@ -37,7 +37,7 @@ The supported SRFIs are
   * `(srfi 0)` Feature-based conditional expansion construct,
     http://srfi.schemers.org/srfi-0/srfi-0.html
   * `(srfi 1)` List Library, http://srfi.schemers.org/srfi-1/srfi-1.html
-  * `(srfi 1)` Homogeneous numeric vector datatypes,
+  * `(srfi 4)` Homogeneous numeric vector datatypes,
     http://srfi.schemers.org/srfi-4/srfi-4.html
 
 See the SRFI page at http://srfi.schemers.org and the list of accepted ones
