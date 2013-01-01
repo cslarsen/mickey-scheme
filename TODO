@@ -38,6 +38,12 @@ PROPER TAIL-RECURSION FOR APPLY
 
 LIBRARY
 
+- When exporting, check that definitions exist
+  (now, we can specify (export foo) without having defined any foo,
+   but that should be an error.. same with renames)
+
+- Implement includable lib specs
+
 - Add (portable zip), (portable reduce) / (portable fold) w/foldr foldl
 
 - Allow (define ...) outside of (begin ...) blocks in (define-library ...)
