@@ -86,11 +86,11 @@ The larger part of this library resides in libscheme-base.so.
     exact-integer?
     exact?
     expt
+    features
     file-exists?
     finite?
     for-each
     gcd
-    get-features
     if
     inexact
     inexact?
@@ -335,4 +335,4 @@ The larger part of this library resides in libscheme-base.so.
 
     ;; open libmickey.so
     (open-self 'global)
-    (define get-features (bind-procedure "proc_list_features"))))
+    (define features (bind-procedure "proc_list_features"))))
