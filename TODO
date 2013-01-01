@@ -40,6 +40,8 @@ FEATURES
 BUGS
 
 - While (list #\) #\)) works, (list #\)#\)) does not.
+- This causes segfault: (lambda (. rest) 1)
+                        (lambda ( . rest) 1)
 
 TESTS
 
