@@ -16,6 +16,7 @@ TARGETS_O =  \
             backtrace.o \
             call-lambda.o \
             circular.o \
+            cond-expand.o \
             cons.o \
             core-transition.o \
             environment.o \
@@ -52,6 +53,7 @@ LIB_DEPS =  \
             backtrace.o \
             call-lambda.o \
             circular.o \
+            cond-expand.o \
             cons.o \
             core-transition.o \
             environment.o \

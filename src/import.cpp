@@ -23,11 +23,14 @@
 #include "file-io.h"
 #include "debug.h"
 #include "system-features.h"
+#include "cond-expand.h"
 
 struct library_map_t {
   const char* library_name;
   const char* source_file;
 };
+
+void load_library_index();
 
 /*
  * TODO: Create a small module that recurses lib-directory and adds all
@@ -39,6 +42,45 @@ static library_map_t* library_map = NULL;
 static const char** repl_libraries = NULL;
 
 static std::string library_file(const std::string& basename);
+
+cons_t* proc_import(cons_t* p, environment_t* e);
+
+/*
+ * Library exports
+ */
+named_function_t exports_import[] = {
+  {"import", proc_import, true},
+  {NULL, NULL, false}
+};
+
+struct library_t {
+  cons_t *name;
+  environment_t *exports; // exported definitions
+  environment_t *internals; // imported libs/defs
+
+  library_t() :
+    name(nil()),
+    exports(null_environment()),
+    internals(exports->extend())
+  {
+  }
+};
+
+/*
+ * Returns true if given library is supported, typically
+ * supports_library("(scheme base)") returns true.
+ */
+bool supports_library(const char* s)
+{
+  load_library_index();
+
+  for ( library_map_t *p = library_map; p->library_name != NULL; ++p ) {
+    if ( !strcmp(s, p->library_name) )
+      return true;
+  }
+
+  return false;
+}
 
 /*
  * Poor man's dirname().  For some reason beyond my understanding,
@@ -69,7 +111,7 @@ static void invalid_index_format(const std::string& msg)
   exit(1);
 }
 
-static void load_library_index()
+void load_library_index()
 {
   if ( library_map != NULL )
     return;
@@ -138,39 +180,6 @@ static void load_library_index()
   }
 }
 
-static bool supports_library(const char* s)
-{
-  load_library_index();
-
-  for ( library_map_t *p = library_map; p->library_name != NULL; ++p ) {
-    if ( !strcmp(s, p->library_name) )
-      return true;
-  }
-
-  return false;
-}
-
-/*
- * Library exports
- */
-named_function_t exports_import[] = {
-  {"import", proc_import, true},
-  {NULL, NULL, false}
-};
-
-struct library_t {
-  cons_t *name;
-  environment_t *exports; // exported definitions
-  environment_t *internals; // imported libs/defs
-
-  library_t() :
-    name(nil()),
-    exports(null_environment()),
-    internals(exports->extend())
-  {
-  }
-};
-
 void import(environment_t *e,
             named_function_t *p,
             const std::string& lib_name)
@@ -229,131 +238,6 @@ static cons_t* verify_library_name(cons_t* p)
   }
 
   return p;
-}
-
-/*
- * Cond-expand is Scheme's #ifdef and has the following form:
- *
- * (cond-expand <clause> ... (else <body>))
- *
- * where <clause> can be
- *   - (<feature req> <body> ...)
- *
- * where <feature req> can be any combination of:
- *
- *   - <feature>
- *   - (library <name>)
- *   - (and <feature> ...)
- *   - (or <feature> ...)
- *   - (not <feature>)
- *
- * We will copy the clauses and transform each <feature> and (library
- * <name>) into #t if supported and #f if not.  We will then evaluate the
- * resulting expression as a normal Scheme boolean expression.
- *
- * If the <clause> returns #t then the <body> will be included in the
- * library.
- */
-
-/*
- * Returns TRUE or FALSE on whether given feature requirement is supported
- * or not.
- *
- * A <feature requirement> takes one of the following forms:
- *
- *   - <feature identifier>
- *   - (library <library name>)
- *   - (and <feature requirement> ...)
- *   - (or <feature requirement> ...)
- *   - (not <feature requirement>)
- */
-static cons_t* lookup_feature_requirement(const cons_t* p)
-{
-  // <feature identifier>
-  if ( symbolp(p) )
-    return boolean(supports_feature(p->symbol->c_str()));
-
-  if ( pairp(p) ) {
-    std::string op = symbol_name(car(p));
-
-    // (library <library name>)
-    if ( op == "library" ) {
-      if ( symbolp(cadr(p)) )
-        return boolean(supports_library(cadr(p)->symbol->c_str()));
-
-      raise(runtime_exception("Missing <name> in (library <name>)"));
-    }
-
-    // (and/or/not <feature req> ...)
-    if ( op == "and" || op == "or" || op == "not" ) {
-
-      if ( op == "not" && length(p) != 2 )
-        raise(runtime_exception(
-          "cond-expand (not <feature req>) only takes one argument"));
-
-      cons_t *r = list(symbol(op.c_str()), cons(NULL)), *e = cdr(r);
-
-      for ( cons_t *q = cdr(p); !nullp(q); q = cdr(q) ) {
-        e->car = lookup_feature_requirement(car(q));
-        e->cdr = cons(NULL);
-        e = e->cdr;
-      }
-
-      return r;
-    }
-  }
-
-  raise(runtime_exception(format(
-    "Unknown cond-expand feature requirement: %s", sprint(p).c_str())));
-  return nil();
-}
-
-static bool eval_feature_req(cons_t* p)
-{
-  if ( booleanp(p) )
-    return p->boolean;
-
-  if ( !pairp(p) || !symbolp(car(p)) )
-    raise(runtime_exception(format(
-      "Invalid feature request: %s", sprint(p).c_str())));
-
-  std::string op = symbol_name(car(p));
-  bool r = eval_feature_req(cadr(p));
-
-  if ( op == "else" )
-    return true;
-  else if ( op == "and" ) {
-    for ( p = cddr(p); !nullp(p); p = cdr(p) )
-      r &= eval_feature_req(car(p));
-  } else if ( op == "or" ) {
-    for ( p = cddr(p); !nullp(p); p = cdr(p) )
-      r |= eval_feature_req(car(p));
-  } else if ( op == "not" )
-    r = !r;
-
-  return r;
-}
-
-/*
- * Evaluate each cond-expand clause and pass on the bodies of all those that
- * are matched.
- */
-static cons_t* cond_expand(const cons_t* p, environment_t*)
-{
-  cons_t *r = nil();
-
-  for ( ; !nullp(p); p = cdr(p) ) {
-    // clause := (<feature request> <library declaration>)
-    cons_t *clause = car(p),
-           *req    = car(clause),
-           *body   = cadr(clause);
-
-    // if <feature request> evaluates to #t, add the body
-    if ( eval_feature_req(lookup_feature_requirement(req)) )
-      r = append(r, body);
-  }
-
-  return list(symbol("begin"), r);
 }
 
 static cons_t* include(cons_t* p, environment_t* e, const char* basedir)
