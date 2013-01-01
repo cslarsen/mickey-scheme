@@ -716,6 +716,11 @@ bool boolean_false(cons_t* p)
   return booleanp(p) && p->boolean == false;
 }
 
+bool boolean_true(cons_t* p)
+{
+  return booleanp(p) && p->boolean == true;
+}
+
 environment_t* null_environment(int version)
 {
   if ( version != 7 )

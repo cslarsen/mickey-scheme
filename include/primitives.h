@@ -114,6 +114,7 @@ int gcd(int a, int b);
 int lcm(int a, int b);
 cons_t* nil_coalesce(cons_t* p);
 bool boolean_false(cons_t* p);
+bool boolean_true(cons_t* p);
 
 /*
  * If argument is a symbol, return its name.
