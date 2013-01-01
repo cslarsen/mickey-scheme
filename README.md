@@ -34,8 +34,8 @@ SRFIs
 
 The supported SRFIs are
 
-  * List Library `(srfi 1)` http://srfi.schemers.org/srfi-1/srfi-1.html
-  * Homogeneous numeric vector datatypes `(srfi 4)`
+  * `(srfi 1)` List Library, http://srfi.schemers.org/srfi-1/srfi-1.html
+  * `(srfi 1)` Homogeneous numeric vector datatypes,
     http://srfi.schemers.org/srfi-4/srfi-4.html
 
 Extensions
