@@ -29,7 +29,7 @@ Current Features
 
 Some of these are demonstrated in the [example code section](#examples).
 
-I've also added experimental support for `(srfi 1)`.
+I've also added (experimental) support for `(srfi 1)` and `(srfi 4)`.
 
 Extensions
 ----------
