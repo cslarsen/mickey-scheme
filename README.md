@@ -41,6 +41,8 @@ The supported SRFIs are
     http://srfi.schemers.org/srfi-4/srfi-4.html
   * `(srfi 16)` Syntax for procedures of variable arity,
     http://srfi.schemers.org/srfi-16/srfi-16.html
+  * `(srfi 98)` An interface to access environment variables,
+    http://srfi.schemers.org/srfi-98/
 
 See the SRFI page at http://srfi.schemers.org and the list of accepted ones
 at http://srfi.schemers.org/final-srfis.html
