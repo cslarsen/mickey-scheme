@@ -1,7 +1,7 @@
 /*
  * Mickey Scheme
  *
- * Copyright (C) 2011-2012 Christian Stigen Larsen <csl@sublevel3.org>
+ * Copyright (C) 2011-2013 Christian Stigen Larsen <csl@sublevel3.org>
  * http://csl.sublevel3.org                              _
  *                                                        \
  * Distributed under the LGPL 2.1; see LICENSE            /\
@@ -21,6 +21,8 @@
  *
  * When that is fixed, the procedures here will be moved back into
  * scheme-base.cpp, where they belong.
+ *
+ * Ultimately, most of these will be implemented as pure scheme macros.
  */
 
 extern "C" {
@@ -93,37 +95,36 @@ cons_t* proc_set_cdr(cons_t* p, environment_t* e)
   return unspecified();
 }
 
+/*
+ * Transform:
+ *
+ * (cond ((case-1) action-1 ...)
+ *       ((case-2) action-2 ...)
+ *       ((case-n) action-n ...)
+ *       (else <else action>))
+ *
+ * to
+ *
+ *  (let ((result <case-1>))
+ *    (if result (begin action-1 ...)
+ *      (let ((result <case-2>))
+ *        (if result (begin <action-2> ...)
+ *          (let ((result <case-n>))
+ *            (if result (begin <action-n>))
+ *              <else action>)))))
+ *
+ * Also, forms involving the literal `=>´ will be
+ * transformed like the following:
+ *
+ *  ((<case> => <action>))
+ *
+ * is transformed to
+ *
+ * (begin (<action> result))
+ *
+ */
 cons_t* proc_cond(cons_t* p, environment_t* e)
 {
-  /*
-   * Transform:
-   *
-   * (cond ((case-1) action-1 ...)
-   *       ((case-2) action-2 ...)
-   *       ((case-n) action-n ...)
-   *       (else <else action>))
-   *
-   * to
-   *
-   *  (let ((result <case-1>))
-   *    (if result (begin action-1 ...)
-   *      (let ((result <case-2>))
-   *        (if result (begin <action-2> ...)
-   *          (let ((result <case-n>))
-   *            (if result (begin <action-n>))
-   *              <else action>)))))
-   *
-   * Also, forms involving the literal `=>´ will be
-   * transformed like the following:
-   *
-   *  ((<case> => <action>))
-   *
-   * is transformed to
-   *
-   * (begin (<action> result))
-   *
-   */
-
   cons_t *r = list(NULL);
   p = cdr(p);
 
@@ -147,29 +148,28 @@ cons_t* proc_cond(cons_t* p, environment_t* e)
               cons(otherwise)))));
 }
 
+/*
+ * Transforms
+ *
+ *  (case <key>
+ *    ((<datum> ...) <expression> ...)
+ *    ((<datum> ...) => <expression>)
+ *    (else <expression> ...) ; OR
+ *    (else => <expression>))
+ *
+ * to the code
+ *
+ *  (let
+ *    ((value <key>))
+ *    (cond
+ *      ((memv value (quote (<datum> ...))) <expression> ...)
+ *      ((memv value (quote (<datum> ...))) => <expression>)
+ *      (else <expression>) ; OR
+ *      (else => <expression>)))
+ *
+ */
 cons_t* proc_case(cons_t *p, environment_t*)
 {
-  /*
-   * Transforms
-   *
-   *  (case <key>
-   *    ((<datum> ...) <expression> ...)
-   *    ((<datum> ...) => <expression>)
-   *    (else <expression> ...) ; OR
-   *    (else => <expression>))
-   *
-   * to the code
-   *
-   *  (let
-   *    ((value <key>))
-   *    (cond
-   *      ((memv value (quote (<datum> ...))) <expression> ...)
-   *      ((memv value (quote (<datum> ...))) => <expression>)
-   *      (else <expression>) ; OR
-   *      (else => <expression>)))
-   *
-   */
-
   cons_t *key = cadr(p);
   cons_t *clauses = cons(NULL);
 
@@ -227,7 +227,7 @@ cons_t* proc_define(cons_t *p, environment_t *env)
 
 cons_t* proc_define_syntax(cons_t *p, environment_t *env)
 {
-  // (define <name> <body>)
+  // (define-syntax <name> <body>)
   assert_type(SYMBOL, car(p));
   cons_t *name = car(p);
   cons_t *syntax = cadr(p);
@@ -239,23 +239,22 @@ cons_t* proc_define_syntax(cons_t *p, environment_t *env)
   return unspecified();
 }
 
+/*
+ * Expand according to r7rs, pp. 56:
+ *
+ *  (letrec
+ *    ((loop (lambda (<var1> <var2> <varN>) 
+ *         (if <test>
+ *             (begin
+ *               (if #f #f) ; used to get unspecified value
+ *               <expr>)
+ *             (begin
+ *               <command>
+ *               (loop (<step1> <step2> <stepN>)))))))
+ *    (loop <init1> <init2> <initN>))
+ */
 cons_t* proc_do(cons_t* p, environment_t*)
 {
-  /*
-   * Expand according to r7rs, pp. 56:
-   *
-   *  (letrec
-   *    ((loop (lambda (<var1> <var2> <varN>) 
-   *         (if <test>
-   *             (begin
-   *               (if #f #f) ; used to get unspecified value
-   *               <expr>)
-   *             (begin
-   *               <command>
-   *               (loop (<step1> <step2> <stepN>)))))))
-   *    (loop <init1> <init2> <initN>))
-   */
-
   cons_t *vars = cadr(p),
          *test = caaddr(p),
          *test_body = cons(symbol("begin"), cdaddr(p)),
@@ -312,33 +311,32 @@ cons_t* proc_do(cons_t* p, environment_t*)
   return letrec;
 }
 
+/*
+ * Transform to lambdas:
+ *
+ * (let <name>
+ *      ((name-1 value-1)
+ *       (name-2 value-2)
+ *       (name-n value-n))
+ *       <body>)
+ *
+ * to
+ *
+ * ((lambda (name-1 name-2 name-n)
+ *    <body>) value-1 value-2 value-n)
+ *
+ * If an OPTIONAL <name> is given, we have a "named let"
+ * which will produce the output:
+ *
+ * (letrec
+ *   ((<name> (lambda
+ *              (name-1 name-2 name-n)
+ *              <body>)))
+ *   (<name> value-1 value-2 value-n))
+ *
+ */
 cons_t* proc_let(cons_t* p, environment_t* e)
 {
-  /*
-   * Transform to lambdas:
-   *
-   * (let <name>
-   *      ((name-1 value-1)
-   *       (name-2 value-2)
-   *       (name-n value-n))
-   *       <body>)
-   *
-   * to
-   *
-   * ((lambda (name-1 name-2 name-n)
-   *    <body>) value-1 value-2 value-n)
-   *
-   * If an OPTIONAL <name> is given, we have a "named let"
-   * which will produce the output:
-   *
-   * (letrec
-   *   ((<name> (lambda
-   *              (name-1 name-2 name-n)
-   *              <body>)))
-   *   (<name> value-1 value-2 value-n))
-   *
-   */
-
   cons_t *name = NULL;
 
   // named let?
@@ -380,27 +378,26 @@ cons_t* proc_let(cons_t* p, environment_t* e)
            cons(cons(name, values))));        //   (<name> value-1 .. value-n))
 }
 
+/*
+ * Transform to begin-define with dummy initial values
+ * and using set! to update with correct ones:
+ *
+ * (letrec ((name-1 value-1)
+ *          (name-2 value-2)
+ *          (name-3 value-3))
+ *         <body>)
+ * to
+ *
+ * (let ((name-1 #f)
+ *       (name-2 #f)
+ *       (name-3 #f))
+ *   (set! name-1 value1)
+ *   (set! name-2 value2)
+ *   (set! name-3 value3)
+ *    <body>)
+ */
 cons_t* proc_letrec(cons_t* p, environment_t*)
 {
-  /*
-   * Transform to begin-define with dummy initial values
-   * and using set! to update with correct ones:
-   *
-   * (letrec ((name-1 value-1)
-   *          (name-2 value-2)
-   *          (name-3 value-3))
-   *         <body>)
-   * to
-   *
-   * (let ((name-1 #f)
-   *       (name-2 #f)
-   *       (name-3 #f))
-   *   (set! name-1 value1)
-   *   (set! name-2 value2)
-   *   (set! name-3 value3)
-   *    <body>)
-   */
-
   cons_t  *body  = cdr(p),
           *names = list(NULL),
          *values = list(NULL);
@@ -438,25 +435,24 @@ cons_t* proc_letrec(cons_t* p, environment_t*)
   return r;
 }
 
+/*
+ * Transform to nested lambdas:
+ *
+ * (let* ((name-1 value-1)
+ *        (name-2 value-2)
+ *        (name-3 value-3))
+ *        <body>)
+ * to
+ *
+ * ((lambda (name-1)
+ * ((lambda (name-2)
+ * ((lambda (name-3)
+ *   <body>) value-3))
+ *           value-2))
+ *           value-1)
+ */
 cons_t* proc_letstar(cons_t* p, environment_t* e)
 {
-  /*
-   * Transform to nested lambdas:
-   *
-   * (let* ((name-1 value-1)
-   *        (name-2 value-2)
-   *        (name-3 value-3))
-   *        <body>)
-   * to
-   *
-   * ((lambda (name-1)
-   * ((lambda (name-2)
-   * ((lambda (name-3)
-   *   <body>) value-3))
-   *           value-2))
-   *           value-1)
-   */
-
   cons_t  *body  = cdr(p),
           *names = list(NULL),
          *values = list(NULL);
@@ -548,4 +544,4 @@ cons_t* proc_and(cons_t* p, environment_t* e)
   return last;
 }
 
-}
+} // extern "C"
