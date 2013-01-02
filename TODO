@@ -5,25 +5,6 @@ READER
     and parse pointer-tagged types, so we can create a nice looking
     syntax for s64vector etc.
 
-CASE-LAMBDA
-
-- Implement as a simple macro. Convert
-
-  (case-lambda
-    ((<signature1>) <body1>)
-    ((<signature2>) <body2>)
-    ...)
-
-  to
-
-  (lambda args
-    (let ((a (length args)))
-      (cond
-        ((>= a (min-length <variadic-signature>) <body>)
-        ((= a (length <nonvariadic-signature)) <body>)
-        (else
-          (error "..."))))))
-
 BINDING NULL-VALUES
 
 - ((lambda (a) '()) (cdr '())) does not bind anything to a;
