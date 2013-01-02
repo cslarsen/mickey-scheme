@@ -921,6 +921,11 @@
 (test (let ((|squared number| (lambda (x) (* x x))))
         (|squared number| 12)) 144)
 
+;; Call-with-values
+(test (call-with-values
+        (lambda () (values -11 1880))
+        (lambda (a b) (+ (* a a) b))) 2001)
+
 (display "\nResults\n")
 (display (string-append
   "  Total: " (number->string (cadr (assq 'total (result))))

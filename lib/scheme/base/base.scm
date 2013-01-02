@@ -174,6 +174,7 @@ The larger part of this library resides in libscheme-base.so.
     truncate
     unless
     values
+    call-with-values
     vector
     vector->list
     vector->string
@@ -303,9 +304,9 @@ The larger part of this library resides in libscheme-base.so.
       (and (integer? z) (exact? z)))
 
     ;; Code taken from R7RS draft
-    (define (values . things)
-      (call-with-current-continuation
-        (lambda (cont) (apply cont things))))
+;    (define (values . things)
+;      (call-with-current-continuation
+;        (lambda (cont) (apply cont things))))
 
     ;; TODO: Add (complex?)
     (define (number? n)
@@ -335,6 +336,23 @@ The larger part of this library resides in libscheme-base.so.
     (define (char-ci<=? char1 char2 . charN)
       (let ((chars `(,char1 ,char2 ,@charN)))
         (or (char-ci=? chars) (char-ci<? chars))))
+
+    ;;
+    ;; This implementation of values and call-with-values
+    ;; is a dirty, ugly hack. :-)
+    ;;
+    (define-syntax values
+      (syntax-rules ()
+        ((_ params ...) (list '(values) params ...))))
+    ;;
+    (define-syntax call-with-values
+      (syntax-rules ()
+        ((call-with-values producer consumer)
+         (let ((c consumer)
+               (p producer))
+           (if (not (procedure? p))
+               (error "call-with-values requires a (values) object"))
+           (apply c (cdr (p)))))))
 
     ;; open libmickey.so
     (open-self 'global)
