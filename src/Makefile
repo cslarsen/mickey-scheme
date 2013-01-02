@@ -85,7 +85,6 @@ TARGETS_SO = \
 						 libmickey-internals.so \
 						 libmickey-misc.so \
 						 libscheme-base.so \
-						 libscheme-case-lambda.so \
 						 libscheme-char.so \
 						 libscheme-load.so \
 						 libscheme-math.so \
@@ -93,6 +92,7 @@ TARGETS_SO = \
 						 libscheme-repl.so \
 						 libscheme-write.so \
 						 libsrfi-0.so \
+						 libsrfi-16.so \
 						 libsrfi-4.so \
 						 libunix-dlopen.so \
 						 libunix-uname.so \
