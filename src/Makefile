@@ -85,15 +85,16 @@ TARGETS_SO = \
 						 libmickey-internals.so \
 						 libmickey-misc.so \
 						 libscheme-base.so \
+						 libscheme-case-lambda.so \
 						 libscheme-char.so \
 						 libscheme-load.so \
 						 libscheme-math.so \
 						 libscheme-process-context.so \
 						 libscheme-repl.so \
 						 libscheme-write.so \
-						 libunix-dlopen.so \
 						 libsrfi-0.so \
 						 libsrfi-4.so \
+						 libunix-dlopen.so \
 						 libunix-uname.so \
 
 TARGETS = $(TARGETS_O) $(TARGETS_SO) $(TARGETS_LIB_O) libmickey.so mickey

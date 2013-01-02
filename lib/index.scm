@@ -25,6 +25,7 @@
   ((portable flatten)        "portable/flatten.scm")
   ((portable print)          "portable/print.scm")
   ((scheme base)             "scheme/base/base.scm")
+  ((scheme case-lambda)      "scheme/case-lambda.scm")
   ((scheme char)             "scheme/char.scm")
   ((scheme cxr)              "scheme/cxr.scm")
   ((scheme lazy)             "scheme/lazy.scm")
