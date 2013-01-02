@@ -1,7 +1,7 @@
 /*
  * Mickey Scheme
  *
- * Copyright (C) 2011-2012 Christian Stigen Larsen <csl@sublevel3.org>
+ * Copyright (C) 2011-2013 Christian Stigen Larsen <csl@sublevel3.org>
  * http://csl.sublevel3.org                              _
  *                                                        \
  * Distributed under the LGPL 2.1; see LICENSE            /\
@@ -14,7 +14,7 @@
 #include "exceptions.h"
 #include "print.h"
 
-size_t arg_length(cons_t* p)
+size_t min_args(cons_t* p)
 {
   size_t n = 0;
 
@@ -26,7 +26,7 @@ size_t arg_length(cons_t* p)
   return n;
 }
 
-bool has_rest_args(cons_t* p)
+bool variadicp(cons_t* p)
 {
   /*
    * We now use proper dot notation so that
