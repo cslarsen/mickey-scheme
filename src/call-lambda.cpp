@@ -29,8 +29,8 @@ cons_t* call_lambda(cons_t *p, closure_t* proc, environment_t* e)
    */
   e = e->extend();
 
-  bool   has_rest    = has_rest_args(args);
-  size_t params_reqd = arg_length(args);
+  bool   has_rest    = variadicp(args);
+  size_t params_reqd = min_args(args);
   size_t params_recv = length(p);
 
   if ( params_recv < params_reqd )
@@ -116,8 +116,8 @@ body_env_t expand_lambda(cons_t *p, closure_t* proc, environment_t* e)
    */
   e = e->extend();
 
-  bool   has_rest    = has_rest_args(args);
-  size_t params_reqd = arg_length(args);
+  bool   has_rest    = variadicp(args);
+  size_t params_reqd = min_args(args);
   size_t params_recv = length(p);
 
   if ( params_recv < params_reqd )
