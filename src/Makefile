@@ -1,4 +1,4 @@
-CXX      = c++
+CXX      = g++
 CXXFLAGS = -g -W -Wall \
 					 -I../include \
 					 -DDEBUG \
@@ -95,7 +95,10 @@ TARGETS_SO = \
 						 libsrfi-16.so \
 						 libsrfi-4.so \
 						 libunix-dlopen.so \
+						 libunix-exit.so \
+						 libunix-fork.so \
 						 libunix-uname.so \
+						 libunix-wait.so
 
 TARGETS = $(TARGETS_O) $(TARGETS_SO) $(TARGETS_LIB_O) libmickey.so mickey
 
