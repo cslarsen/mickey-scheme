@@ -63,6 +63,10 @@ FEATURES
 
 BUGS
 
+- The (when) macro is broken (or, the macro system is broken),
+  doesn't work in code once you starting actually using it, like
+    (define (catch-signal s) (when (eqv? s 'sigint) (display "hey")))
+  does NOT work...
 - (let loop (<pair>) ...) check that we have a (<pair>)
 - Try s|...|# for a file, the parser will crash
 - While (list #\) #\)) works, (list #\)#\)) does not.
