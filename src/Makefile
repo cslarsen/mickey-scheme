@@ -98,6 +98,7 @@ TARGETS_SO = \
 						 libunix-exit.so \
 						 libunix-fork.so \
 						 libunix-kill.so \
+						 libunix-signal.so \
 						 libunix-uname.so \
 						 libunix-unistd.so \
 						 libunix-wait.so

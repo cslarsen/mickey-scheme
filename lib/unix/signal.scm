@@ -7,14 +7,19 @@
 
 |#
 (define-library (unix signal)
-  (import (scheme base))
+  (import (scheme base)
+          (mickey library))
 
   (export
-    signal-table
+    deactivate-signal
     integer->signal
-    signal->integer)
+    signal
+    signal->integer
+    signal-table)
 
   (begin
+    (open-internal-library "libunix-signal.so")
+
     (define signal-table
       '( 1 sighup
          2 sigint
@@ -54,4 +59,34 @@
 
     (define (signal->integer signal)
       (let ((n (memv signal (reverse signal-table))))
-        (if (pair? n) (cadr n) 'unknown-signal)))))
+        (if (pair? n) (cadr n) 'unknown-signal)))
+
+    (define (parse-signal signal)
+      (cond
+        ((symbol? signal) (signal->integer signal))
+        ((integer? signal)
+         (if (member? signal signal-table) signal
+             (error (string-append "Unknown signal "
+                                   (number->string signal)))))
+        (else
+          (error "Unknown signal"))))
+
+    (define proc-signal (bind-procedure "proc_signal"))
+
+    ;; Usage: (signal <signal> <procedure taking one argument>)
+    ;;
+    ;; Registers closure as a handler for the given signal.
+    ;;
+    ;; Remember that you cannot trap SIGKILL.
+    ;;
+    (define (signal sig proc)
+      (proc-signal (parse-signal sig) proc))
+
+    (define proc-deactivate-signal (bind-procedure "proc_deactivate_signal"))
+
+    ;; Usage: (deactivate-signal <signal>)
+    ;;
+    ;; Stops handling the given signal.
+    ;;
+    (define (deactivate-signal sig)
+      (proc-deactivate-signal (parse-signal sig)))))

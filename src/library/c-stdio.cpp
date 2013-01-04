@@ -110,4 +110,16 @@ cons_t* proc_feof(cons_t* p, environment_t*)
   return boolean(feof(f) != 0);
 }
 
+cons_t* proc_stdout(cons_t* p, environment_t*)
+{
+  assert_length(p, 0);
+  return pointer("FILE*", stdout);
+}
+
+cons_t* proc_stdin(cons_t* p, environment_t*)
+{
+  assert_length(p, 0);
+  return pointer("FILE*", stdin);
+}
+
 }

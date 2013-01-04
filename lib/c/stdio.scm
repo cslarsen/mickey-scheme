@@ -1,6 +1,6 @@
 #|
 
-Copyright (C) 2012 Christian Stigen Larsen
+Copyright (C) 2012-2013 Christian Stigen Larsen
 http://csl.sublevel3.org
 
 Distributed under the LGPL 2.1; see LICENSE
@@ -14,7 +14,9 @@ Distributed under the LGPL 2.1; see LICENSE
     fflush
     fopen
     fread
-    freopen)
+    freopen
+    stdin
+    stdout)
 
   (import (only (scheme base) define)
           (mickey library))
@@ -27,4 +29,6 @@ Distributed under the LGPL 2.1; see LICENSE
     (define fflush (bind-procedure "proc_fflush"))
     (define fopen (bind-procedure "proc_fopen"))
     (define fread (bind-procedure "proc_fread"))
-    (define freopen (bind-procedure "proc_freopen"))))
+    (define freopen (bind-procedure "proc_freopen"))
+    (define stdin (bind-procedure "proc_stdin"))
+    (define stdout (bind-procedure "proc_stdout"))))
