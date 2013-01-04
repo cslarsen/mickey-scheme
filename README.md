@@ -39,6 +39,8 @@ The supported SRFIs are
   * `(srfi 1)` List Library, http://srfi.schemers.org/srfi-1/srfi-1.html
   * `(srfi 4)` Homogeneous numeric vector datatypes,
     http://srfi.schemers.org/srfi-4/srfi-4.html
+  * `(srfi 8)` receive: Binding to multiple values,
+    http://srfi.schemers.org/srfi-8/srfi-8.html
   * `(srfi 16)` Syntax for procedures of variable arity,
     http://srfi.schemers.org/srfi-16/srfi-16.html
   * `(srfi 98)` An interface to access environment variables,

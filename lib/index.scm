@@ -37,6 +37,7 @@
   ((srfi 0)                  "srfi/srfi-0.scm")
   ((srfi 1)                  "srfi/srfi-1.scm")
   ((srfi 4)                  "srfi/srfi-4.scm")
+  ((srfi 8)                  "srfi/srfi-8.scm")
   ((srfi 16)                 "srfi/srfi-16.scm")
   ((srfi 98)                 "srfi/srfi-98.scm")
   ((test unit-test)          "test/unit-test.scm")
