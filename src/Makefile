@@ -97,6 +97,7 @@ TARGETS_SO = \
 						 libunix-dlopen.so \
 						 libunix-exit.so \
 						 libunix-fork.so \
+						 libunix-kill.so \
 						 libunix-uname.so \
 						 libunix-wait.so
 

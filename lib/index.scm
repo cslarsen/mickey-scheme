@@ -44,6 +44,7 @@
   ((unix dlopen)             "")
   ((unix exit)               "unix/exit.scm")
   ((unix fork)               "unix/fork.scm")
+  ((unix kill)               "unix/kill.scm")
   ((unix signal)             "unix/signal.scm")
   ((unix uname)              "unix/uname.scm")
   ((unix wait)               "unix/wait.scm"))
