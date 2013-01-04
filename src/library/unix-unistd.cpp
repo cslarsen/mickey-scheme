@@ -32,3 +32,17 @@ extern "C" cons_t* proc_gethostname(cons_t* p, environment_t*)
 
   return r;
 }
+
+extern "C" cons_t* proc_usleep(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_type(INTEGER, car(p));
+
+  int usecs = car(p)->number.integer;
+
+  if ( usecs < 0 )
+    raise(runtime_exception("usleep doesn't like negative time"));
+
+  // TODO: If it returns -1, lookup error and return it
+  return integer(usleep(usecs));
+}

@@ -10,7 +10,8 @@
   (export
     gethostname
     getpid
-    getppid)
+    getppid
+    usleep)
 
   (import
     (mickey library)
@@ -21,4 +22,5 @@
 
     (define gethostname (bind-procedure "proc_gethostname"))
     (define getpid (bind-procedure "proc_getpid"))
-    (define getppid (bind-procedure "proc_getppid"))))
+    (define getppid (bind-procedure "proc_getppid"))
+    (define usleep (bind-procedure "proc_usleep"))))
