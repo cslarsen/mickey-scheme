@@ -63,6 +63,7 @@ FEATURES
 
 BUGS
 
+- Try s|...|# for a file, the parser will crash
 - While (list #\) #\)) works, (list #\)#\)) does not.
 - This causes segfault: (lambda (. rest) 1)
                         (lambda ( . rest) 1)
