@@ -99,6 +99,7 @@ TARGETS_SO = \
 						 libunix-fork.so \
 						 libunix-kill.so \
 						 libunix-uname.so \
+						 libunix-unistd.so \
 						 libunix-wait.so
 
 TARGETS = $(TARGETS_O) $(TARGETS_SO) $(TARGETS_LIB_O) libmickey.so mickey

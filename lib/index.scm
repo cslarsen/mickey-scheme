@@ -47,4 +47,5 @@
   ((unix kill)               "unix/kill.scm")
   ((unix signal)             "unix/signal.scm")
   ((unix uname)              "unix/uname.scm")
+  ((unix unistd)             "unix/unistd.scm")
   ((unix wait)               "unix/wait.scm"))
