@@ -11,6 +11,7 @@
  * library/scheme-base.cpp but who cannot be loaded dynamically yet.
  */
 
+#include <stdlib.h>
 #include "mickey.h"
 #include "core-transition.h"
 

@@ -5,6 +5,7 @@
  * Distributed under the LGPL 2.1; see LICENSE
  */
 
+#include <stdlib.h>
 #include <signal.h>
 #include "mickey.h"
 
