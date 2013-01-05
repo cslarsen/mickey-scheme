@@ -34,8 +34,8 @@ cons_t* call_lambda(cons_t *p, closure_t* proc, environment_t* e)
   size_t params_recv = length(p);
 
   if ( params_recv < params_reqd )
-    raise(runtime_exception(format("Function requires %d parameters, but got %d",
-      params_reqd, params_recv)));
+    raise(runtime_exception(format("Function %s requires %d parameters, but got %d",
+      func_name.c_str(), params_reqd, params_recv)));
 
   if ( params_recv > params_reqd && !has_rest ) {
     raise(runtime_exception(
@@ -121,8 +121,8 @@ body_env_t expand_lambda(cons_t *p, closure_t* proc, environment_t* e)
   size_t params_recv = length(p);
 
   if ( params_recv < params_reqd )
-    raise(runtime_exception(format("Function requires %d parameters, but got %d",
-      params_reqd, params_recv)));
+    raise(runtime_exception(format("Function %s requires %d parameters, but got %d",
+      func_name.c_str(), params_reqd, params_recv)));
 
   if ( params_recv > params_reqd && !has_rest ) {
     raise(runtime_exception(
