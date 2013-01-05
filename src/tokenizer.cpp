@@ -65,7 +65,7 @@ void set_source(const char* program)
 
 static bool not_pipe(const char* s)
 {
-  return *s!='\0' && *s!='|';
+  return *s!='|';
 }
 
 static bool string_or_non_delimiter(const char* s)
@@ -152,10 +152,14 @@ static const char* skip_space(const char* s)
 }
 
 static const char* copy_while(
-    char *dest, const char* src, bool (*while_expr)(const char*))
+    char *dest, const char* src,
+    size_t destsize,
+    bool (*while_expr)(const char*))
 {
-  while ( while_expr(src) )
+  while ( *src!='\0' && destsize-- && while_expr(src) ) {
+    checkline(*src);
     *dest++ = *src++;
+  }
 
   *dest = '\0';
   return src;
@@ -238,22 +242,23 @@ const char* get_token()
     else {
       // long-form-symbol w/format "|foo bar baz|"
       if ( source[0]=='|' ) {
-        const char* start = source;
+        const size_t lineno = line;
         token[0]='|';
-        source = copy_while(token+1, source+1, not_pipe);
+        source = copy_while(token+1, source+1, sizeof(token)-2, not_pipe);
 
-        if ( *source =='|' )
+        if ( *source == '|' )
           ++source;
         else
           raise(parser_exception(format(
-            "Invalid |long symbol| on line %d: %s\n", line, start)));
+            "Invalid |long symbol| on line %lu\n", lineno)));
 
         const size_t l = strlen(token);
         token[l] = '|';
         token[l+1] = '\0';
       } else
         // other tokens
-        source = copy_while(token, source, string_or_non_delimiter);
+        source = copy_while(token, source, sizeof(token)-1,
+                            string_or_non_delimiter);
     }
 
     // emit NULL when finished
