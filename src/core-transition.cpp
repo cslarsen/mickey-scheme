@@ -61,6 +61,10 @@ cons_t* proc_set_car(cons_t* p, environment_t* e)
   else // constant, or whatever
     source = eval(source, e);
 
+  if ( !pairp(target) )
+    raise(runtime_exception(format(
+      "Not a pair: %s", sprint(target).c_str())));
+
   target->car = source;
   return unspecified();
 }
@@ -90,6 +94,10 @@ cons_t* proc_set_cdr(cons_t* p, environment_t* e)
     source = e->lookup_or_throw(*source->symbol);
   else // constant, or whatever
     source = eval(source, e);
+
+  if ( !pairp(target) )
+    raise(runtime_exception(format(
+      "Not a pair: %s", sprint(target).c_str())));
 
   target->cdr = source;
   return unspecified();
