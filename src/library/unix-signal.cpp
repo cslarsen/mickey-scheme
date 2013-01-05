@@ -17,7 +17,7 @@ static closure_t* sighandlers[SIGHANDLERS] = {NULL};
  */
 static void sighandler(int sig)
 {
-  if ( signal<0 || sig > SIGHANDLERS )
+  if ( sig<0 || sig > SIGHANDLERS )
     return;
 
   closure_t *proc = sighandlers[sig];
