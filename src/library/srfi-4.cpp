@@ -20,6 +20,30 @@
 #include "print.h"
 
 /*
+ * Pointer tags
+ */
+#define TAG_S8 "s8vector"
+#define TAG_U8 "u8vector"
+#define TAG_S16 "s16vector"
+#define TAG_U16 "u16vector"
+#define TAG_S32 "s32vector"
+#define TAG_U32 "u32vector"
+#define TAG_S64 "s64vector"
+#define TAG_U64 "u64vector"
+
+/*
+ * TODO: Avoid signedness warnings.
+ *
+ * For C++11 this can be done with type_traits and is_signed.
+ */
+template<typename TARGET, typename SOURCE>
+static bool out_of_bounds(const SOURCE& n)
+{
+  return n > std::numeric_limits<TARGET>::max() ||
+         n < std::numeric_limits<TARGET>::min();
+}
+
+/*
  * Convert a number to given data type and check for numerical limits.
  */
 template<typename T>
@@ -28,10 +52,10 @@ static T convert(const cons_t* n)
   if ( integerp(n) ) {
     integer_t i = n->number.integer;
 
-    if ( i > std::numeric_limits<T>::max() ||
-         i < std::numeric_limits<T>::min() )
-    {
-      raise(runtime_exception("Integer does not fit target type"));
+    if ( out_of_bounds<T>(i) ) {
+      raise(runtime_exception(format(
+        "Integer does not fit target type: %s",
+          sprint(n).c_str())));
     }
 
     return static_cast<T>(i);
@@ -40,10 +64,10 @@ static T convert(const cons_t* n)
   if ( realp(n) ) {
     real_t f = n->number.real;
 
-    if ( f > std::numeric_limits<T>::max() ||
-         f < std::numeric_limits<T>::min() )
-    {
-      raise(runtime_exception("Real number does not fit target type"));
+    if ( out_of_bounds<T>(f) ) {
+      raise(runtime_exception(format(
+        "Real number does not fit target type: %s",
+          sprint(n).c_str())));
     }
 
     return static_cast<T>(f);
@@ -53,10 +77,10 @@ static T convert(const cons_t* n)
     real_t f = static_cast<real_t>(n->number.rational.numerator) /
                static_cast<real_t>(n->number.rational.denominator);
 
-    if ( f > std::numeric_limits<T>::max() ||
-         f < std::numeric_limits<T>::min() )
-    {
-      raise(runtime_exception("Rational number does not fit target type"));
+    if ( out_of_bounds<T>(f) ) {
+      raise(runtime_exception(format(
+        "Rational number does not fit target type: %s ~ %g",
+          sprint(n).c_str(), f)));
     }
 
     // TODO: We shouldn't just truncate the number here
@@ -69,17 +93,25 @@ static T convert(const cons_t* n)
   return 0;
 }
 
-/*
- * Pointer tags (used internally to discern between void pointers).
- */
-#define TAG_S8 "s8vector"
-#define TAG_U8 "u8vector"
-#define TAG_S16 "s16vector"
-#define TAG_U16 "u16vector"
-#define TAG_S32 "s32vector"
-#define TAG_U32 "u32vector"
-#define TAG_S64 "s64vector"
-#define TAG_U64 "u64vector"
+template<typename T>
+cons_t* make_vector(const char* tag, cons_t* p)
+{
+  assert_length(p, 1, 2);
+  assert_type(INTEGER, car(p));
+
+  const size_t size = car(p)->number.integer;
+
+  // only size specified
+  if ( length(p) < 2 )
+    return pointer(tag, new std::vector<T>(size));
+
+  // initialize with size and fill-numbers
+  cons_t *f = cadr(p);
+  assert_number(f);
+
+  T fill = convert<T>(f);
+  return pointer(tag, new std::vector<T>(size, fill));
+}
 
 /*
  * (make-<tag>vector size [fill])
@@ -88,19 +120,7 @@ static T convert(const cons_t* n)
 extern "C" cons_t* make_ ## SHORT_TAG ## \
                    vector(cons_t* p, environment_t*) \
 { \
-  assert_length(p, 1, 2); \
-  \
-  assert_type(INTEGER, car(p)); \
-  const size_t size = car(p)->number.integer; \
-  \
-  if ( length(p) < 2 ) \
-    return pointer(PTR_TAG, new std::vector<DATA_TYPE>(size)); \
-  \
-  cons_t *f = cadr(p); \
-  assert_number(f); \
-  \
-  DATA_TYPE fill = convert<DATA_TYPE>(f); \
-  return pointer(PTR_TAG, new std::vector<DATA_TYPE>(size, fill)); \
+  return make_vector<DATA_TYPE>(PTR_TAG, p); \
 }
 
 /*
@@ -114,22 +134,44 @@ extern "C" cons_t* SHORT_TAG ## vectorp(cons_t* p, environment_t*) \
 }
 
 /*
+ * Construct vector with elements in p.
+ */
+template<typename T>
+cons_t* vector(const char* tag, cons_t* p)
+{
+  const size_t size = length(p);
+  size_t pos = 0;
+
+  std::vector<T> *v = new std::vector<T>(size);
+
+  // initialize with numbers in list
+  while ( !nullp(p) ) {
+    v->operator[](pos++) = convert<T>(car(p));
+    p = cdr(p);
+  }
+
+  return pointer(tag, v);
+}
+
+/*
  * (<tag>vector ...)
  */
 #define VECTOR(SHORT_TAG, PTR_TAG, DATA_TYPE) \
 extern "C" cons_t* SHORT_TAG ## vector(cons_t* p, environment_t*) \
 { \
-  const size_t size = length(p); \
-  size_t pos = 0; \
-  \
-  std::vector<DATA_TYPE> *v = new std::vector<DATA_TYPE>(size); \
-  \
-  while ( !nullp(p) ) { \
-    v->operator[](pos++) = convert<DATA_TYPE>(car(p)); \
-    p = cdr(p); \
-  } \
-  \
-  return pointer(PTR_TAG, v); \
+  return vector<DATA_TYPE>(PTR_TAG, p); \
+}
+
+template<typename DATA_TYPE>
+cons_t* vector_length(const char* tag, cons_t* p)
+{
+  assert_length(p, 1);
+  assert_pointer(tag, car(p));
+
+  std::vector<DATA_TYPE>* v =
+    static_cast<std::vector<DATA_TYPE>*>(car(p)->pointer->value);
+
+  return integer(v->size());
 }
 
 /*
@@ -138,13 +180,27 @@ extern "C" cons_t* SHORT_TAG ## vector(cons_t* p, environment_t*) \
 #define VECTOR_LENGTH(SHORT_TAG, PTR_TAG, DATA_TYPE) \
 extern "C" cons_t* SHORT_TAG ## vector_length(cons_t* p, environment_t*) \
 { \
-  assert_length(p, 1); \
-  assert_pointer(PTR_TAG, car(p)); \
-  \
-  std::vector<DATA_TYPE>* v = \
-    static_cast<std::vector<DATA_TYPE>*>(car(p)->pointer->value); \
-  \
-  return integer(v->size()); \
+  return vector_length<DATA_TYPE>(PTR_TAG, p); \
+}
+
+template<typename DATA_TYPE>
+cons_t* vector_ref(const char* tag, cons_t* p)
+{
+  assert_length(p, 2);
+  assert_pointer(tag, car(p));
+  assert_type(INTEGER, cadr(p));
+
+  std::vector<DATA_TYPE>* v =
+    static_cast<std::vector<DATA_TYPE>*>(car(p)->pointer->value);
+
+  int k = cadr(p)->number.integer;
+
+  if ( k<0 || static_cast<size_t>(k) >= v->size() ) {
+    raise(runtime_exception(format(
+      "%s index out of range: %d", tag, k)));
+  }
+
+  return integer(v->at(k));
 }
 
 /*
@@ -153,19 +209,29 @@ extern "C" cons_t* SHORT_TAG ## vector_length(cons_t* p, environment_t*) \
 #define VECTOR_REF(SHORT_TAG, PTR_TAG, DATA_TYPE) \
 extern "C" cons_t* SHORT_TAG ## vector_ref(cons_t* p, environment_t*) \
 { \
-  assert_length(p, 2); \
-  assert_pointer(PTR_TAG, car(p)); \
-  assert_type(INTEGER, cadr(p)); \
-  \
-  std::vector<DATA_TYPE>* v = \
-    static_cast<std::vector<DATA_TYPE>*>(car(p)->pointer->value); \
-  \
-  int k = cadr(p)->number.integer; \
-  \
-  if ( k<0 || static_cast<size_t>(k) >= v->size() ) \
-    raise(runtime_exception(format("%s index out of range", PTR_TAG))); \
-  \
-  return integer(v->at(k)); \
+  return vector_ref<DATA_TYPE>(PTR_TAG, p); \
+}
+
+template<typename DATA_TYPE>
+cons_t* vector_set(const char* tag, cons_t* p)
+{
+  assert_length(p, 3);
+  assert_pointer(tag, car(p));
+  assert_type(INTEGER, cadr(p));
+  assert_type(INTEGER, caddr(p));
+
+  std::vector<DATA_TYPE>* v =
+    static_cast<std::vector<DATA_TYPE>*>(car(p)->pointer->value);
+
+  int k = cadr(p)->number.integer;
+
+  if ( k<0 || static_cast<size_t>(k) >= v->size() )
+    raise(runtime_exception(format(
+      "%s index out of range: %d", tag, k)));
+
+  // note: caddr(p) is integer
+  v->operator[](k) = convert<DATA_TYPE>(caddr(p));
+  return unspecified();
 }
 
 /*
@@ -174,21 +240,7 @@ extern "C" cons_t* SHORT_TAG ## vector_ref(cons_t* p, environment_t*) \
 #define VECTOR_SET(SHORT_TAG, PTR_TAG, DATA_TYPE) \
 extern "C" cons_t* SHORT_TAG ## vector_set(cons_t* p, environment_t*) \
 { \
-  assert_length(p, 3); \
-  assert_pointer(PTR_TAG, car(p)); \
-  assert_type(INTEGER, cadr(p)); \
-  assert_type(INTEGER, caddr(p)); \
- \
-  std::vector<DATA_TYPE>* v = \
-    static_cast<std::vector<DATA_TYPE>*>(car(p)->pointer->value); \
-  \
-  int k = cadr(p)->number.integer; \
-  \
-  if ( k<0 || static_cast<size_t>(k) >= v->size() ) \
-    raise(runtime_exception(format("%s index out of range", PTR_TAG))); \
-  \
-  v->operator[](k) = convert<DATA_TYPE>(caddr(p)); /* note: val is integer */ \
-  return unspecified(); \
+  return vector_set<DATA_TYPE>(PTR_TAG, p); \
 }
 
 /*
@@ -203,6 +255,26 @@ extern "C" cons_t* list_to_ ## SHORT_TAG ## vector( \
   return SHORT_TAG ## vector(car(p), e); \
 }
 
+template<typename DATA_TYPE>
+cons_t* vector_to_list(const char* tag, cons_t* p)
+{
+  assert_length(p, 1);
+  assert_pointer(tag, car(p));
+
+  std::vector<DATA_TYPE>* v =
+    static_cast<std::vector<DATA_TYPE>*>(car(p)->pointer->value);
+
+  cons_t* r = list();
+
+  for ( typename std::vector<DATA_TYPE>::const_reverse_iterator i =
+        v->rbegin(); i != v->rend(); ++i )
+  {
+    r = cons(integer(*i, true), r);
+  }
+
+  return r;
+}
+
 /*
  * (<tag>vector->list <tag>vector)
  */
@@ -210,21 +282,7 @@ extern "C" cons_t* list_to_ ## SHORT_TAG ## vector( \
 extern "C" cons_t* SHORT_TAG ## vector_to_list( \
                      cons_t* p, environment_t*) \
 { \
-  assert_length(p, 1); \
-  assert_pointer(PTR_TAG, car(p)); \
-  \
-  std::vector<DATA_TYPE>* v = \
-    static_cast<std::vector<DATA_TYPE>*>(car(p)->pointer->value); \
-  \
-  cons_t* r = list(); \
-  \
-  for ( std::vector<DATA_TYPE>::const_reverse_iterator i = \
-        v->rbegin(); i != v->rend(); ++i ) \
-  { \
-    r = cons(integer(*i, true), r); \
-  } \
-  \
-  return r; \
+  return vector_to_list<DATA_TYPE>(PTR_TAG, p); \
 }
 
 MAKE_VECTOR(s8,  TAG_S8,    int8_t);
