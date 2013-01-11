@@ -31,17 +31,30 @@
 #define TAG_S64 "s64vector"
 #define TAG_U64 "u64vector"
 
-/*
- * TODO: Avoid signedness warnings.
- *
- * For C++11 this can be done with type_traits and is_signed.
- */
 template<typename TARGET, typename SOURCE>
 static bool out_of_bounds(const SOURCE& n)
 {
-  return n > std::numeric_limits<TARGET>::max() ||
-         n < std::numeric_limits<TARGET>::min();
+  return !(n >= std::numeric_limits<TARGET>::min() &&
+           n <= std::numeric_limits<TARGET>::max());
 }
+/*
+ * Specialized templates to avoid signedness warnings.
+ */
+
+template<>
+static bool out_of_bounds<uint32_t, integer_t>(const integer_t& n)
+{
+  return n>0 &&
+    static_cast<uint32_t>(n) <= std::numeric_limits<uint32_t>::max();
+}
+
+template<>
+static bool out_of_bounds<uint64_t, integer_t>(const integer_t& n)
+{
+  return n>0 &&
+    static_cast<uint64_t>(n) <= std::numeric_limits<uint64_t>::max();
+}
+
 
 /*
  * Convert a number to given data type and check for numerical limits.
