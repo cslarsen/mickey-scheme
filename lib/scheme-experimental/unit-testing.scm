@@ -63,7 +63,11 @@
                    (display "Assertion failed: ")
                    (display code)
                    (newline))
-                 (mark-good)))))))
+                 (begin
+                   (display "OK ")
+                   (display code)
+                   (newline)
+                   (mark-good))))))))
 
     (define-syntax assert-eqv
       (syntax-rules ()
@@ -86,4 +90,10 @@
                  (display " !==> ")
                  (display eval-b)
                  (newline))
-               (mark-good)))))))))
+               (begin
+                 (display "OK ")
+                 (display quote-a)
+                 (display " ==> ")
+                 (display eval-a)
+                 (newline)
+                 (mark-good))))))))))
