@@ -29,6 +29,7 @@ struct options_t
   std::vector<std::string> lib_path;
   const char* startup_path;
   const char* mickey_absolute_path;
+  const char* mickey_absolute_lib_path;
   char **argv;
   int argc;
   bool warn;

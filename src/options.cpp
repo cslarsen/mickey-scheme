@@ -41,6 +41,7 @@ void set_default(struct options_t* p, int argc, char** argv)
    */
   static char t[1+MAXPATHLEN];
   p->mickey_absolute_path = dirname(realpath(argv[0], t));
+  p->mickey_absolute_lib_path = strdup(format("%s/lib/").c_str());
 
   /*
    * Set up feature environment

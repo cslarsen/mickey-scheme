@@ -58,6 +58,7 @@ public:
  *
  */
 #define TRY                     \
+    push_catch_point();         \
     bool got_exception = false; \
     if ( exception_raised() ) { \
       got_exception = true;     \
@@ -68,15 +69,22 @@ public:
   args = general_exception(__exception.what());\
   if (got_exception)
 
+#define RETHROW(e) \
+  pop_catch_point(); \
+  raise(e);
+
 /*
  * Raise error.
  */
 void raise(const exception_t&);
 
 #include <setjmp.h>
-extern jmp_buf catch_point;
 extern general_exception __exception;
-#define exception_raised() setjmp(catch_point)
+#define exception_raised() setjmp(*catch_point())
+
+extern jmp_buf* catch_point();
+extern void push_catch_point();
+extern void pop_catch_point();
 
 /*
  * Specific exceptions

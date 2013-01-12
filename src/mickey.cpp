@@ -13,6 +13,7 @@
 #include <libgen.h> // dirname
 #include "mickey.h"
 #include "repl.h"
+#include "import.h"
 
 /*
  * Environment variables:
@@ -139,10 +140,15 @@ int main(int argc, char** argv)
   if ( global_opts.lib_path.empty() ) {
     if ( getenv(MICKEY_LIB) )
       add_lib_path(&global_opts, getenv(MICKEY_LIB));
-    else
-      add_lib_path(&global_opts,
-        format("%s/lib/", global_opts.mickey_absolute_path).c_str());
+    else {
+      const char* s = strdup(format("%s/lib/",
+                        global_opts.mickey_absolute_path).c_str());
+      add_lib_path(&global_opts,s);
+      global_opts.mickey_absolute_lib_path = s;
+    }
   }
+
+  std::vector<std::string> files;
 
   for ( int n=1; n<argc; ++n ) {
     if ( global_opts.eval_next ) {
@@ -151,16 +157,19 @@ int main(int argc, char** argv)
       run_repl = false;
     } else if ( !rest_is_files && argv[n][0] == '-' ) {
       if ( argv[n][1] == '\0' )
-        execute("-"); // stdin
+        files.push_back("-"); // stdin
       else
         rest_is_files |= parse_option(argv[n], &global_opts);
-    } else {
-      execute(argv[n]); // file
-      run_repl = false;
-    }
+    } else
+      files.push_back(argv[n]);
   }
 
-  if ( run_repl )
+  scan_for_library_files();
+
+  if ( !files.empty() ) {
+    for ( size_t n=0; n<files.size(); ++n )
+      execute(files[n].c_str());
+  } else
     repl();
 
   return 0;

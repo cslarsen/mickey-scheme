@@ -9,6 +9,7 @@
  *
  */
 
+#include <dirent.h>
 #include <stdlib.h>
 #include <dlfcn.h>
 #include <cassert>
@@ -42,7 +43,9 @@ static library_map_t* library_map = NULL;
 static const char** repl_libraries = NULL;
 
 static std::string library_file(const std::string& basename);
+static cons_t* verify_library_name(cons_t* p);
 
+static struct library_t* import_lib(environment_t* target, const std::string& filename);
 cons_t* proc_import(cons_t* p, environment_t* e);
 
 /*
@@ -109,6 +112,98 @@ static void invalid_index_format(const std::string& msg)
   raise(runtime_exception(format(
     "Invalid format for library index file: %s", msg.c_str())));
   exit(1);
+}
+
+/*
+ * Return name of library defined in `file`, or empty string if file is not
+ * a valid library file.
+ */
+std::string read_library_name(const std::string& file)
+{
+  TRY {
+    program_t *p = parse(slurp(open_file(file)), null_environment());
+
+    if ( symbol_name(caar(p->root)) != "define-library" )
+      return "";
+
+    cons_t *name = verify_library_name(cadar(p->root));
+    return sprint(name);
+  }
+  CATCH(const exception_t& e) {
+    int i=0; if ( e.what() ) ++i; // suppress unused variable warning
+  }
+
+  return "";
+}
+
+static std::vector<std::string> ls(const std::string& path)
+{
+  std::vector<std::string> ret;
+
+  DIR *d = opendir(path.c_str());
+  dirent *p = NULL;
+
+  while ( (p = readdir(d)) != NULL )
+    if ( p->d_type == DT_REG )
+      ret.push_back(p->d_name);
+
+  closedir(d);
+  return ret;
+}
+
+bool ends_with(const std::string& s, const std::string& suffix)
+{
+  size_t slen = s.size();
+  size_t xlen = suffix.size();
+
+  if ( slen < xlen )
+    return false;
+
+  return slen<xlen? false : s.substr(slen-xlen, xlen) == suffix;
+}
+
+void scan_for_library_files()
+{
+  load_library_index();
+
+  // Scan additional library directories
+  for ( std::vector<std::string>::const_iterator i =
+          global_opts.lib_path.begin();
+        i != global_opts.lib_path.end();
+        ++i )
+  {
+    // skip default library
+    if ( !strcmp((*i).c_str(), global_opts.mickey_absolute_lib_path) )
+      continue;
+
+    // get all files in dir
+    std::vector<std::string> files = ls(*i);
+
+    // check if any of them are scheme libraries
+    for ( size_t n=0; n<files.size(); ++n ) {
+      if ( !ends_with(tolower(files[n]), ".scm") )
+        continue;
+
+      std::string name = read_library_name(files[n]);
+
+      if ( name.empty() )
+        continue;
+
+      // entries in library map
+      size_t len = 0;
+      for ( library_map_t *p = library_map; p->library_name != NULL; ++p )
+        ++len;
+
+      // add an entry to end of library map
+      library_map = (library_map_t*) realloc(library_map, sizeof(library_map_t)*(len+1));
+
+      library_map[len].library_name = strdup(name.c_str());
+      library_map[len].source_file = strdup(files[n].c_str());
+
+      library_map[len+1].library_name = NULL;
+      library_map[len+1].source_file = NULL;
+    }
+  }
 }
 
 void load_library_index()
@@ -405,20 +500,25 @@ static std::string library_file(const std::string& basename)
   return "";
 }
 
-/*
- * Read, parse and evaluate SCHEME SOURCE FILE in target environment.
- */
-static void import(environment_t *target, const std::string& filename)
+static library_t* import_lib(environment_t* target, const std::string& filename)
 {
   if ( global_opts.verbose )
     fprintf(stderr, "Loading file %s\n", filename.c_str());
 
   program_t *p = parse(slurp(open_file(filename)), target);
-  library_t *lib = define_library(p->root, filename.c_str());
+  return define_library(p->root, filename.c_str());
+}
+
+/*
+ * Read, parse and evaluate SCHEME SOURCE FILE in target environment.
+ */
+static void import(environment_t *target, const std::string& file)
+{
+  library_t *lib = import_lib(target, file);
   merge(target, lib->exports);
   lib->exports->outer = target;
 
-  // TODO: Double-check that request library name matches library name
+  // TODO: Double-check that requested library name matches library name
   //       in file.
 }
 

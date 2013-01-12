@@ -130,20 +130,29 @@ cons_t* proc_dlopen_internal(cons_t* p, environment_t*)
   assert_length_min(p, 1);
   assert_type(STRING, car(p));
 
-  /*
-   * file will point to Mickey Scheme's location
-   * and then in the /lib/ subdirectory
-   */
-  std::string file =
-    format("%s/lib/%s",
-      global_opts.mickey_absolute_path,
-      sbasename(car(p)->string).c_str());
+  const std::string base = sbasename(car(p)->string);
 
-  void *h = dlopen(file.c_str(), parse_dlopen_mode(cdr(p)));
+  for ( size_t n=0; n < global_opts.lib_path.size(); ++n ) {
 
-  return h!=NULL?
-    pointer(new pointer_t(TYPE_TAG, h)) :
-    boolean(false);
+    /*
+     * File will point to Mickey Scheme's location and then in the /lib/
+     * subdirectory
+     */
+    const std::string path = global_opts.lib_path[n];
+    const std::string file = path + "/" + base;
+
+    if ( file_exists(file.c_str()) ) {
+      void *h = dlopen(file.c_str(), parse_dlopen_mode(cdr(p)));
+
+      return h!=NULL?
+        pointer(new pointer_t(TYPE_TAG, h)) :
+        boolean(false);
+    }
+  }
+
+  raise(runtime_exception(format("Could not find shared object file: %s",
+    base.c_str())));
+  return nil();
 }
 
 static lambda_t dlsym_helper(cons_t* p)
