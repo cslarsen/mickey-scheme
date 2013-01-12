@@ -377,25 +377,32 @@ static library_t* define_library(cons_t* p, const char* file)
  */
 static std::string library_file(const std::string& basename)
 {
-  const std::string library_path = global_opts.lib_path;
+  // Try all library paths in order
+  for ( std::vector<std::string>::const_iterator i =
+          global_opts.lib_path.begin();
+        i != global_opts.lib_path.end();
+        ++i )
+  {
+    /*
+     * TODO: Add more search heuristics here to find a file
+     *       in library.
+     */
 
-  /*
-   * TODO: Add more search heuristics here to find a file
-   *       in library.
-   */
+    const std::string& library_path = *i;
 
-  // first try library path
-  std::string file = library_path + "/" + basename;
+    // first try library path
+    std::string file = library_path + "/" + basename;
 
-  // secondly, try include path
-  if ( !file_exists(file.c_str()) )
-    file = std::string(global_opts.include_path) + "/" + basename;
+    // secondly, try include path
+    if ( !file_exists(file.c_str()) )
+      file = std::string(global_opts.include_path) + "/" + basename;
 
-  // no cigar
-  if ( !file_exists(file.c_str()) )
-    raise(runtime_exception("Cannot find library file: " + file));
+    if ( file_exists(file.c_str()) )
+      return file;
+  }
 
-  return file;
+  raise(runtime_exception("Cannot find library file: " + basename));
+  return "";
 }
 
 /*

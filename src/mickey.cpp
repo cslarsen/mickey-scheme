@@ -78,7 +78,7 @@ bool parse_option(const char* s, struct options_t* p)
   } else if ( !strncmp(s, "-I", 2) && strlen(s) > 2 ) {
     p->include_path = s+2;
   } else if ( !strncmp(s, "-L", 2) && strlen(s) > 2 ) {
-    p->lib_path = s+2;
+    p->lib_path.push_back(s+2);
   } else if ( !strcmp(s, "-") ) {
     // TODO: read from standard input
   } else if ( ARGHIT("-v", "--verbose") ) {
@@ -136,11 +136,11 @@ int main(int argc, char** argv)
    * If there was no -L<path> option, set library path using either
    * environment variable or current working directory.
    */
-  if ( strlen(global_opts.lib_path) == 0 ) {
+  if ( global_opts.lib_path.empty() ) {
     if ( getenv(MICKEY_LIB) )
-      set_lib_path(&global_opts, getenv(MICKEY_LIB));
+      add_lib_path(&global_opts, getenv(MICKEY_LIB));
     else
-      set_lib_path(&global_opts,
+      add_lib_path(&global_opts,
         format("%s/lib/", global_opts.mickey_absolute_path).c_str());
   }
 

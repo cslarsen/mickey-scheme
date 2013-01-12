@@ -26,7 +26,6 @@ void set_default(struct options_t* p, int argc, char** argv)
   p->verbose = false;
   p->read_stdin = false;
   p->include_path = "";
-  p->lib_path = "";
   p->argc = argc;
   p->argv = argv;
   p->warn = false;
@@ -51,9 +50,9 @@ void set_default(struct options_t* p, int argc, char** argv)
   reset_for_programs(p);
 }
 
-void set_lib_path(struct options_t* p, const char* lib_path)
+void add_lib_path(struct options_t* p, const char* lib_path)
 {
-  p->lib_path = strdup(lib_path);
+  p->lib_path.push_back(strdup(lib_path));
 }
 
 void reset_for_programs(struct options_t* p, const char* file)

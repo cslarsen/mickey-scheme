@@ -17,6 +17,15 @@ cons_t* global_options(cons_t* p, environment_t*)
 {
   assert_length(p, 0);
 
+  cons_t *paths = list();
+  for ( std::vector<std::string>::const_iterator i =
+          global_opts.lib_path.begin();
+        i != global_opts.lib_path.end();
+        ++i )
+  {
+    paths = append(paths, string((*i).c_str()));
+  }
+
   /*
    * Only spit out useful options.  E.g., don't return argc/argv, because
    * (scheme command-line) can do that for you.
@@ -37,11 +46,10 @@ cons_t* global_options(cons_t* p, environment_t*)
     cons(list(symbol("current-filename"),
               string(global_opts.current_filename)),
 
-    cons(list(symbol("include-path"),
+    cons(list(symbol("include-paths"),
               string(global_opts.include_path)),
 
-    cons(list(symbol("library-path"),
-              string(global_opts.lib_path)),
+    cons(list(symbol("library-path"), paths),
 
     cons(list(symbol("startup-path"),
               string(global_opts.startup_path)),

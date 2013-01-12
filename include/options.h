@@ -12,6 +12,8 @@
 #ifndef INC_MICKEY_OPTIONS_H
 #define INC_MICKEY_OPTIONS_H
 
+#include <string>
+#include <vector>
 #include "cons.h"
 
 struct options_t
@@ -24,7 +26,7 @@ struct options_t
   port_t current_error_device;
   const char* current_filename;
   const char* include_path;
-  const char* lib_path;
+  std::vector<std::string> lib_path;
   const char* startup_path;
   const char* mickey_absolute_path;
   char **argv;
@@ -36,7 +38,7 @@ struct options_t
 extern options_t global_opts;
 
 void set_default(struct options_t*, int argc, char** argv);
-void set_lib_path(struct options_t*, const char* lib_path);
+void add_lib_path(struct options_t*, const char* lib_path);
 void reset_for_programs(struct options_t*, const char* file = NULL);
 
 #endif
