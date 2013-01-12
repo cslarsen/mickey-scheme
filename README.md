@@ -125,6 +125,8 @@ or, alternatively just export it into your environment:
     $ export LD_LIBRARY_PATH=".:"
     $ ./mickey
 
+The equivalent on Mac OS X is `DYLD_LIBRARY_PATH`.
+
 To run some test code, just type
 
     $ make check
