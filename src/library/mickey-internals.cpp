@@ -46,10 +46,10 @@ cons_t* global_options(cons_t* p, environment_t*)
     cons(list(symbol("current-filename"),
               string(global_opts.current_filename)),
 
-    cons(list(symbol("include-paths"),
+    cons(list(symbol("include-path"),
               string(global_opts.include_path)),
 
-    cons(list(symbol("library-path"), paths),
+    cons(list(symbol("library-paths"), list(paths)),
 
     cons(list(symbol("startup-path"),
               string(global_opts.startup_path)),
