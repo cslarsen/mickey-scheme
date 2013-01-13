@@ -82,6 +82,28 @@ extern "C" cons_t* proc_public_keys(cons_t* p, environment_t*)
 
     if ( !key ) continue;
 
+    if ( key->subkeys ) {
+      gpgme_subkey_t sub = key->subkeys;
+      cons_t *skeys = list();
+      while ( sub != NULL ) {
+        cons_t *skey = nil();
+        skey = cons(list(symbol("secret?"), boolean(sub->secret)), skey);
+        skey = cons(list(symbol("cardkey?"), boolean(sub->is_cardkey)), skey);
+        if ( sub->card_number )
+          skey = cons(list(symbol("card-number"), string(sub->card_number)), skey);
+        skey = cons(list(symbol("expires"), sub->expires==0? string("never") : integer(sub->expires)), skey);
+        skey = cons(list(symbol("timestamp"), integer(sub->timestamp)), skey);
+        skey = cons(list(symbol("fingerprint"), string(sub->fpr)), skey);
+        skey = cons(list(symbol("length"), integer(sub->length)), skey);
+        skey = cons(list(symbol("keyid"), string(sub->keyid)), skey);
+
+        skeys = append(list(skey), skeys);
+        sub = sub->next;
+      }
+
+      k = cons(list(symbol("subkeys"), skeys), k);
+    }
+
     k = cons(list(symbol("revoked"), boolean(key->revoked)), k);
     k = cons(list(symbol("expired"), boolean(key->expired)), k);
     k = cons(list(symbol("disabled"), boolean(key->disabled)), k);
@@ -97,22 +119,25 @@ extern "C" cons_t* proc_public_keys(cons_t* p, environment_t*)
     if ( key->uids ) {
       gpgme_user_id_t uids = key->uids;
 
+      cons_t *us = list();
+
       while ( uids != NULL ) {
+        cons_t *u = nil();
+
         if ( uids->comment && strlen(uids->comment) )
-          k = cons(list(symbol("comment"), string(uids->comment)), k);
+          u = cons(list(symbol("comment"), string(uids->comment)), u);
 
         if ( uids->email && strlen(uids->email) )
-          k = cons(list(symbol("email"), string(uids->email)), k);
+          u = cons(list(symbol("email"), string(uids->email)), u);
 
         if ( uids->name && strlen(uids->name) )
-          k = cons(list(symbol("name"), string(uids->name)), k);
+          u = cons(list(symbol("name"), string(uids->name)), u);
 
+        us = append(u, us);
         uids = uids->next;
       }
-    }
 
-    if ( key->subkeys ) {
-      k = cons(list(symbol("keyid"), string(key->subkeys->keyid)), k);
+      k = cons(list(symbol("UIDs"), us), k);
     }
 
     keys = append(keys, list(k));
