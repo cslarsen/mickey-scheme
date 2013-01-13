@@ -30,5 +30,8 @@ install: check
 	@echo '  ((crypto gnupg) "crypto/gnupg/gnupg.scm")'
 	@echo ""
 
+example: all
+	@$(MICKEY_LIB_PATH) $(MICKEY)/mickey -L. example-show-keys.scm
+
 clean:
 	rm -f $(TARGETS)

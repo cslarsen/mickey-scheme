@@ -12,5 +12,5 @@
     version)
   (begin
     (open-internal-library "libgnupg.so")
-    (define version (bind-procedure "proc_get_version"))
-    (define public-keys (bind-procedure "proc_get_public_keys"))))
+    (define version (bind-procedure "proc_version"))
+    (define public-keys (bind-procedure "proc_public_keys"))))
