@@ -24,6 +24,7 @@
   ((portable atom)           "portable/atom.scm")
   ((portable flatten)        "portable/flatten.scm")
   ((portable print)          "portable/print.scm")
+  ((prng lcg)                "prng/lcg.scm")
   ((scheme-experimental unit-testing) "scheme-experimental/unit-testing.scm")
   ((scheme base)             "scheme/base/base.scm")
   ((scheme case-lambda)      "scheme/case-lambda.scm")
