@@ -29,10 +29,16 @@
 ;;
 ;;  EXAMPLE USAGE
 ;;
-;;    (import (prng lcg)
-;;            (scheme write))
-;;    (define random (lcg-mmix 123))
-;;    (display (random))
+;;  #; mickey> (import (prng lcg))
+;;  #; mickey> (define random (lcg-simple 123))
+;;  #; mickey> (random)
+;;  142
+;;  #; mickey> (random)
+;;  185
+;;  #; mickey> (random)
+;;  188
+;;  #; mickey> (random)
+;;  87
 ;;
 (define-library (prng lcg)
   (import (scheme base)
@@ -42,10 +48,10 @@
     lcg-carbonlib
     lcg-forth
     lcg-glibc
-    lcg-glibc16
     lcg-java
     lcg-mmix
     lcg-newlib
+    lcg-simple
     lcg-vb6
     make-lcg)
 
@@ -62,35 +68,42 @@
       (case-lambda
         ((m a c) (make-lcg m a c 0)) ; default seed of 0
         ((m a c seed)
-         ;; Check parameters
          (cond
+           ((not (and (number? m)
+                      (number? a)
+                      (number? c)
+                      (number? seed)))
+            (error "All parameters must be numbers"))
+
            ((not (< 0 m))
             (error (string-append
-                     "Modulus m must be greater than zero: " m)))
+                     "Modulus m must be greater than zero: "
+                     (number->string m))))
 
            ((not (< 0 a m))
             (error (string-append
-                     "Multiplier a must be in range (0,modulus): " a)))
+                     "Multiplier a must be in range (0,modulus): "
+                     (number->string a))))
 
            ((not (and (<= 0 c) (< c m)))
             (error (string-append
-                     "Increment c must be in [0,modulus): " c)))
+                     "Increment c must be in range [0,modulus): "
+                     (number->string c))))
 
            ((not (and (<= 0 seed) (< seed m)))
             (error (string-append
-                     "Seed must be in [0,modulus): " seed))))
+                     "Seed must be in range [0,modulus): "
+                     (number->string seed)))))
          (let
            ((X seed))
            (lambda ()
              (set! X (modulo (+ (* a X) c) m))
              X)))))
 
-    ; Half glibc lcg using mod 2^16
-    (define (lcg-glibc16 seed)
-      (make-lcg (expt 2 16)
-                33676
-                12345
-                seed))
+    ; Simple, with modulus and multiplier taken from TAOCP, vol 2, page 106,
+    ; line 5, with an increment of 187, as given in figure 8, p. 94 (ibid.)
+    (define (lcg-simple seed)
+      (make-lcg 256 137 187 seed))
 
     ; Full GNU glibc
     (define (lcg-glibc seed)
