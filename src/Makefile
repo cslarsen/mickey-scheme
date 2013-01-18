@@ -94,6 +94,7 @@ TARGETS_SO = \
 						 libsrfi-0.so \
 						 libsrfi-16.so \
 						 libsrfi-4.so \
+						 libeval-cont.so \
 						 libunix-dlopen.so \
 						 libunix-exit.so \
 						 libunix-fork.so \

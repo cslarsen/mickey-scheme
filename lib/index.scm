@@ -15,6 +15,7 @@
   ((c stdio)                 "c/stdio.scm")
   ((cross-platform sdl)      "cross-platform/sdl.scm")
   ((experimental endianness) "experimental/endianness.scm")
+  ((experimental eval-with-continuation) "experimental/eval-with-continuation.scm")
   ((maclisp)                 "maclisp/maclisp.scm")
   ((mickey environment)      "mickey/environment.scm")
   ((mickey gensym)           "mickey/gensym.scm")
