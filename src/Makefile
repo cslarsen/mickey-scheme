@@ -1,5 +1,6 @@
 CXX      = g++
 CXXFLAGS = -g -W -Wall \
+					 -fPIC \
 					 -I../include \
 					 -DDEBUG \
 					 -DUSE_READLINE \
