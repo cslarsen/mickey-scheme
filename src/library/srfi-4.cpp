@@ -42,14 +42,14 @@ static bool out_of_bounds(const SOURCE& n)
  */
 
 template<>
-static bool out_of_bounds<uint32_t, integer_t>(const integer_t& n)
+bool out_of_bounds<uint32_t, integer_t>(const integer_t& n)
 {
   return n>0 &&
     static_cast<uint32_t>(n) <= std::numeric_limits<uint32_t>::max();
 }
 
 template<>
-static bool out_of_bounds<uint64_t, integer_t>(const integer_t& n)
+bool out_of_bounds<uint64_t, integer_t>(const integer_t& n)
 {
   return n>0 &&
     static_cast<uint64_t>(n) <= std::numeric_limits<uint64_t>::max();
