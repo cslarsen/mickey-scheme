@@ -26,6 +26,11 @@ struct key_value_t {
   const V value;
 };
 
+static integer_t intval(cons_t* p)
+{
+  return p->number.integer;
+}
+
 /*
  * Map of scheme symbols to SDL mode flags.
  */
@@ -85,8 +90,8 @@ cons_t* set_video_mode(cons_t* p, environment_t*)
   assert_type(INTEGER, cadr(p));
 
   // dimension
-  int x = car(p)->integer;
-  int y = cadr(p)->integer;
+  int x = intval(car(p));
+  int y = intval(cadr(p));
 
   // default values
   int bits = 32;
@@ -94,7 +99,7 @@ cons_t* set_video_mode(cons_t* p, environment_t*)
 
   // bits per pixel
   if ( length(p) > 2 && integerp(caddr(p)) )
-    bits = caddr(p)->integer;
+    bits = intval(caddr(p));
 
   // mode options
   if ( length(p) > 3 ) {
