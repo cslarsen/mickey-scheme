@@ -355,5 +355,5 @@ The larger part of this library resides in libscheme-base.so.
            (apply c (cdr (p)))))))
 
     ;; open libmickey.so
-    (open-self 'global)
+    (open-self 'global 'lazy)
     (define features (bind-procedure "proc_list_features"))))

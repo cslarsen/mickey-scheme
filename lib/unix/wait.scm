@@ -23,7 +23,7 @@
     (unix signal))
 
   (begin
-    (open-internal-library "libunix-wait.so")
+    (open-internal-library "libunix-wait.so" 'lazy 'global)
 
     ;; Calls wait(2) and returns (<pid> <status>)
     ;;

@@ -18,7 +18,7 @@ Please post bugfixes and suggestions to the author.   /  \_
           flush-output-port)
 
   (begin
-    (open-internal-library "libscheme-write.so")
+    (open-internal-library "libscheme-write.so" 'global 'lazy)
 
     (define flush-output-port (bind-procedure "flush_output_port"))
     (define display           (bind-procedure "proc_display"))))

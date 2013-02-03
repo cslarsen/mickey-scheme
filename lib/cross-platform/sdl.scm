@@ -16,6 +16,6 @@ Distributed under the LGPL 2.1; see LICENSE
           (mickey library))
 
   (begin
-    (open-internal-library "libcross-platform-sdl.so" 'lazy)
+    (open-internal-library "libcross-platform-sdl.so" 'lazy 'global)
     (define initialize (bind-procedure "initialize"))
     (define set-video-mode (bind-procedure "set_video_mode"))))

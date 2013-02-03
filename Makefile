@@ -46,7 +46,7 @@ check: all
 	LD_LIBRARY_PATH=".:" ./mickey -Itest test/tests.scm
 
 check-all: all
-	LD_LIBRARY_PATH=".:" ./mickey -Itest test/*.scm
+	for t in test/*.scm; do LD_LIBRARY_PATH=".:" ./mickey -Itest $$t; done
 
 check-diff: all
 	# mickey and chicken should have same output

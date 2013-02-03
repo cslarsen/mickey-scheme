@@ -48,7 +48,7 @@
     s32vector->list u32vector->list
     s64vector->list u64vector->list)
   (begin
-    (open-internal-library "libsrfi-4.so")
+    (open-internal-library "libsrfi-4.so" 'lazy 'global)
 
     (define make-s8vector (bind-procedure "make_s8vector"))
     (define make-u8vector (bind-procedure "make_u8vector"))

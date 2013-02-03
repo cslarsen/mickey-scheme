@@ -12,7 +12,7 @@
   (import (only (scheme base) define)
           (mickey library))
   (begin
-    (open-internal-library "libunix-exit.so")
+    (open-internal-library "libunix-exit.so" 'lazy 'global)
 
     ;; Calls exit(3) with given integer status (exit code).
     ;;

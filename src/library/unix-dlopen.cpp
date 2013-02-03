@@ -43,11 +43,11 @@ named_function_t exports_dlopen[] = {
 /*
  * ... and the function to parse it
  */
-static int parse_dlopen_mode(const cons_t* p)
+static int parse_dlopen_mode(cons_t* p)
 {
   int mode = 0;
 
-  for ( cons_t *m = cdr(p); !nullp(m); m = cdr(m) ) {
+  for ( cons_t *m = p; !nullp(m); m = cdr(m) ) {
     std::string n = symbol_name(car(m));
 
          if ( n == SYMBOL_RTLD_LAZY )   mode |= RTLD_LAZY;

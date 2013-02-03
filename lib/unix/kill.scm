@@ -15,7 +15,7 @@
     (unix signal))
 
   (begin
-    (open-internal-library "libunix-kill.so")
+    (open-internal-library "libunix-kill.so" 'global 'lazy)
 
     (define proc-kill (bind-procedure "proc_kill"))
 

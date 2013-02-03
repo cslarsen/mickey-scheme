@@ -1,4 +1,4 @@
-(open-internal-library "libscheme-base.so")
+(open-internal-library "libscheme-base.so" 'lazy 'global)
 
 (define * (bind-procedure "proc_mul"))
 (define + (bind-procedure "proc_add"))
@@ -100,7 +100,7 @@
 (define null?  (bind-procedure "proc_nullp"))
 (define number->string (bind-procedure "proc_number_to_string"))
 (define odd?  (bind-procedure "proc_oddp"))
-(define or (bind-syntax "proc_or"))
+;(define or (bind-syntax "proc_or"))
 (define output-port?  (bind-procedure "proc_output_portp"))
 (define pair?  (bind-procedure "proc_pairp"))
 (define peek-char (bind-procedure "proc_peek_char"))

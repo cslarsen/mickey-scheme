@@ -18,7 +18,7 @@
     (scheme base))
 
   (begin
-    (open-internal-library "libunix-unistd.so")
+    (open-internal-library "libunix-unistd.so" 'lazy 'global)
 
     (define gethostname (bind-procedure "proc_gethostname"))
     (define getpid (bind-procedure "proc_getpid"))

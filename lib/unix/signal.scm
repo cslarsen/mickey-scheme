@@ -18,7 +18,7 @@
     signal-table)
 
   (begin
-    (open-internal-library "libunix-signal.so")
+    (open-internal-library "libunix-signal.so" 'lazy 'global)
 
     (define signal-table
       '( 1 sighup

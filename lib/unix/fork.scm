@@ -13,7 +13,7 @@
   (import (only (scheme base) define)
           (mickey library))
   (begin
-    (open-internal-library "libunix-fork.so")
+    (open-internal-library "libunix-fork.so" 'lazy 'global)
 
     ;; (fork) is a wrapper around fork(2).
     ;;

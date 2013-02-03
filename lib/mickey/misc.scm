@@ -24,7 +24,7 @@ Distributed under the LGPL 2.1
     :version)
 
   (begin
-    (open-internal-library "libmickey-misc.so")
+    (open-internal-library "libmickey-misc.so" 'global 'lazy)
 
     (define :backtrace      (bind-procedure "proc_backtrace"))
     (define :circular?      (bind-procedure "proc_circularp"))

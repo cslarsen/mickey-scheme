@@ -11,6 +11,6 @@
     public-keys
     version)
   (begin
-    (open-internal-library "libgnupg.so")
+    (open-internal-library "libgnupg.so" 'lazy 'global)
     (define version (bind-procedure "proc_version"))
     (define public-keys (bind-procedure "proc_public_keys"))))
