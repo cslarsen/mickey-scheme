@@ -129,7 +129,6 @@ void version()
 int main(int argc, char** argv)
 {
   bool rest_is_files = false; // used with option `--`
-  bool run_repl = true;
 
   set_default(&global_opts, argc, argv);
 
@@ -154,7 +153,6 @@ int main(int argc, char** argv)
     if ( global_opts.eval_next ) {
       execute_string(argv[n]);
       global_opts.eval_next = false;
-      run_repl = false;
     } else if ( !rest_is_files && argv[n][0] == '-' ) {
       if ( argv[n][1] == '\0' )
         files.push_back("-"); // stdin
