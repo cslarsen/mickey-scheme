@@ -1,3 +1,9 @@
+BUGS
+
+- Error in printing of vectors: `(list->vector '((a . b) (c . d) (e . f)))`
+  should print `#((a . b) (c . d) (e . f))` but instead prints
+  `#(a . b c . d e . f)`.
+
 READER
 
 - Add simple reader macros:
