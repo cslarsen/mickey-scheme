@@ -904,6 +904,16 @@
 (test (null? '()) #t)
 (test (null? '(())) #f)
 
+;; Subtraction errors
+(test (exact? (- 1 1)) #t)
+(test (integer? (- 10 10)) #t)
+(test (integer? (- 1 1)) #t)
+(test (integer? (- 3 1 1 1)) #t)
+(test (real? (- 1 1)) #f)
+(test (- 1 1) #e0)
+(test (- 3 1 1 1) 0)
+(test (integer? (- 3 1 1 1)) #t)
+
 ;; Tokenizer should recognize "a""b" as two tokens "a" and "b"
 (test '("1""2""3") (list "1" "2" "3"))
 (test '("foo""bar""baz") (list "foo" "bar" "baz"))
