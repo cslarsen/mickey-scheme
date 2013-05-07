@@ -65,7 +65,7 @@ Version 2013-05-07
               '((a 1) (b 2) (c 3) (d 4)
                 (e 5) (f 6) (g 7) (h 8)))))
 
-(define (position file rank)
+(define (make-position file rank)
   "Create a position made of a file and rank."
   (cons file rank))
 
@@ -121,7 +121,7 @@ Version 2013-05-07
     (display rank)
     (for-each
       (lambda (file)
-        (print-piece (position file rank)))
+        (print-piece (make-position file rank)))
       files)
     (newline))
 
