@@ -1,15 +1,19 @@
 #|
 
-Simple, INCOMPLETE chess engine written in portable R7RS scheme.
+Simple (and incomplete) chess engine written in portable R7RS scheme.
 
-Written in 2013 by Christian Stigen Larsen
-Put into the public domain by the author.
+Written by Christian Stigen Larsen
+Put in the public domain by the author.
+
+Version 2013-05-07
 
 |#
 
 (import (scheme base)
         (scheme write)
         (scheme char))
+
+;; Some constants
 
 (define files '(a b c d e f g h))
 (define ranks '(1 2 3 4 5 6 7 8))
@@ -63,7 +67,7 @@ Put into the public domain by the author.
 
 (define (position file rank)
   "Create a position made of a file and rank."
-  (list file rank))
+  (cons file rank))
 
 (define (file position)
   "Get the file part of a position."
@@ -71,7 +75,7 @@ Put into the public domain by the author.
 
 (define (rank position)
   "Get the rank part of a position."
-  (cadr position))
+  (cdr position))
 
 (define (position->index pos)
   "Convert position to index into the board vector."
