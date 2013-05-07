@@ -49,6 +49,32 @@ cons_t* proc_addf(cons_t *p, environment_t*)
   return real(sum);
 }
 
+cons_t* proc_subf(cons_t *p, environment_t*)
+{
+  real_t sum = 0.0;
+  bool first = !nullp(cadr(p)); // length(p)>1
+
+  for ( ; !nullp(p); p = cdr(p) ) {
+    cons_t *i = listp(p)? car(p) : p;
+
+    if ( integerp(i) )
+      sum -= static_cast<real_t>(i->number.integer);
+    else if ( realp(i) )
+      sum -= i->number.real;
+    else if ( rationalp(i) )
+      sum -= real(i->number.rational)->number.real;
+    else
+      raise(runtime_exception("Cannot add real with " + to_s(type_of(i)) + ": " + sprint(i)));
+
+    if ( first ) {
+      sum = -sum;
+      first = false;
+    }
+  }
+
+  return real(sum);
+}
+
 cons_t* proc_add(cons_t *p, environment_t* env)
 {
   /*
@@ -83,29 +109,43 @@ cons_t* proc_add(cons_t *p, environment_t* env)
   return rational(sum, exact);
 }
 
-cons_t* proc_sub(cons_t *p, environment_t*)
+cons_t* proc_sub(cons_t *p, environment_t* env)
 {
+  /*
+   * Integers have an IDENTITY, so we can do this,
+   * but a more correct approach would be to take
+   * the value of the FIRST number we find and
+   * return that.
+   */
+  rational_t sum;
+  sum.numerator = 0;
+  sum.denominator = 1;
   bool exact = true;
+  bool first = !nullp(cadr(p)); // length(p)>1
 
-  if ( length(p) == 0 )
-    raise(runtime_exception("No arguments to -"));
+  for ( ; !nullp(p); p = cdr(p) ) {
+    cons_t *i = listp(p)? car(p) : p;
 
-  real_t d = number_to_real(car(p));
+    if ( integerp(i) ) {
+      if ( !i->number.exact ) exact = false;
+      sum -= i->number.integer;
+    } else if ( rationalp(i) ) {
+      if ( !i->number.exact ) exact = false;
+      sum -= i->number.rational;
+    } else if ( realp(i) ) {
+      // perform rest of computation in floats
+      return proc_subf(first? p : cons(real(sum), p), env);
+    } else
+      raise(runtime_exception(
+        "Cannot subtract integer with " + to_s(type_of(i)) + ": " + sprint(i)));
 
-  if ( !car(p)->number.exact )
-    exact = false;
-
-  // (- x) => -x, instead of +x
-  if ( nullp(cdr(p)) )
-    d = -d;
-
-  while ( !nullp(p = cdr(p)) ) {
-    if ( !car(p)->number.exact )
-      exact = false;
-    d -= number_to_real(car(p));
+    if ( first ) {
+      sum.negate();
+      first = false;
+    }
   }
 
-  return iswhole(d) ? integer((int)d, exact) : real(d);
+  return rational(sum, exact);
 }
 
 cons_t* proc_divf(cons_t *p, environment_t*)

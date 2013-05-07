@@ -27,8 +27,9 @@
 (testq (complex->string
        (*complex (make-complex 2 3)
          (make-complex 5 7))) "-11 + 29i")
-(testq (- 0.5 -1.5) 2)
-(testq (- 0.5 -10.5) 11)
+(testq (- 0.5 -1.5) 2.0)
+(testq (- 0.5 -10.5) 11.0)
+(testq (exact? (- 0.5 -1.5)) #f) ; is this really universally true?
 (testq (- 1 2 3) -4)
 (testq (- 1) -1)
 (testq (- 2) -2)
@@ -906,10 +907,10 @@
 
 ;; Subtraction errors
 (test (exact? (- 1 1)) #t)
+(test (integer? (- 1 1)) #t)
 (test (integer? (- 10 10)) #t)
 (test (integer? (- 1 1)) #t)
 (test (integer? (- 3 1 1 1)) #t)
-(test (real? (- 1 1)) #f)
 (test (- 1 1) #e0)
 (test (- 3 1 1 1) 0)
 (test (integer? (- 3 1 1 1)) #t)
