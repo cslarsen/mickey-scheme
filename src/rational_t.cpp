@@ -25,6 +25,11 @@ rational_t& simplify(rational_t& r)
     r.denominator /= d;
   }
 
+  if ( r.numerator<0 && r.denominator<0 ) {
+    r.numerator = -r.numerator;
+    r.denominator = -r.denominator;
+  }
+
   return r;
 }
 
@@ -37,6 +42,20 @@ rational_t& rational_t::operator+=(const integer_t& n)
 rational_t& rational_t::operator+=(const rational_t& n)
 {
   this->numerator = this->numerator*n.denominator +
+                    n.numerator*this->denominator;
+  this->denominator *= n.denominator;
+  return simplify(*this);
+}
+
+rational_t& rational_t::operator-=(const integer_t& n)
+{
+  this->numerator -= this->denominator*n;
+  return simplify(*this);
+}
+
+rational_t& rational_t::operator-=(const rational_t& n)
+{
+  this->numerator = this->numerator*n.denominator -
                     n.numerator*this->denominator;
   this->denominator *= n.denominator;
   return simplify(*this);
@@ -89,4 +108,10 @@ rational_t operator/(const rational_t& n, const rational_t& d)
   q /= d;
 
   return q;
+}
+
+void rational_t::negate()
+{
+  numerator = -numerator;
+  simplify(*this);
 }
