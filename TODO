@@ -1,3 +1,10 @@
+MORE BUGS:
+
+- parser error / Doesn't work:
+  mickey> 0;
+    but this works:
+      mickey> 0 ;
+
 BUGS
 
 - Error in printing of vectors: `(list->vector '((a . b) (c . d) (e . f)))`
