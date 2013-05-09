@@ -30,6 +30,7 @@ cons_t* proc_or(cons_t* p, environment_t* e);
 cons_t* proc_set_car(cons_t* p, environment_t* e);
 cons_t* proc_set_cdr(cons_t* p, environment_t* e);
 cons_t* proc_vector(cons_t* p, environment_t* e);
+cons_t* proc_define_macro(cons_t*, environment_t*);
 
 }
 

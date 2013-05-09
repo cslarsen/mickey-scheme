@@ -194,6 +194,9 @@ cons_t* eval(cons_t* p, environment_t* e)
         return proc_define_syntax(cons(name, cons(syntax)), e);
       }
 
+      if ( name == "define-macro" )
+        return proc_define_macro(p, e);
+
       /*
        * Define requires one not to look up
        * the variable name, so we need to take

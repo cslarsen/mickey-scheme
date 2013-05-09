@@ -937,6 +937,21 @@
         (lambda () (values -11 1880))
         (lambda (a b) (+ (* a a) b))) 2001)
 
+;; define-macro, aka defmacro, tests
+(let ()
+  (define-macro defmacro-foo1 (a b)
+    ;; basic pattern, ",a" means "EVALUATE argument a",
+    ;; while "a" means "just use a as-is"
+    `(+ ,a (* ,b 10)))
+  (testq (defmacro-foo1 3 2) 23)
+  (testq (defmacro-foo1 (+ 1 2) 2) 23))
+
+;; Note on above: if we did `(+ a (,b * 10))
+;; without using ",a" then it would try to evaluate
+;; (+ <a unevaluated> (* <value of b> 10)).
+;; TODO: Add a test for this.
+
+
 (display "\nResults\n")
 (display (string-append
   "  Total: " (number->string (cadr (assq 'total (result))))

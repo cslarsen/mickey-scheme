@@ -553,4 +553,26 @@ cons_t* proc_and(cons_t* p, environment_t* e)
   return last;
 }
 
+cons_t* proc_define_macro(cons_t* p, environment_t* e)
+{
+  // (define-macro <name> <signature> <expansion>)
+  assert_type(SYMBOL, cadr(p));
+
+  if ( symbol_name(cadr(p)).empty() )
+    raise(runtime_exception("Missing define-macro name"));
+
+  if ( nullp(caddr(p)) )
+    raise(runtime_exception("Missing define-macro signature"));
+
+  if ( nullp(cadddr(p)) )
+    raise(runtime_exception("Missing define-macro expansion body"));
+
+  cons_t *macro = make_syntax(
+                    list(symbol("syntax-macro"), cdr(p)),
+                    e->extend());
+
+  e->define(symbol_name(cadr(p)), macro);
+  return unspecified();
+}
+
 } // extern "C"

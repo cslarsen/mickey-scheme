@@ -123,9 +123,47 @@ static cons_t* syntax_replace(dict_t &map, cons_t* p)
   return start;
 }
 
-cons_t* syntax_expand(cons_t *macro, cons_t *code, environment_t*)
+/*
+ * Handle defmacro-like expansion
+ */
+cons_t* syntax_macro(cons_t* rules, cons_t* code, environment_t*)
+{
+  cons_t *arg_names = cadadr(rules);
+  cons_t *arg_values = cdr(code);
+  cons_t *body = car(cdr(cdr(cadr(rules))));
+
+  // quote all values
+  for ( cons_t *p = arg_values; !nullp(p); p = cdr(p) )
+    p->car = list(symbol("quote"), car(p));
+
+  body = list(symbol("eval"), body);
+
+  cons_t *expansion =
+    cons(
+      cons(symbol("lambda"),
+      cons(arg_names,
+      cons(body))),
+      arg_values);
+
+  return expansion;
+}
+
+cons_t* syntax_expand(cons_t *macro, cons_t *code, environment_t* e)
 {
   cons_t *rules = macro->syntax->transformer;
+
+  /*
+   * Handle different syntax transformer engine
+   */
+
+  const std::string engine = symbol_name(car(rules));
+
+  if ( engine == "syntax-macro" )
+    return syntax_macro(rules, code, e);
+
+  /*
+   * Assume syntax-rules. TODO: Check that syntax-rules is indeed used here!
+   */
 
   // Go through all rules and find a match
   for ( cons_t *p = cdar(rules); !nullp(p); p = cdr(p) ) {
@@ -134,7 +172,11 @@ cons_t* syntax_expand(cons_t *macro, cons_t *code, environment_t*)
 
     dict_t map;
 
-    // mark "..." as '() for cases where it's empty, like `(when #t)`
+    /*
+     * Mark "..." as '() for cases where it's empty, like `(when #t)`
+     * Note that this is WRONG; it's just an incorrect but convenient
+     * hack that works for the current time being.
+     */
     map["..."] = NULL;
 
     if ( syntax_match(pattern, code, map) )
