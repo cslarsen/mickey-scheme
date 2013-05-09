@@ -1,3 +1,9 @@
+OTHER STUFF
+
+- remove unspecified(nil()), or make it possible to eval.. it evaluates to
+  <?unknown ....?> so shouldn't be used (unspecified function can intercept
+  NULLs and fix them?)
+
 MORE BUGS:
 
 - parser error / Doesn't work:
