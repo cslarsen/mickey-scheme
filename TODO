@@ -5,6 +5,10 @@ MORE BUGS:
     but this works:
       mickey> 0 ;
 
+- Does not check if it's got all arguments:
+  (set-cdr! (cons 1 2))
+  same with set-car! ?
+
 BUGS
 
 - Error in printing of vectors: `(list->vector '((a . b) (c . d) (e . f)))`
