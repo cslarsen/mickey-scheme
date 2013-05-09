@@ -310,6 +310,11 @@ cons_t* cadar(const cons_t* p)
   return car(cdar(p));
 }
 
+cons_t* cadadr(const cons_t* p)
+{
+  return car(cdr(car(cdr(p))));
+}
+
 cons_t* caddar(const cons_t* p)
 {
   return car(cdr(cdar(p)));

@@ -62,6 +62,7 @@ cons_t* caaddr(const cons_t*);
 cons_t* caadr(const cons_t*);
 cons_t* caar(const cons_t*);
 cons_t* cadaar(const cons_t*);
+cons_t* cadadr(const cons_t*);
 cons_t* cadar(const cons_t*);
 cons_t* caddar(const cons_t*);
 cons_t* caddr(const cons_t*);
