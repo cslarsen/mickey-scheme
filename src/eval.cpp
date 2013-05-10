@@ -1,7 +1,7 @@
 /*
  * Mickey Scheme
  *
- * Copyright (C) 2011-2012 Christian Stigen Larsen <csl@sublevel3.org>
+ * Copyright (C) 2011-2013 Christian Stigen Larsen <csl@sublevel3.org>
  * http://csl.sublevel3.org                              _
  *                                                        \
  * Distributed under the LGPL 2.1; see LICENSE            /\
@@ -391,6 +391,15 @@ cons_t* eval(cons_t* p, environment_t* e)
         }
       } else if ( syntaxp(op) ) {
         /*
+         * Special handling of define-macro:
+         */
+        if ( syntax_macrop(op) ) {
+          cons_t * x = syntax_expand(op, p, op->syntax->environment);
+          p = eval(x, e);
+          continue;
+        }
+
+        /*
          * We need to expand macros in the environment
          * in which they were defined, so we cannot just
          * do
@@ -416,9 +425,7 @@ cons_t* eval(cons_t* p, environment_t* e)
         else
           merge(synenv->outer, e);
 
-        return eval(
-            syntax_expand(op, p, op->syntax->environment),
-            synenv);
+        return eval(syntax_expand(op, p, op->syntax->environment), synenv);
 
         /*
          * Some background info on the above:

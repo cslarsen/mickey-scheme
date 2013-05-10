@@ -136,8 +136,6 @@ cons_t* syntax_macro(cons_t* rules, cons_t* code, environment_t*)
   for ( cons_t *p = arg_values; !nullp(p); p = cdr(p) )
     p->car = list(symbol("quote"), car(p));
 
-  body = list(symbol("eval"), body);
-
   cons_t *expansion =
     cons(
       cons(symbol("lambda"),
@@ -202,6 +200,12 @@ cons_t* make_syntax(cons_t* body, environment_t* e)
   r->type = SYNTAX;
   r->syntax = s;
   return r;
+}
+
+bool syntax_macrop(cons_t* p)
+{
+  return syntaxp(p) &&
+    symbol_name(car(p->syntax->transformer)) == "syntax-macro";
 }
 
 } // extern "C"
