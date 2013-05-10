@@ -24,6 +24,7 @@
   ((mickey misc)             "mickey/misc.scm")
   ((portable atom)           "portable/atom.scm")
   ((portable flatten)        "portable/flatten.scm")
+  ((portable gensym)         "portable/gensym.scm")
   ((portable print)          "portable/print.scm")
   ((portable sequence)       "portable/sequence.scm")
   ((prng lcg)                "prng/lcg.scm")
