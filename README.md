@@ -419,7 +419,7 @@ Running the function should be self-explanatory.
 Furthermore, sometimes we want to splice two lists together when we quote.
 We can do that by using unquote splice, or the `,@` prefix.
 
-    #; mickey> (define date '(2012 05 17))
+    #; mickey> (define date '(2012 5 17))
     #; mickey> date
     (2012 5 17)
     #; mickey> `(here is a date: ,@date)
