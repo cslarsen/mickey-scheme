@@ -17,15 +17,16 @@ The name will change as the project matures.
 Current Features
 ----------------
 
-  * Most core scheme functions
-  * Supports 184 of 241 R7RS base library definitions
+  * Most core scheme functions: Supports 185 of 241 R7RS base library definitions
   * Quotation and quasiquotation
-  * All non-syntactic, single-valued `let`-forms
+  * All non-syntactic `let`-forms
   * Variadic functions
-  * Macros via `syntax-rules` (though, it's incomplete)
+  * Two macro systems: `syntax-rules` (incomplete support) and
+                       `define-macro` (unhygienic)
   * Lazy evaluation with memoization in `(scheme lazy)`
   * Full support for the R7RS library system `define-library`
   * Tail call eliminiation
+  * The `define-record-type` record system
 
 Some of these are demonstrated in the [example code section](#examples).
 
@@ -41,6 +42,8 @@ The supported SRFIs are
     http://srfi.schemers.org/srfi-4/srfi-4.html
   * `(srfi 8)` receive: Binding to multiple values,
     http://srfi.schemers.org/srfi-8/srfi-8.html
+  * `(srfi 9)` Definint record types,
+    http://srfi.schemers.org/srfi-9/srfi-9.html
   * `(srfi 16)` Syntax for procedures of variable arity,
     http://srfi.schemers.org/srfi-16/srfi-16.html
   * `(srfi 98)` An interface to access environment variables,

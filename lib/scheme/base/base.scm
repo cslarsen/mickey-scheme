@@ -75,6 +75,7 @@ The larger part of this library resides in libscheme-base.so.
     current-input-port
     current-output-port
     define
+    define-record-type
     define-syntax
     do
     eof-object
@@ -190,6 +191,7 @@ The larger part of this library resides in libscheme-base.so.
     zero?)
 
   (include "bind-shared-library.scm")
+  (include "define-record-type.scm")
 
   (begin
     (define (compare-all op v)
