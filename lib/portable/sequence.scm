@@ -27,23 +27,25 @@
     ;
     ;;   (seq 3 7) ==> (3 4 5 6 7)
     ;;   (seq 7 3) ==> (7 6 5 4 3)
-    ;;   (seq 7) ==> (7)
+    ;;   (seq 7) ==> (1 2 3 4 5 6 7)
     ;;   (seq 7 7) ==> (7)
     ;;   (seq 7 8) ==> (7 8)
     ;;
     (define seq
       (case-lambda
-        ((start) (seq start start))
-        ((start stop)
+        ((stop) (seq 1 stop))
+        ((start stop) (seq start stop (if (>= stop start) 1 -1)))
+        ((start stop inc)
            (let
              ((out '())
-              (inc (if (>= stop start) 1 -1)))
+              (cont? (if (positive? inc) <= >=)))
 
              (let loop
                ((cur start))
-               (set! out (append out (list cur)))
-               (if (not (= cur stop))
-                   (loop (+ inc cur))))
+               (if (cont? cur stop)
+                   (begin
+                     (set! out (append out (list cur)))
+                     (loop (+ inc cur)))))
 
              out))))))
 
@@ -65,7 +67,7 @@
 ;
 ;  '(((seq 3 7) (3 4 5 6 7))
 ;    ((seq 7 3) (7 6 5 4 3))
-;    ((seq 7) (7))
+;    ((seq 7) (1 2 3 4 5 6 7))
 ;    ((seq 7 7) (7))
 ;    ((seq 7 8) (7 8))
 ;    ((seq 8 7) (8 7))
