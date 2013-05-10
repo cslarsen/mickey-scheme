@@ -44,6 +44,7 @@ The supported SRFIs are
     http://srfi.schemers.org/srfi-8/srfi-8.html
   * `(srfi 9)` Defining record types,
     http://srfi.schemers.org/srfi-9/srfi-9.html
+    *NOTE:* Currently only supported via `(scheme base)`
   * `(srfi 16)` Syntax for procedures of variable arity,
     http://srfi.schemers.org/srfi-16/srfi-16.html
   * `(srfi 98)` An interface to access environment variables,
