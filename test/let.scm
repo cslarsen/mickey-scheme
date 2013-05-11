@@ -22,6 +22,7 @@
       (define <names>  (map car (car p)))
       (define <values> (map cadr (car p)))
       (define <body>   (cdr p))
+
       `((lambda ,<names> ,@<body>) ,@<values>))
 
     (define (named-let p)
@@ -29,6 +30,7 @@
       (define <names>  (map car (cadr p)))
       (define <values> (map cadr (cadr p)))
       (define <body>   (cddr p))
+
       `(letrec
          ((,<proc> (lambda ,<names> ,@<body>)))
          (,<proc> ,@<values>)))
