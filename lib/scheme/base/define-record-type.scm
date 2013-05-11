@@ -36,6 +36,23 @@ WEAKNESSES / TODO
                      (string-append
                        "record-type-" (symbol->string <name>) "-"
                        "<missing-gensym>")))
+
+     ;; Sanity checks
+
+     (if (null? <def>) (error "Missing record definition"))
+
+     (if (null? <name>) (error "Missing record name"))
+     (if (not (symbol? <name>)) (error "Invalid record name"))
+
+     (if (null? <ctor>) (error "Missing record constructor"))
+     (if (not (and (list? <ctor>) ;; must be a list ...
+                   ;(apply and (map symbol? <ctor>)) ;; ... of only symbols
+                   (>= 1 (length <ctor>)) ; must have at least one member
+                   (symbol? (car <ctor>)))) ; must be a symbol
+       (error "Invalid constructor signature"))
+
+     (if (null? <predicate?>) (error "Missing predicate procedure name"))
+
      (seq
        (lambda (start stop)
          (let
