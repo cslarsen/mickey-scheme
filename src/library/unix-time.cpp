@@ -125,7 +125,7 @@ extern "C" cons_t* proc_tm_to_alist(cons_t* p, environment_t*)
   assert_pointer(id_struct_tm, car(p));
   struct tm* t = static_cast<struct tm*>(car(p)->pointer->value);
 
-  cons_t *r = cons(
+  cons_t *r =
     cons(list(symbol("seconds"), integer(t->tm_sec)),
     cons(list(symbol("minutes"), integer(t->tm_min)),
     cons(list(symbol("hours"), integer(t->tm_hour)),
@@ -136,7 +136,7 @@ extern "C" cons_t* proc_tm_to_alist(cons_t* p, environment_t*)
     cons(list(symbol("year-day"), integer(t->tm_yday)),
     cons(list(symbol("dst?"), boolean(t->tm_isdst > 0)),
     cons(list(symbol("timezone"), symbol(t->tm_zone)),
-    cons(list(symbol("utc-offset-seconds"), integer(t->tm_gmtoff))))))))))))));
+    cons(list(symbol("utc-offset-seconds"), integer(t->tm_gmtoff)))))))))))));
 
   return r;
 }
