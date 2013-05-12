@@ -14,7 +14,7 @@ Distributed under the GNU LGPL 2.1; see LICENSE.
   (import (scheme base)
           (scheme write)
           (scheme cxr)
-          (portable atom)
+          (portable atom?)
           (portable flatten))
 
   ;; Missing:
