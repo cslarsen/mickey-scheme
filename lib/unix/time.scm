@@ -9,8 +9,11 @@
 (define-library (unix time)
   (export
     ctime
+    gmtime
+    localtime
     time
-    time-value)
+    time-value
+    tm->alist)
 
   (import
     (mickey library)
@@ -25,4 +28,7 @@
     ;;
     (define time (bind-procedure "proc_time"))
     (define time-value (bind-procedure "proc_time_value"))
+    (define localtime (bind-procedure "proc_localtime"))
+    (define gmtime (bind-procedure "proc_gmtime"))
+    (define tm->alist (bind-procedure "proc_tm_to_alist"))
     (define ctime (bind-procedure "proc_ctime"))))
