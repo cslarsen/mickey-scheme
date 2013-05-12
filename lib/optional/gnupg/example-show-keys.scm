@@ -3,6 +3,7 @@
         (scheme write)
         (scheme char)
         (scheme cxr)
+        (unix time)
         (portable print))
 
 (define (capitalize s)
@@ -35,7 +36,10 @@
            (display-alist (cdr x)))
          (begin
            (display-alist (car x))
-           (display-alist (cdr x))))))
+           (if (or (eqv? (car x) 'timestamp)
+                   (eqv? (car x) 'expires))
+             (print (ctime (time (cadr x)))) ;; Convert to time
+             (display-alist (cdr x)))))))
     (else
       (println (to-string x)))))
 
