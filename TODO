@@ -6,6 +6,10 @@ OTHER STUFF
 
 MORE BUGS:
 
+- If (export ... foo ...) is specified, but no (define foo) exists,
+  it should raise an error (or at least a warning).
+  (must also check that foo is not imported; just check the environment).
+
 - #(aa bb cc) produces vector, but
   '#(aa bb cc) does not; it produces the quoted list
   '(vector aa bb cc). It should produce an IMMUTABLE vector.
