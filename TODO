@@ -6,6 +6,10 @@ OTHER STUFF
 
 MORE BUGS:
 
+- #(aa bb cc) produces vector, but
+  '#(aa bb cc) does not; it produces the quoted list
+  '(vector aa bb cc). It should produce an IMMUTABLE vector.
+
 - parser error / Doesn't work:
   mickey> 0;
     but this works:
