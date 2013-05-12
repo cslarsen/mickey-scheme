@@ -23,6 +23,8 @@ all: $(TARGETS)
 %:
 	cd $@ && make
 
+check: all
+
 clean:
 	@true
 
