@@ -1,4 +1,4 @@
-TARGETS = gnupg
+TARGETS = gnupg libffi
 
 help:
 	@echo "This directory contains optional modules you can build"
@@ -17,6 +17,7 @@ help:
 	@true
 
 gnupg: .DUMMY
+libffi: .DUMMY
 
 all: $(TARGETS)
 
