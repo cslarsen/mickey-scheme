@@ -13,6 +13,7 @@ extern "C" {
 
 static const char tag_ffi_cif[] = "libffi call interface";
 static const char tag_ffi_retval[] = "libffi return value";
+static const char tag_void_pointer[] = "void*";
 
 /*
  * ifdefs taken from ffi/x86-ffitarget.h
@@ -254,8 +255,24 @@ cons_t* proc_retval_to_string(cons_t* p, environment_t*)
    * Note that string() duplicates the string, so this is a bit potential
    * risk. We'll assume the authors know they're doing :-)
    */
-  char *s = static_cast<char*>(car(p)->pointer->value);
-  return string(s);
+  void *value = car(p)->pointer->value;
+  return string(static_cast<const char*>(value));
+}
+
+cons_t* proc_retval_to_integer(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_pointer(tag_ffi_retval, car(p));
+  void *value = car(p)->pointer->value;
+  return integer(reinterpret_cast<intptr_t>(value));
+}
+
+cons_t* proc_retval_to_pointer(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_pointer(tag_ffi_retval, car(p));
+  void *value = car(p)->pointer->value;
+  return pointer(tag_void_pointer, value);
 }
 
 }; // extern "C"

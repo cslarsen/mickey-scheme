@@ -16,11 +16,18 @@
   (error (string-append
            "Could not find function " fname)))
 
+;; Call curl_easy_init first
+(define init
+  (call-foreign-function
+    (prepare-call-interface 'default-abi 'pointer '())
+    (dlsym lib "curl_easy_init")
+    8))
+(println "curl_easy_init() ==> " (return-value->pointer init))
+
 (define cif
   (prepare-call-interface 'default-abi 'uchar))
 
-(println "Calling foreign function")
 (define val
-  (call-foreign-function cif funptr 32))
+  (call-foreign-function cif funptr 8))
 
-(println fname "() ==> " (return-value->string val))
+(println fname "() ==> '" (return-value->string val) "'")

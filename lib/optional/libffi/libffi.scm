@@ -12,10 +12,14 @@
   (export
     call-foreign-function
     prepare-call-interface
+    return-value->integer
+    return-value->pointer
     return-value->string)
 
   (begin
     (open-internal-library "libffi.so" 'lazy 'global)
     (define prepare-call-interface (bind-procedure "proc_ffi_prep_cif"))
     (define call-foreign-function (bind-procedure "proc_ffi_call"))
+    (define return-value->integer (bind-procedure "proc_retval_to_integer"))
+    (define return-value->pointer (bind-procedure "proc_retval_to_pointer"))
     (define return-value->string (bind-procedure "proc_retval_to_string"))))
