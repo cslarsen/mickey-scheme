@@ -12,6 +12,7 @@
 extern "C" {
 
 static const char tag_ffi_cif[] = "libffi call interface";
+static const char tag_ffi_retval[] = "libffi return value";
 
 /*
  * ifdefs taken from ffi/x86-ffitarget.h
@@ -20,15 +21,15 @@ static struct {
   const char* name;
   ffi_abi value;
 } ffi_abi_map[] = {
-  {"default", FFI_DEFAULT_ABI},
-  {"sysv", FFI_SYSV},
+  {"default-abi", FFI_DEFAULT_ABI},
+  {"sysv-abi", FFI_SYSV},
 
 #ifdef X86_WIN32
-  {"stdcall", FFI_STDCALL},
+  {"stdcall-abi", FFI_STDCALL},
 #endif
 
 #if !defined(X86_WIN32) && (defined(__i386__) || defined(__x86_64__))
-  {"unix64", FFI_UNIX64},
+  {"unix64-abi", FFI_UNIX64},
 #endif
 
   {NULL, FFI_LAST_ABI}
@@ -112,15 +113,20 @@ static ffi_type* parse_ffi_type(cons_t* p)
  *   <foreign function ABI>
  *   <type of return value>
  *   (<type of input argument> ...))
+ *
+ *
+ * TODO:
+ * - Put ABI parameter last.
+ * - If there is no input-value list, then ignore it.
  */
 cons_t* proc_ffi_prep_cif(cons_t* p, environment_t*)
 {
-  assert_length(p, 3);
+  assert_length(p, 2, 3);
 
   ffi_abi abi = FFI_DEFAULT_ABI;
 
   /*
-   * ARGUMENT 1: * ABI for foreign function
+   * ARGUMENT 1: ABI for foreign function
    */
   abi = parse_ffi_abi(car(p));
 
@@ -128,24 +134,27 @@ cons_t* proc_ffi_prep_cif(cons_t* p, environment_t*)
    * ARGUMENT 2:
    * Return type for foreign function
    */
-  ffi_type *rtype = parse_ffi_type(cadr(p));
+  ffi_type* rtype = parse_ffi_type(cadr(p));
 
   /*
    * ARGUMENT 3:
    * Types for foreign function's input parameters.
    */
-  assert_type(PAIR, cadddr(p));
-  unsigned int nargs = length(cadddr(p));
-
   ffi_type** argtypes = NULL;
+  unsigned int nargs = 0;
 
-  if ( nargs > 0 ) {
-    argtypes = static_cast<ffi_type**>(malloc(nargs*sizeof(ffi_type*)));
-    cons_t *val = cadddr(p);
+  if ( length(p) >= 3 ) {
+    cons_t *args = caddr(p);
+    assert_type(PAIR, args);
+    nargs = length(args);
 
-    for ( unsigned int n=0; n<nargs; ++n ) {
-      argtypes[n] = parse_ffi_type(car(val));
-      val = cdr(val);
+    if ( nargs > 0 ) {
+      argtypes = static_cast<ffi_type**>(malloc(nargs*sizeof(ffi_type*)));
+
+      for ( unsigned int n=0; n<nargs; ++n ) {
+        argtypes[n] = parse_ffi_type(car(args));
+        args = cdr(args);
+      }
     }
   }
 
@@ -157,6 +166,11 @@ cons_t* proc_ffi_prep_cif(cons_t* p, environment_t*)
 
   check(ffi_prep_cif(cif, abi, nargs, rtype, argtypes));
   return pointer(tag_ffi_cif, cif);
+
+  /*
+   * In the future, the malloced argtypes should be added to the
+   * pointer-return value here, so that it too can be freed.
+   */
 }
 
 /*
@@ -223,7 +237,25 @@ cons_t* proc_ffi_call(cons_t* p, environment_t*)
   void **funargs = NULL;
 
   ffi_call(call_interface, funptr, retval, funargs);
-  return !retval? nil() : pointer("libffi return value", retval);
+  return !retval? nil() : pointer(tag_ffi_retval, retval);
+}
+
+/*
+ * (return-value->string <retval>)
+ *
+ * USE AT YOUR OWN RISK! :-)
+ */
+cons_t* proc_retval_to_string(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_pointer(tag_ffi_retval, car(p));
+
+  /*
+   * Note that string() duplicates the string, so this is a bit potential
+   * risk. We'll assume the authors know they're doing :-)
+   */
+  char *s = static_cast<char*>(car(p)->pointer->value);
+  return string(s);
 }
 
 }; // extern "C"
