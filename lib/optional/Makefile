@@ -17,17 +17,20 @@ help:
 	@true
 
 gnupg: .DUMMY
+	cd $@; make; cd ..
+
 libffi: .DUMMY
+	cd $@; make; cd ..
 
 all: $(TARGETS)
-
-%:
-	cd $@ && make
 
 check: all
 
 clean:
-	@true
+	for dir in $(TARGETS); do \
+		cd $$dir && make clean; \
+		cd ..; \
+	done
 
 install:
 	@true
