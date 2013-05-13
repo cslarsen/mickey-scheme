@@ -1,102 +1,118 @@
-Marketing & Research
-- Lag "ACID test" for Scheme.  Publiser resultater for en haug med forskjellige schemes.
-  ACID-testen var opprinnelig test av CSS der en rendret en "ACID"-figur, altså smiley.
-  Vi lager en annen test.. feks holder det at programmet forventer å printe en spesiell
-  tekst ut, feks en tekst fra Shakespeare eller noe, så kaller vi det "Macbeth test", eller
-  noe sånt... eller noe som ligner på ACID eller noe sånt.. ah, eller at den faktisk
-  printer ut en ASCII acid-figur!:D Jaa!
+RESEARCH
 
-  "ACID test for Scheme"; hvis alt går bra skal den se ut som referanserenderingen:
+Research how different scheme projects have implemented
 
-     ,*****.
-   .* _   _ *,
-   *  o   o  *
-   *    +    *
-   * \_____/ *
-    *       *
-     *******
+- Tail call elimination
+  - Trampoline
+  - Extended trampoline
+  - Cheney on the MTA
+  - etc.
 
-  Ja, bare at det som printes ut er MYE større.. og innenfor 76x20, sånn den kan
-  embeddes i epost osv.
+- Garbage collection
+  - Mark-and-sweep
+  - Boehm GC
+  - Generational
+  - Incremental
+  - Stop-the-world
+  - No-GC
+  - etc.
 
-  Og den bør være THOROUGH for RnRS... sånn den faktisk kan teste om forskjellige
-  schemes ikke følger spekken.
+- How is collection handled with FFI
 
-- Reseach: Lag stor oversikt over hvordan forskjellige schemes løser div problem,
-  spesifikt tail call elimination (trampoline, extended trampoline, cheney on the
-  mta, osv) og GC (mark-and-sweep, boehm gc, generational, incremental, stop the
-  world, no-gc, osv) og hvordan de fikser closures/gc mot C verden.
+MARK-AND-SWEEP GC
 
-CORE FEATURES, sortert fra lett til vanskelig
-- Format funksjon, defun_format(), altså C-versjon
-- Add let* (er ikke det bare reverse-ordering fra over? Altså
-          (let* ((a1 b1) (a2 b2)) <body>) => ((lambda (a2 a1) <body>) b2 b1) ?
-- Quote form, altså 'a eller '(), må det gjøres i parser?
-- nil == '() ? Altså at type=nil er samme som '() ?
-- Vector support, #(1 2 3) (dvs, arrays)
+- Simple stop, mark and sweep GC has three steps:
+  - Mark all objects to 1
+  - Traverse usage-graph from root and set all reached objects to 0
+  - Collect all objects still set to 1
 
-MORE FEATURES
-- Enkel, stop-the-world, mark-and-sweep GC
-     - 3 steg: Mark all objects to 1, reach all objects and set to 0, collect all objects still set to 1
-- Tail call recursion elimination
-- Generell tail call optimization
-     - Trampoline?
-     - Extended trampoline?
-     - Cheney on the MTA?
-- Continuations
-- Unrolled linked lists
- - Macros (merk, macros bør kanskje gjøres så tidlig en kan, da det er veldig nyttig for å kode andre ting)
+CONTINUATIONS
 
+Choose between CPS-transform and several engine implementations
 
-- Hygienic macros
-- Partial evaluation
-     - Brukes for å inline/optimize helt ned til LLVM primitives
-     - Bør dermed være mulig å få syk speed improvement
-     - Kanskje en bør se litt på hvordan eliminere push-call-pop calling convention? Kanskje en
-        kan bruke threaded execution a la Forth, for å få opp hastigheten noe sykt
-- SIMD / SSE optimized vector instructions
-     - Kanskje via #(1 2 3) vektorer?
-- Format funksjon som macro, expanderer code
-     - Burde implementeres i scheme selv, men har dårlig string-processing, så enklere å få gjort i C
-     - På sikt, bruk macro (evt partial evaluation) til å "compile" / ekspandere til feks
-          (format "Hello, ~s!\n" "world") => (macro expansion) =>
-          (string-append "Hello, " "world" "!\n") => (partial evaluation + concatenation) =>
-          (string-append "Hello, world!\n") => bør gi MAX speed
- - Profiler, bruker AOP/metaprogramming til å injecte (time expr) og collecte i hierarki, altså
-     (* (+ 1 2 3)) => (time (* (time + 1 2 3))) er basically apply macro + hierarkisk tidtakning
+LINKED LIST IMPLEMENTATIONS
 
-Eksterne libs:
-- Rask malloc, feks tcmalloc: http://code.google.com/p/google-perftools/
-- Rask hashtable (sparse/dense), se Google sine
+I think Clojure uses 64-ary trees, possibly due to the fact that these can
+easily be accessed in parallel (see Guy L. Steele's talk on FORTRESS for
+more info on this).
+
+The old MIT schemes used unrolled linked lists.
+
+HYGIENIC MACROS
+
+Seems most implementations either to explicit or implicit renaming.
+
+Would need to rewrite the way memory locations are referenced in Mickey.
+Specifically, if a macro refers to (if ...) from (scheme base), then it
+should *still* reference the very same if at point of usage, and not any
+locally defined (if ...).
+
+Also, it should be possible to inspect references using lexical scoping
+rules so that references needn't be looked up every time a code is run. This
+would also lead to significant speed increases (as was also noted in
+Norvig's small implementation).
+
+PARTIAL EVALUATION AND OPTIMIZATION
+
+This is an optimization trick that has a lot of backing literature. Read up.
+
+Can inline and optimize right down to primitive operations. But note that
+sometimes several "competing" optimization techniques can lead to slower
+code (simply needs experimentation).
+
+Should also be possible to eliminate push-and-pop call conventions in
+certain cases.
+
+SIMD / SSE vector instructions
+
+Should be possible to create a stand-alone library that performs very well
+on numeric code. Perhaps we could use homogenous vectors (e.g., bytevectors)
+to pass code to an SIMD/SSE engine? Could computations efficiently be
+offloaded to the GPU?
+
+CONSTANT FOLDING / COMPILE-TIME EXPANSION / EVAL-WHEN
+
+It should be possible to create a system that inspects and expands code at
+compile time as in:
+
+  (format-string "Hello, ~s!\n" "world")
+  => magic expansion based on knowledge of format-string
+  (format-string (string-append "Hello, " "world" "!\n"))
+  => more magic
+  (format-string "Hello, world!\n")
+
+It could be possible with some effort.
+
+CREATE A PROFILER
+
+At the moment, Mickey is way too slow for any profiler to make sense. But it
+would be neat to have a good one that just injects code with some
+AOP-system to inject profiler code directly into the code tree.
+
+It should then be possible to report timings hierarchically, where each node
+is the sum of its children.
+
+VARIOUS STUFF TO LOOK INTO
+
+- In main engine: Fast malloc, e.g. tcmalloc
+- As a library: Fast hash tables (sparse/dense), there is a SRFI for that.
 - libgmp for multi precision numbers
-- libffi for eksterne libs
-- llvm selvsagt for JIT og AOT compilation
+- libffi for external C-functions
+- llvm for jit?
+- libjit for jit?
 - Qt interface
-- libsdl interface (kanskje via qt?)
-- opengl via libsdl/qt
+- libsdl interface
+- OpenGL interface, via Qt or libsdl?
 
-Lag masse morsomme eksempelprogrammer:
-- Mandelbrot
-     - I ASCII
-     - I grafikk (SDL)
-     - Med fine, kontinuerlige farger (smooth coloring)
-- Recreate 20k lines of C to generate the THX Deep Note in Scheme
-     - Originalkoden finnes ikke, men noen har brukt SuperCollider:
-          http://www.earslap.com/instruction/recreating-the-thx-deep-note
-     - De klarte å få den ned i 140 chars eller noe, så her trengs et greit soundlib
-     - Få Olli til å mekke et kult eksempel her
-- Forth interpreter / compiler
-     (siden llvm brukes av mickey scheme bør primitives være tilgjengelige for å kode ting som Forth også)
+MAKE SOME FUN EXMAPLE APPS
+
+- Mandelbrot that is not only in ASCII
+- Is the THX deep note code available? Would be neat to port it to Scheme.
+  Someone has done ´this with SuperCollider:
+  http://www.earslap.com/instruction/recreating-the-thx-deep-note
+- Forth interpreter / parser-compiler
 - Cellular automaton (rule 101)
-- Graf-algoritmer, spesielt er det gøy å bruke topologisk sorting for å løse enkle problemer
-- Småspill
-     - Pacman-klone
-     - Space invaders klone
-- Metacircular evaluator
-     - Hiv på en reader og parser, start en egen repl og du har SKIKKELIG dsl språk, dvs ikke s-expressions men et skikkelig språk
-- Noe skikkelig kick ass.. hva med å rendre Calabi-Yau manifold?
+- Some games (pacman, space invaders, asteroids)
 
-MARKEDSFØRING / HYPE
-- Har jo "Now you're thinking in portals", men når jeg tenker på alt over, hvordan jeg har endret mitt syn på kode, så blir det "Now you're thinking in LISP" eller "Now you're thinking in Scheme"
-- "Scheme ACID test", altså bruk RnRS (feks R7RS?) for å rendre en ascii smiley, brukes for å se om alt funker, hvis mickey scheme passerer denne helt perfekt så er jo det automatisk sykt god reklame for oss
-- Masse blogging med eksempelprogrammer på små tøffe ting, husk å lage rom for ENKLE forbedringer, sånn at de som leser tenker "hekkan, dette kan jeg lett forbedre" sånn de får lyst å prøve
+These examples could potentially be written as step-by-step coding tutorials
+for the most fun.
