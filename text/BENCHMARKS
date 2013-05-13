@@ -7,6 +7,9 @@ with other schemes.  So far, I do:
 - time csi -bq mandelbrot.scm    # Chicken scheme, interpreted
 - csc -O5 mandelbrot.scm -o mandelbrot && time ./mandelbrot # ditto, compiled
 
+I expect the running time to decline a little bit before as it gets more
+complete (e.g., bignums will slow it down, etc.) before it increases again.
+
 BENCHMARK HISTORY
 
 == 2011-05-02 ==
