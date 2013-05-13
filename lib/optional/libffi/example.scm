@@ -1,33 +1,44 @@
+;; Example of loading libcurl using libffi throuh Mickey Scheme.
+;; By Christian Stigen Larsen
+;;
+;; NOTE: Does not work, yet.
+
 (import (ffi libffi)
         (scheme base)
         (scheme write)
         (portable print)
         (unix dlopen))
 
-(define path "/usr/lib/libcurl.dylib")
+(let*
+  ((path "/usr/lib/libcurl.dylib")
+   (curl (dlopen path 'now 'global)))
 
-(println "Loading " path)
-(define lib (dlopen path 'now 'global))
+  (if (not curl) (error "Could not load libcurl"))
 
-(define fname "curl_version")
-(define funptr (dlsym lib fname))
+  ;; SET UP SOME PROCEDURES
 
-(if (not funptr)
-  (error (string-append
-           "Could not find function " fname)))
+  (define curl-easy-init #f)
 
-;; Call curl_easy_init first
-(define init
-  (call-foreign-function
-    (prepare-call-interface 'default-abi 'pointer '())
-    (dlsym lib "curl_easy_init")
-    8))
-(println "curl_easy_init() ==> " (return-value->pointer init))
+  (let*
+    ((fptr (dlsym curl "curl_easy_init"))
+     (cif (prepare-call-interface 'default-abi 'pointer)))
+    (if (not fptr) (error "Could not find curl_easy_init"))
+    (set! curl-easy-init
+      (lambda ()
+        (return-value->pointer
+          (call-foreign-function cif fptr 8)))))
 
-(define cif
-  (prepare-call-interface 'default-abi 'uchar))
+  (define curl-version #f)
 
-(define val
-  (call-foreign-function cif funptr 8))
+  (let*
+    ((fptr (dlsym curl "curl_version"))
+     (cif (prepare-call-interface 'default-abi 'uchar)))
+    (if (not fptr) (error "Could not find curl_version"))
+    (set! curl-version
+      (lambda ()
+        (return-value->string
+          (call-foreign-function cif fptr 8)))))
 
-(println fname "() ==> '" (return-value->string val) "'")
+  ;; MAIN CODE
+  (println "curl_easy_init() ==> " (curl-easy-init))
+  (println "curl_version() ==> \"" (curl-version) "\""))
