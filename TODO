@@ -6,6 +6,13 @@ OTHER STUFF
 
 MORE BUGS:
 
+- This parses
+  > #\"
+  but this doesn't:
+  > #\" "foo"
+  or, similarly,
+  > (list #\" "foo")
+
 - If (export ... foo ...) is specified, but no (define foo) exists,
   it should raise an error (or at least a warning).
   (must also check that foo is not imported; just check the environment).
