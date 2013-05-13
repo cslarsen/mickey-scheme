@@ -116,3 +116,11 @@ MAKE SOME FUN EXMAPLE APPS
 
 These examples could potentially be written as step-by-step coding tutorials
 for the most fun.
+
+DOCUMENTATION / MAN PAGES
+
+It's possible to do `man 3 ctime` for POSIX functions. Would be neat to be
+able to do `man 3 assv` for instance, as well.
+
+This should probably be a separate project; just copy definitions from the
+R7RS report and put them into the corresponding man pages.
