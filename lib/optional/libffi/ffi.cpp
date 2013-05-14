@@ -7,12 +7,13 @@
  */
 
 #include <mickey.h>
-#include <ffi/ffi.h> // libffi
+#include <ffi.h>
 
 extern "C" {
 
-static const char tag_ffi_cif[] = "libffi call interface";
-static const char tag_ffi_retval[] = "libffi return value";
+static const char tag_ffi_cif[]      = "libffi call interface";
+static const char tag_ffi_retval[]   = "libffi return value";
+static const char tag_ffi_type[]     = "libffi type";
 static const char tag_void_pointer[] = "void*";
 
 /*
@@ -394,6 +395,40 @@ cons_t* proc_size_of(cons_t* p, environment_t*)
     "Unknown type specifier: %s", name.c_str())));
 
   return nil(); // appease compiler
+}
+
+/*
+ * (make-type (<type1> <type2>) size alignment)
+ */
+cons_t* proc_make_type(cons_t* p, environment_t*)
+{
+  cons_t *types = car(p),
+          *size = cadr(p),
+         *align = caddr(p);
+
+  assert_length(p, 3);
+  assert_type(PAIR, types);
+  assert_type(INTEGER, size);
+  assert_type(INTEGER, align);
+
+  const size_t ntypes = length(types);
+
+  if ( ntypes == 0 )
+    raise(runtime_exception("No types given"));
+
+  ffi_type *t = new ffi_type();
+  t->size      = size->number.integer;
+  t->alignment = align->number.integer;
+  t->elements  = new ffi_type*[1+ntypes];
+  t->elements[ntypes] = NULL;
+
+  p = types;
+  for ( size_t n=0; n<ntypes; ++n ) {
+    t->elements[n] = parse_ffi_type(car(p));
+    p = cdr(p);
+  }
+
+  return pointer(tag_ffi_type, t);
 }
 
 }; // extern "C"

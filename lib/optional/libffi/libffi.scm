@@ -12,6 +12,7 @@
   (export
     call-function
     make-interface
+    make-type
     size-of
     value->character
     value->float
@@ -25,6 +26,7 @@
 
     (define call-function     (bind-procedure "proc_ffi_call"))
     (define make-interface    (bind-procedure "proc_ffi_prep_cif"))
+    (define make-type         (bind-procedure "proc_make_type"))
     (define size-of           (bind-procedure "proc_size_of"))
     (define value->bytevector (bind-procedure "proc_retval_to_u8vector"))
     (define value->character  (bind-procedure "proc_retval_to_uchar"))
