@@ -68,10 +68,27 @@ static struct {
   const char* name;
   size_t size;
 } type_sizes[] = {
-  {"char*", sizeof(char*)},
-  {"void*", sizeof(void*)},
-  {"void(*)()", sizeof(void(*)())},
-  {NULL, 0}
+  {"uint",       sizeof(unsigned int)},
+  {"uint8",      1},
+  {"uint16",     2},
+  {"uint32",     4},
+  {"uint64",     8},
+  {"sint",       sizeof(signed int)},
+  {"sint8",      1},
+  {"sint16",     2},
+  {"sint32",     4},
+  {"sint64",     8},
+  {"ulong",      sizeof(unsigned long)},
+  {"slong",      sizeof(signed long)},
+  {"float",      sizeof(float)},
+  {"double",     sizeof(double)},
+  {"longdouble", sizeof(long double)},
+  {"pointer",    sizeof(void*)},
+  {"uchar",      sizeof(unsigned char)},
+  {"schar",      sizeof(signed char)},
+  {"ushort",     sizeof(unsigned short)},
+  {"sshort",     sizeof(signed short)},
+  {NULL,         0}
 };
 
 static void check(const ffi_status& s)

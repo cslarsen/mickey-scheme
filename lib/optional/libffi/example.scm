@@ -44,7 +44,7 @@
         (set! curl-easy-init (lambda ()
                                (return-value->pointer
                                  (call-foreign-function
-                                   cif fptr (size-of 'void*)))))
+                                   cif fptr (size-of 'pointer)))))
         (curl-easy-init))))
 
   (define curl-version
@@ -56,7 +56,7 @@
         (set! curl-version (lambda ()
                              (return-value->string
                                (call-foreign-function
-                                 cif fptr (size-of 'char*)))))
+                                 cif fptr (size-of 'pointer)))))
         (curl-version))))
 
   ;; MAIN CODE
