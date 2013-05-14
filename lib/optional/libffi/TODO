@@ -1,0 +1,5 @@
+- Complete make-type trail
+  - be able to specify struct return types w/make-type
+  - be able to specify call args w/make-type
+- Able to specify call args
+- Able to get/set struct data
