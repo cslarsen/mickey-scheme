@@ -21,7 +21,7 @@
 
 (let*
   ((path (find-library "/usr/lib" "libcurl"))
-   (_ (println "Loading " path))
+   (_    (println "Loading " path))
    (curl (dlopen path 'now 'global)))
 
   (if (not curl) (error "Could not load libcurl"))
@@ -38,25 +38,31 @@
   (define curl-easy-init
     (let*
       ((fptr (dlsym curl "curl_easy_init"))
-       (cif (prepare-call-interface 'default-abi 'pointer)))
-      (if (not fptr) (error "Could not find curl_easy_init"))
+       (cif (make-interface 'default-abi 'pointer)))
+
+      (if (not fptr)
+        (error "Could not find curl_easy_init"))
+
       (lambda ()
-        (set! curl-easy-init (lambda ()
-                               (return-value->pointer
-                                 (call-foreign-function
-                                   cif fptr (size-of 'pointer)))))
+        (set! curl-easy-init
+          (lambda ()
+            (value->pointer
+              (call-function cif fptr (size-of 'pointer)))))
         (curl-easy-init))))
 
   (define curl-version
     (let*
       ((fptr (dlsym curl "curl_version"))
-       (cif (prepare-call-interface 'default-abi 'pointer)))
-      (if (not fptr) (error "Could not find curl_version"))
+       (cif (make-interface 'default-abi 'pointer)))
+
+      (if (not fptr)
+        (error "Could not find curl_version"))
+
       (lambda ()
-        (set! curl-version (lambda ()
-                             (return-value->string
-                               (call-foreign-function
-                                 cif fptr (size-of 'pointer)))))
+        (set! curl-version
+          (lambda ()
+            (value->string
+              (call-function cif fptr (size-of 'pointer)))))
         (curl-version))))
 
   ;; MAIN CODE

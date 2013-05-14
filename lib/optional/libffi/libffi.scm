@@ -10,18 +10,26 @@
           (mickey library))
 
   (export
-    call-foreign-function
-    prepare-call-interface
-    return-value->integer
-    return-value->pointer
-    return-value->string
-    size-of)
+    call-function
+    make-interface
+    size-of
+    value->character
+    value->float
+    value->integer
+    value->pointer
+    value->string
+    value->vector)
 
   (begin
     (open-internal-library "libffi.so" 'lazy 'global)
-    (define prepare-call-interface (bind-procedure "proc_ffi_prep_cif"))
-    (define call-foreign-function (bind-procedure "proc_ffi_call"))
-    (define return-value->integer (bind-procedure "proc_retval_to_integer"))
-    (define return-value->pointer (bind-procedure "proc_retval_to_pointer"))
-    (define return-value->string (bind-procedure "proc_retval_to_string"))
-    (define size-of (bind-procedure "proc_size_of"))))
+
+    (define call-function     (bind-procedure "proc_ffi_call"))
+    (define make-interface    (bind-procedure "proc_ffi_prep_cif"))
+    (define size-of           (bind-procedure "proc_size_of"))
+    (define value->bytevector (bind-procedure "proc_retval_to_u8vector"))
+    (define value->character  (bind-procedure "proc_retval_to_uchar"))
+    (define value->double     (bind-procedure "proc_retval_to_double"))
+    (define value->float      (bind-procedure "proc_retval_to_float"))
+    (define value->integer    (bind-procedure "proc_retval_to_integer"))
+    (define value->pointer    (bind-procedure "proc_retval_to_pointer"))
+    (define value->string     (bind-procedure "proc_retval_to_string"))))

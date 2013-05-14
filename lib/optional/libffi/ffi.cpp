@@ -16,6 +16,62 @@ static const char tag_ffi_retval[] = "libffi return value";
 static const char tag_void_pointer[] = "void*";
 
 /*
+ * We need to hold the return value and its size in bytes.
+ * (Will also let us free() memory as well, later on)
+ *
+ * If size==0, then data has not been malloc'ed and needn't be freed.
+ */
+struct value_t {
+  void *data;
+  size_t size;
+
+  value_t(const size_t bytes = sizeof(long))
+  {
+    if ( bytes < sizeof(long) )
+      size = sizeof(long);
+
+    data = malloc(size);
+    memset(data, 0, size);
+  }
+
+  char* string()
+  {
+    return static_cast<char*>(data);
+  }
+
+  integer_t integer()
+  {
+    return reinterpret_cast<intptr_t>(data);
+  }
+
+  character_t character()
+  {
+    character_t c = '\0';
+    memcpy(data, &c, sizeof(character_t));
+    return c;
+  }
+
+  float real_float()
+  {
+    float f = 0;
+    memcpy(data, &f, sizeof(float));
+    return f;
+  }
+
+  double real_double()
+  {
+    double d = 0;
+    memcpy(data, &d, sizeof(double));
+    return d;
+  }
+
+  void free()
+  {
+    ::free(data);
+  }
+};
+
+/*
  * ifdefs taken from ffi/x86-ffitarget.h
  */
 static struct {
@@ -98,7 +154,7 @@ static void check(const ffi_status& s)
   switch ( s ) {
   case FFI_OK: return;
   case FFI_BAD_TYPEDEF: err = "FFI_BAD_TYPEDEF"; break;
-  case FFI_BAD_ABI: err = "FFI_BAD_ABI"; break;
+  case FFI_BAD_ABI:     err = "FFI_BAD_ABI"; break;
   }
 
   raise(runtime_exception(err));
@@ -244,28 +300,17 @@ cons_t* proc_ffi_call(cons_t* p, environment_t*)
       "Cannot allocate a negative number of bytes: %d", size)));
 
   /*
-   * Return value.
+   * Allocate enough memory necessary to hold return data.
    */
-  void *retval = NULL;
-
-  /*
-   * Allocate space for return value and initialize it.
-   *
-   * It's the caller's responsibility to get this value right with proper
-   * alignment!
-   */
-  if ( size > 0 ) {
-    retval = malloc(size);
-    memset(retval, 0, size);
-  }
+  value_t *retval = new value_t(size);
 
   /*
    * Function arguments (currently unsupported).
    */
   void **funargs = NULL;
 
-  ffi_call(call_interface, funptr, &retval, funargs);
-  return !retval? nil() : pointer(tag_ffi_retval, retval);
+  ffi_call(call_interface, funptr, &retval->data, funargs);
+  return pointer(tag_ffi_retval, retval);
 }
 
 /*
@@ -282,24 +327,56 @@ cons_t* proc_retval_to_string(cons_t* p, environment_t*)
    * Note that string() duplicates the string, so this is a bit potential
    * risk. We'll assume the authors know they're doing :-)
    */
-  void *value = car(p)->pointer->value;
-  return string(static_cast<const char*>(value));
+  value_t* value = static_cast<value_t*>(car(p)->pointer->value);
+  return string(value->string());
 }
 
 cons_t* proc_retval_to_integer(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   assert_pointer(tag_ffi_retval, car(p));
-  void *value = car(p)->pointer->value;
-  return integer(reinterpret_cast<intptr_t>(value));
+  value_t* value = static_cast<value_t*>(car(p)->pointer->value);
+  return integer(value->integer());
 }
 
 cons_t* proc_retval_to_pointer(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   assert_pointer(tag_ffi_retval, car(p));
-  void *value = car(p)->pointer->value;
-  return pointer(tag_void_pointer, value);
+  value_t* value = static_cast<value_t*>(car(p)->pointer->value);
+  return pointer(tag_void_pointer, value->data);
+}
+
+cons_t* proc_retval_to_uchar(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_pointer(tag_ffi_retval, car(p));
+  value_t* value = static_cast<value_t*>(car(p)->pointer->value);
+  return character(value->character());
+}
+
+cons_t* proc_retval_to_float(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_pointer(tag_ffi_retval, car(p));
+  value_t* value = static_cast<value_t*>(car(p)->pointer->value);
+  return real(value->real_float());
+}
+
+cons_t* proc_retval_to_double(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_pointer(tag_ffi_retval, car(p));
+  value_t* value = static_cast<value_t*>(car(p)->pointer->value);
+  return real(value->real_double());
+}
+
+cons_t* proc_retval_to_u8vector(cons_t* p, environment_t*)
+{
+  assert_length(p, 2);
+  assert_pointer(tag_ffi_retval, car(p));
+  value_t* value = static_cast<value_t*>(car(p)->pointer->value);
+  return bytevector(value->size, static_cast<uint8_t*>(value->data));
 }
 
 cons_t* proc_size_of(cons_t* p, environment_t*)
