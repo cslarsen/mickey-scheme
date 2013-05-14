@@ -80,4 +80,46 @@ could be described like
 This returns an ffi_type object with the given structure and size=0 and
 alignment=0.
 
+Best of all would be to combine the above make-type with define-record-type
+to allow for extracting data from a FF into a Scheme record and back.
+
+Could be done by doing:
+
+  (define-ffi-type tm
+    make-tm
+    tm?
+    '((sec int)
+      (min int)
+      (hour int)
+      (offset slong)
+      (zone string))
+    0 0)
+
+which would expand into
+
+  (define (tm-index field)
+    (case field
+      ('sec 0)
+      ('min 1)
+      ('hour 2)
+      ('offset 3)
+      ('zone 4)
+      (else (error "Unknown field " field))))
+
+  (define (make-tm)
+    (let
+      ((ffi_type (make-type ...))
+       (data (make-vector <size> #f)))
+      (vector-set! (tm-index 'sec 0))
+      ...
+      (list '(ffi-type-tm)
+            ('ffi_type ffi_type)
+            ('data data))))
+
+  (define (tm-set! tm field value)
+    (vector-set! (assv ...) (tm-index ...)))
+
+  (define (tm-get tm field)
+    ...)
+
 |#
