@@ -26,19 +26,19 @@
     (set! curl-easy-init
       (lambda ()
         (return-value->pointer
-          (call-foreign-function cif fptr 8)))))
+          (call-foreign-function cif fptr (size-of 'void*))))))
 
   (define curl-version #f)
 
   (let*
     ((fptr (dlsym curl "curl_version"))
-     (cif (prepare-call-interface 'default-abi 'uchar)))
+     (cif (prepare-call-interface 'default-abi 'pointer)))
     (if (not fptr) (error "Could not find curl_version"))
     (set! curl-version
       (lambda ()
         (return-value->string
-          (call-foreign-function cif fptr 8)))))
+          (call-foreign-function cif fptr (size-of 'char*))))))
 
   ;; MAIN CODE
-  (println "curl_easy_init() ==> " (curl-easy-init))
-  (println "curl_version() ==> \"" (curl-version) "\""))
+  (curl-easy-init)
+  (println "libcurl version: " (curl-version)))

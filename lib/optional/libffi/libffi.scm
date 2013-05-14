@@ -14,7 +14,8 @@
     prepare-call-interface
     return-value->integer
     return-value->pointer
-    return-value->string)
+    return-value->string
+    size-of)
 
   (begin
     (open-internal-library "libffi.so" 'lazy 'global)
@@ -22,4 +23,5 @@
     (define call-foreign-function (bind-procedure "proc_ffi_call"))
     (define return-value->integer (bind-procedure "proc_retval_to_integer"))
     (define return-value->pointer (bind-procedure "proc_retval_to_pointer"))
-    (define return-value->string (bind-procedure "proc_retval_to_string"))))
+    (define return-value->string (bind-procedure "proc_retval_to_string"))
+    (define size-of (bind-procedure "proc_size_of"))))

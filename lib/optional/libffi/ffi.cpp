@@ -64,6 +64,16 @@ static struct {
   {NULL,         &ffi_type_void}
 };
 
+static struct {
+  const char* name;
+  size_t size;
+} type_sizes[] = {
+  {"char*", sizeof(char*)},
+  {"void*", sizeof(void*)},
+  {"void(*)()", sizeof(void(*)())},
+  {NULL, 0}
+};
+
 static void check(const ffi_status& s)
 {
   std::string err = "Unknown ffi error";
@@ -237,7 +247,7 @@ cons_t* proc_ffi_call(cons_t* p, environment_t*)
    */
   void **funargs = NULL;
 
-  ffi_call(call_interface, funptr, retval, funargs);
+  ffi_call(call_interface, funptr, &retval, funargs);
   return !retval? nil() : pointer(tag_ffi_retval, retval);
 }
 
@@ -273,6 +283,23 @@ cons_t* proc_retval_to_pointer(cons_t* p, environment_t*)
   assert_pointer(tag_ffi_retval, car(p));
   void *value = car(p)->pointer->value;
   return pointer(tag_void_pointer, value);
+}
+
+cons_t* proc_size_of(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_type(SYMBOL, car(p));
+
+  const std::string name = symbol_name(car(p));
+
+  for ( size_t n=0; type_sizes[n].name != NULL; ++n)
+    if ( name == type_sizes[n].name )
+      return integer(type_sizes[n].size);
+
+  raise(runtime_exception(format(
+    "Unknown type specifier: %s", name.c_str())));
+
+  return nil(); // appease compiler
 }
 
 }; // extern "C"
