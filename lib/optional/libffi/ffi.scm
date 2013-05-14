@@ -75,10 +75,9 @@ A similar method could easily be used to describe structs, e.g.
 
 could be described like
 
-  (make-type
-    '((int sec)
-      (int min)
-      (long gmt-offset)
-      (char* zone)))
+  (make-type '(int int slong pointer) 0 0)
+
+This returns an ffi_type object with the given structure and size=0 and
+alignment=0.
 
 |#
