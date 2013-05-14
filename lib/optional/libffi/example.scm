@@ -9,8 +9,19 @@
         (portable print)
         (unix dlopen))
 
+(define (find-library path library-name)
+  (string-append
+    path "/" library-name
+    (cond-expand
+      (linux ".so")
+      (darwin ".dylib")
+      (else ".so"))))
+
+(println "Example of using (ffi libffi) with libcurl")
+
 (let*
-  ((path "/usr/lib/libcurl.dylib")
+  ((path (find-library "/usr/lib" "libcurl"))
+   (_ (println "Loading " path))
    (curl (dlopen path 'now 'global)))
 
   (if (not curl) (error "Could not load libcurl"))
