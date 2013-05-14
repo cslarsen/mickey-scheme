@@ -28,27 +28,36 @@
 
   ;; SET UP SOME PROCEDURES
 
-  (define curl-easy-init #f)
+  ;; The code below is really terrible; functions redefining
+  ;; themselves. It's just that I don't like the idiom
+  ;;
+  ;; (define foo #f)
+  ;; (let ...
+  ;;   (set! foo (lambda () ...)))
 
-  (let*
-    ((fptr (dlsym curl "curl_easy_init"))
-     (cif (prepare-call-interface 'default-abi 'pointer)))
-    (if (not fptr) (error "Could not find curl_easy_init"))
-    (set! curl-easy-init
+  (define curl-easy-init
+    (let*
+      ((fptr (dlsym curl "curl_easy_init"))
+       (cif (prepare-call-interface 'default-abi 'pointer)))
+      (if (not fptr) (error "Could not find curl_easy_init"))
       (lambda ()
-        (return-value->pointer
-          (call-foreign-function cif fptr (size-of 'void*))))))
+        (set! curl-easy-init (lambda ()
+                               (return-value->pointer
+                                 (call-foreign-function
+                                   cif fptr (size-of 'void*)))))
+        (curl-easy-init))))
 
-  (define curl-version #f)
-
-  (let*
-    ((fptr (dlsym curl "curl_version"))
-     (cif (prepare-call-interface 'default-abi 'pointer)))
-    (if (not fptr) (error "Could not find curl_version"))
-    (set! curl-version
+  (define curl-version
+    (let*
+      ((fptr (dlsym curl "curl_version"))
+       (cif (prepare-call-interface 'default-abi 'pointer)))
+      (if (not fptr) (error "Could not find curl_version"))
       (lambda ()
-        (return-value->string
-          (call-foreign-function cif fptr (size-of 'char*))))))
+        (set! curl-version (lambda ()
+                             (return-value->string
+                               (call-foreign-function
+                                 cif fptr (size-of 'char*)))))
+        (curl-version))))
 
   ;; MAIN CODE
   (curl-easy-init)
