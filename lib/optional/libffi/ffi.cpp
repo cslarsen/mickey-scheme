@@ -103,7 +103,7 @@ static struct {
   {"uint16",     &ffi_type_uint16},
   {"uint32",     &ffi_type_uint32},
   {"uint64",     &ffi_type_uint64},
-  {"sint",       &ffi_type_sint16},
+  {"sint",       &ffi_type_sint},
   {"sint8",      &ffi_type_sint8},
   {"sint16",     &ffi_type_sint16},
   {"sint32",     &ffi_type_sint32},
@@ -148,6 +148,14 @@ static struct {
   {NULL,         0}
 };
 
+static const char* ffi_type_name(const ffi_type* p)
+{
+  for ( size_t n=0; ffi_type_map[n].name != NULL; ++n )
+    if ( p == ffi_type_map[n].value )
+      return ffi_type_map[n].name;
+  return "Unknown ffi_type";
+}
+
 static void check(const ffi_status& s)
 {
   std::string err = "Unknown ffi error";
@@ -159,6 +167,43 @@ static void check(const ffi_status& s)
   }
 
   raise(runtime_exception(err));
+}
+
+/*
+ * Returns a void pointer to the data the cell holds,
+ * whose data type must be compatible with `type`.
+ */
+static void* make_arg(ffi_type *type, cons_t* val)
+{
+  if ( type == &ffi_type_uint ||
+       type == &ffi_type_sint )
+  {
+    if ( !integerp(val) )
+      raise(runtime_exception("Argument must be an integer"));
+
+    return static_cast<void*>(&val->number.integer);
+  }
+
+  if ( type == &ffi_type_pointer ) {
+    if ( stringp(val) ) return static_cast<void*>(&val->string);
+    if ( pointerp(val) ) return val->pointer->value;
+    if ( integerp(val) ) return &val->number.integer;
+    if ( realp(val) ) return &val->number.real;
+
+    raise(runtime_exception(format(
+      "Unsupported pointer type %s", to_s(type_of(val)).c_str())));
+  }
+
+  const std::string expect = ffi_type_name(type),
+                     given = to_s(type_of(val));
+
+  raise(runtime_exception(format(
+    "Foreign function wants %s but input data was %s, "
+    "which we don't know how to convert.",
+    indef_art("'"+expect+"'").c_str(),
+    indef_art("'"+given+"'").c_str())));
+
+  return NULL;
 }
 
 static ffi_abi parse_ffi_abi(cons_t* p)
@@ -266,7 +311,7 @@ cons_t* proc_ffi_prep_cif(cons_t* p, environment_t*)
  */
 cons_t* proc_ffi_call(cons_t* p, environment_t*)
 {
-  assert_length(p, 2, 3);
+  assert_length(p, 2, 4);
   assert_pointer(tag_ffi_cif, car(p));
   assert_type(CLOSURE, cadr(p));
   assert_type(INTEGER, caddr(p));
@@ -275,7 +320,7 @@ cons_t* proc_ffi_call(cons_t* p, environment_t*)
    * libffi description of function.
    */
 
-  ffi_cif *call_interface = static_cast<ffi_cif*>(car(p)->pointer->value);
+  ffi_cif *cif = static_cast<ffi_cif*>(car(p)->pointer->value);
 
   /*
    * Pointer to function to call.
@@ -310,7 +355,30 @@ cons_t* proc_ffi_call(cons_t* p, environment_t*)
    */
   void **funargs = NULL;
 
-  ffi_call(call_interface, funptr, &retval->data, funargs);
+  if ( !nullp(cadddr(p)) ) {
+    cons_t *args = cadddr(p);
+
+    if ( length(args) != cif->nargs )
+      raise(runtime_exception(format(
+        "Foreign function expects %d arguments",
+        cif->nargs)));
+
+    funargs = static_cast<void**>(malloc(sizeof(void*)*(cif->nargs+1)));
+
+    size_t n=0;
+    for ( cons_t *a = args; !nullp(a); a = cdr(a), ++n ) {
+      funargs[n] = make_arg(cif->arg_types[n], car(a));
+    }
+
+    funargs[cif->nargs] = NULL; // TODO: is this necessary?
+  }
+
+  /*
+   * TODO: Destroy allocated funargs data after ffi_call, unless those are
+   * pointer values used to store returned data.
+   */
+
+  ffi_call(cif, funptr, &retval->data, funargs);
   return pointer(tag_ffi_retval, retval);
 }
 

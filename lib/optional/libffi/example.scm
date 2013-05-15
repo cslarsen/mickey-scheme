@@ -65,6 +65,41 @@
               (call-function cif fptr (size-of 'pointer)))))
         (curl-version))))
 
+  (define curlopt-url 10002) ; taken from g++ -E some-curl-proj.cpp
+  (define curl-easy-setopt #f)
+  (let*
+    ((fptr (dlsym curl "curl_easy_setopt"))
+     (cif (make-interface
+            'default-abi
+            'sint
+            '(pointer sint pointer))))
+
+    (if (not fptr) (error "Could not find curl_easy_setopt"))
+
+    (set! curl-easy-setopt
+      (lambda (handle option data)
+        (value->integer
+          (call-function cif fptr (size-of 'sint)
+                         (list handle option data))))))
+
+  (define curl-easy-strerror #f)
+  (let*
+    ((fptr (dlsym curl "curl_easy_strerror"))
+     (cif (make-interface 'default-abi 'pointer '(sint))))
+    (if (not fptr) (error "Could not find curl_easy_strerror"))
+    (set! curl-easy-strerror
+      (lambda (error-code)
+        (value->string
+          (call-function cif fptr (size-of 'pointer)
+                         (list error-code))))))
+
+  (define (check-result code)
+    (if (> code 0)
+      (println "Error: " (curl-easy-strerror code))))
+
   ;; MAIN CODE
-  (curl-easy-init)
-  (println "libcurl version: " (curl-version)))
+  (define handle (curl-easy-init))
+  (println (curl-version))
+  (check-result (curl-easy-setopt handle
+                                  curlopt-url
+                                  "http://www.google.com")))
