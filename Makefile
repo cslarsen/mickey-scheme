@@ -37,10 +37,10 @@ mickey:
 	cp src/mickey src/libmickey.so .
 
 run: all
-	LD_LIBRARY_PATH=".:" ./mickey
+	@LD_LIBRARY_PATH=".:" ./mickey
 
 runz: all
-	LD_LIBRARY_PATH=".:" ./mickey -z
+	@LD_LIBRARY_PATH=".:" ./mickey -z
 
 check: all
 	LD_LIBRARY_PATH=".:" ./mickey -Itest test/tests.scm
