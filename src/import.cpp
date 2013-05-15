@@ -195,7 +195,8 @@ void scan_for_library_files()
         ++len;
 
       // add an entry to end of library map
-      library_map = (library_map_t*) realloc(library_map, sizeof(library_map_t)*(len+1));
+      library_map = static_cast<library_map_t*>(
+          realloc(library_map, sizeof(library_map_t)*(len+2)));
 
       library_map[len].library_name = strdup(name.c_str());
       library_map[len].source_file = strdup(files[n].c_str());
