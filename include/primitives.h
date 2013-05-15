@@ -90,6 +90,7 @@ bool equalp(const cons_t*, const cons_t*);
 bool eqvp(const cons_t*, const cons_t*);
 bool integerp(const cons_t*);
 bool pointerp(const char* tag, const cons_t*);
+bool pointerp(cons_t*);
 bool nanp(const cons_t*);
 bool listp(const cons_t*);
 bool not_p(const cons_t*);
