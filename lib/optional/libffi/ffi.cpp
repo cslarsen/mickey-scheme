@@ -4,6 +4,9 @@
  * Copyright (C) 2013 Christian Stigen Larsen
  * Distributed under any of LGPL v2.1, LGPL 3.0, GPL 2.0 or GPL 3.0
  *
+ * Requires libffi version 3.0.11 or later, because we need support for
+ * variadic functions (ffi_prep_cif_var).
+ *
  */
 
 #include <mickey.h>
@@ -186,7 +189,7 @@ static void* make_arg(ffi_type *type, cons_t* val)
 
   if ( type == &ffi_type_pointer ) {
     if ( stringp(val) ) return static_cast<void*>(&val->string);
-    if ( pointerp(val) ) return val->pointer->value;
+    if ( pointerp(val) ) return &val->pointer->value;
     if ( integerp(val) ) return &val->number.integer;
     if ( realp(val) ) return &val->number.real;
 
@@ -295,6 +298,67 @@ cons_t* proc_ffi_prep_cif(cons_t* p, environment_t*)
   memset(cif, 0, sizeof(ffi_cif));
 
   check(ffi_prep_cif(cif, abi, nargs, rtype, argtypes));
+  return pointer(tag_ffi_cif, cif);
+
+  /*
+   * In the future, the malloced argtypes should be added to the
+   * pointer-return value here, so that it too can be freed.
+   */
+}
+
+cons_t* proc_ffi_prep_cif_var(cons_t* p, environment_t*)
+{
+  assert_length(p, 3, 4);
+
+  ffi_abi abi = FFI_DEFAULT_ABI;
+
+  /*
+   * ARGUMENT 1: ABI for foreign function
+   */
+  abi = parse_ffi_abi(car(p));
+
+  /*
+   * ARGUMENT 2:
+   * Return type for foreign function
+   */
+  ffi_type* rtype = parse_ffi_type(cadr(p));
+
+  /*
+   * ARGUMENT 3:
+   * Number of fixed vars
+   */
+  assert_type(INTEGER, caddr(p));
+  unsigned int fixedargs = caddr(p)->number.integer;
+
+  /*
+   * ARGUMENT 4:
+   * Types for foreign function's input parameters.
+   */
+  ffi_type** argtypes = NULL;
+  unsigned int nargs = 0;
+
+  if ( length(p) >= 4 ) {
+    cons_t *args = cadddr(p);
+    assert_type(PAIR, args);
+    nargs = length(args);
+
+    if ( nargs > 0 ) {
+      argtypes = static_cast<ffi_type**>(malloc(nargs*sizeof(ffi_type*)));
+
+      for ( unsigned int n=0; n<nargs; ++n ) {
+        argtypes[n] = parse_ffi_type(car(args));
+        args = cdr(args);
+      }
+    }
+  }
+
+  /*
+   * Initialize returned struct
+   */
+  ffi_cif *cif = new ffi_cif();
+  memset(cif, 0, sizeof(ffi_cif));
+
+  check(ffi_prep_cif_var(cif, abi, fixedargs, nargs, rtype, argtypes));
   return pointer(tag_ffi_cif, cif);
 
   /*
@@ -497,6 +561,16 @@ cons_t* proc_make_type(cons_t* p, environment_t*)
   }
 
   return pointer(tag_ffi_type, t);
+}
+
+cons_t* proc_version(cons_t* p, environment_t*)
+{
+  assert_length(p, 0);
+#ifdef PACKAGE_VERSION
+  return string(PACKAGE_VERSION);
+#else
+  return string("<unknown version>");
+#endif
 }
 
 }; // extern "C"

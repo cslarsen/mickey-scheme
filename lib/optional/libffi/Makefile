@@ -2,11 +2,21 @@ TARGETS = ffi.o libffi.so
 CXX = /usr/bin/g++
 MICKEY = ../../..
 
-LIBFFI_CFLAGS = -I/usr/include/ffi
-LIBFFI_LIBS = -lffi
+##
+## LOCATION OF LIBFFI
+## You should use a recent version of libffi that
+## contains the ffi_prep_cif_var() function.
+##
+## LIBFFI_CFLAGS = -I/usr/include/ffi
+##
+## I installed libcurl using homebrew on OS X, which resulted
+## in the following directories:
+##
+LIBFFI_CFLAGS = -I/usr/local/opt/libffi/lib/libffi-3.0.13/include/
+LIBFFI_LIBS = -L/usr/local/opt/libffi/lib/ -lffi
 
 CXXFLAGS = -W -Wall -I$(MICKEY)/include $(LIBFFI_CFLAGS)
-LDFLAGS = -L$(MICKEY)/lib -lmickey $(LIBFFI_LIBS)
+LDFLAGS = $(LIBFFI_LIBS) -L$(MICKEY)/lib -lmickey
 LIBFLAGS = -shared -fpic
 
 MICKEY_LIB_PATH = DYLD_LIBRARY_PATH=$(MICKEY) LD_LIBRARY_PATH=$(MICKEY)

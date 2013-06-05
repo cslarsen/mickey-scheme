@@ -12,6 +12,7 @@
   (export
     call-function
     make-interface
+    make-variadic-interface
     make-type
     size-of
     value->character
@@ -19,13 +20,15 @@
     value->integer
     value->pointer
     value->string
-    value->vector)
+    value->vector
+    version)
 
   (begin
     (open-internal-library "libffi.so" 'lazy 'global)
 
     (define call-function     (bind-procedure "proc_ffi_call"))
     (define make-interface    (bind-procedure "proc_ffi_prep_cif"))
+    (define make-variadic-interface  (bind-procedure "proc_ffi_prep_cif_var"))
     (define make-type         (bind-procedure "proc_make_type"))
     (define size-of           (bind-procedure "proc_size_of"))
     (define value->bytevector (bind-procedure "proc_retval_to_u8vector"))
@@ -34,4 +37,5 @@
     (define value->float      (bind-procedure "proc_retval_to_float"))
     (define value->integer    (bind-procedure "proc_retval_to_integer"))
     (define value->pointer    (bind-procedure "proc_retval_to_pointer"))
-    (define value->string     (bind-procedure "proc_retval_to_string"))))
+    (define value->string     (bind-procedure "proc_retval_to_string"))
+    (define version           (bind-procedure "proc_version"))))

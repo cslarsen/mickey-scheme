@@ -1,7 +1,8 @@
 ;; Example of loading libcurl using libffi throuh Mickey Scheme.
 ;; By Christian Stigen Larsen
 ;;
-;; NOTE: Does not work, yet.
+;; You must have a libffi version of at least 3.0.11 (Apr-11-12), as we
+;; require the support for variadic functions (ffi_prep_cif_var).
 
 (import (ffi libffi)
         (scheme base)
@@ -13,11 +14,13 @@
   (string-append
     path "/" library-name
     (cond-expand
-      (linux ".so")
+      (linux  ".so")
       (darwin ".dylib")
-      (else ".so"))))
+      (else   ".so"))))
 
-(println "Example of using (ffi libffi) with libcurl")
+(println "Example of using libffi with libcurl")
+(println "libffi version " (version))
+(println)
 
 (let*
   ((path (find-library "/usr/lib" "libcurl"))
@@ -65,22 +68,27 @@
               (call-function cif fptr (size-of 'pointer)))))
         (curl-version))))
 
-  (define curlopt-url 10002) ; taken from g++ -E some-curl-proj.cpp
+  ;; Find enum value by doing:
+  ;; gcc -E /usr/include/curl/curl.h | grep CURLOPT_URL
+  ;;
+  (define curlopt-url 10002)
+
   (define curl-easy-setopt #f)
   (let*
     ((fptr (dlsym curl "curl_easy_setopt"))
-     (cif (make-interface
+     (cif (make-variadic-interface
             'default-abi
             'sint
+            2
             '(pointer sint pointer))))
 
     (if (not fptr) (error "Could not find curl_easy_setopt"))
 
     (set! curl-easy-setopt
-      (lambda (handle option data)
+      (lambda (handle option value)
         (value->integer
           (call-function cif fptr (size-of 'sint)
-                         (list handle option data))))))
+                         (list handle option value))))))
 
   (define curl-easy-strerror #f)
   (let*
@@ -93,6 +101,17 @@
           (call-function cif fptr (size-of 'pointer)
                          (list error-code))))))
 
+  (define curl-easy-perform #f)
+  (let*
+    ((fptr (dlsym curl "curl_easy_perform"))
+     (cif (make-interface 'default-abi 'sint '(pointer))))
+    (if (not fptr) (error "Could not find curl_easy_perform"))
+    (set! curl-easy-perform
+      (lambda (error-code)
+        (value->integer
+          (call-function cif fptr (size-of 'pointer)
+                         (list error-code))))))
+
   (define (check-result code)
     (if (> code 0)
       (println "Error: " (curl-easy-strerror code))))
@@ -102,4 +121,5 @@
   (println (curl-version))
   (check-result (curl-easy-setopt handle
                                   curlopt-url
-                                  "http://www.google.com")))
+                                  "http://www.google.com"))
+  (curl-easy-perform handle))
