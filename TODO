@@ -1,3 +1,7 @@
+MOVE
+
+Move procedures file-exists? and delete-file to (scheme process-context)
+
 CRASH
 
 This crashes:
