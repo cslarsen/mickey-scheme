@@ -1,7 +1,7 @@
 /*
  * Mickey Scheme
  *
- * Copyright (C) 2011-2012 Christian Stigen Larsen <csl@sublevel3.org>
+ * Copyright (C) 2011-2013 Christian Stigen Larsen <csl@sublevel3.org>
  * http://csl.sublevel3.org                              _
  *                                                        \
  * Distributed under the LGPL 2.1; see LICENSE            /\
@@ -74,7 +74,7 @@ cons_t* proc_exit(cons_t* p, environment_t*)
   assert_length(p, 0, 1);
 
   /*
-   * TODO: Runn all outstanding dynamic-wind AFTER-procs
+   * TODO: Run all outstanding dynamic-wind AFTER-procs
    */
 
   int code = EXIT_SUCCESS;
@@ -89,6 +89,25 @@ cons_t* proc_exit(cons_t* p, environment_t*)
   }
 
   ::exit(code);
+  return unspecified();
+}
+
+cons_t* proc_emergency_exit(cons_t* p, environment_t*)
+{
+  assert_length(p, 0, 1);
+
+  int code = EXIT_SUCCESS;
+
+  if ( length(p) == 1 ) {
+    if ( integerp(car(p)) )
+      code = car(p)->number.integer;
+    else if ( realp(car(p)) )
+      code = static_cast<int>(car(p)->number.real);
+    else
+      code = !boolean_false(car(p))? EXIT_SUCCESS : EXIT_FAILURE;
+  }
+
+  ::_exit(code);
   return unspecified();
 }
 
