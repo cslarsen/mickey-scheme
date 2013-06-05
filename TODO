@@ -1,3 +1,11 @@
+PARSER BUG
+
+Should not be allowed:
+
+(lambda (. rest) 123)
+
+csi and chibi does not parse the above; mickey segfaults.
+
 OTHER STUFF
 
 - remove unspecified(nil()), or make it possible to eval.. it evaluates to
