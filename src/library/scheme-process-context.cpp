@@ -111,4 +111,9 @@ cons_t* proc_emergency_exit(cons_t* p, environment_t*)
   return unspecified();
 }
 
+cons_t* proc_file_existsp(cons_t* p, environment_t*)
+{
+  return boolean(file_exists(car(p)->string));
+}
+
 }

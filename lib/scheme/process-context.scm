@@ -19,23 +19,16 @@ Please post bugfixes and suggestions to the author.   /  \_
     command-line
     emergency-exit
     exit
+    file-exists?
     get-environment-variable
     get-environment-variables)
 
   (begin
     (open-internal-library "libscheme-process-context.so" 'global 'lazy)
 
-    (define command-line
-      (bind-procedure "proc_command_line"))
-
-    (define exit
-      (bind-procedure "proc_exit"))
-
-    (define emergency-exit
-      (bind-procedure "proc_emergency_exit"))
-
-    (define get-environment-variable
-      (bind-procedure "proc_get_environment_variable"))
-
-    (define get-environment-variables
-      (bind-procedure "proc_get_environment_variables"))))
+    (define command-line (bind-procedure "proc_command_line"))
+    (define exit (bind-procedure "proc_exit"))
+    (define emergency-exit (bind-procedure "proc_emergency_exit"))
+    (define file-exists? (bind-procedure "proc_file_existsp"))
+    (define get-environment-variable (bind-procedure "proc_get_environment_variable"))
+    (define get-environment-variables (bind-procedure "proc_get_environment_variables"))))

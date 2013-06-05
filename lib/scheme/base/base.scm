@@ -91,7 +91,6 @@ The larger part of this library resides in libscheme-base.so.
     exact?
     expt
     features
-    file-exists?
     finite?
     for-each
     gcd

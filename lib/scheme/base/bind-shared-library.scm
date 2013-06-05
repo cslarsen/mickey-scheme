@@ -59,7 +59,6 @@
 (define exact->inexact (bind-procedure "proc_exact_to_inexact"))
 (define exact? (bind-procedure "proc_exactp"))
 (define expt (bind-procedure "proc_expt"))
-(define file-exists?  (bind-procedure "proc_file_existsp"))
 (define finite?  (bind-procedure "proc_finitep"))
 (define gcd (bind-procedure "proc_gcd"))
 (define if (bind-syntax "proc_dummy_placeholder"))

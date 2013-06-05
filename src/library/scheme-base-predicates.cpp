@@ -224,11 +224,6 @@ cons_t* proc_eqnump(cons_t* p, environment_t*)
   return boolean(true);
 }
 
-cons_t* proc_file_existsp(cons_t* p, environment_t*)
-{
-  return boolean(file_exists(car(p)->string));
-}
-
 cons_t* proc_char_ltep(cons_t* p, environment_t*)
 {
   assert_length(p, 2);

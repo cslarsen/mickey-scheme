@@ -1,6 +1,6 @@
-MOVE
+ADD
 
-Move procedures file-exists? and delete-file to (scheme process-context)
+Add delete-file to (scheme process-context)
 
 CRASH
 
