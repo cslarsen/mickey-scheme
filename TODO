@@ -1,3 +1,11 @@
+CRASH
+
+This crashes:
+
+$ ./mickey -L.foo
+
+segfault :)
+
 PARSER BUG
 
 Should not be allowed:
