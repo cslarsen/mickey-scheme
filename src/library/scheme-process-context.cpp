@@ -11,6 +11,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "mickey.h"
 
 extern char **environ;
@@ -114,6 +115,14 @@ cons_t* proc_emergency_exit(cons_t* p, environment_t*)
 cons_t* proc_file_existsp(cons_t* p, environment_t*)
 {
   return boolean(file_exists(car(p)->string));
+}
+
+cons_t* proc_delete_file(cons_t* p, environment_t*)
+{
+  assert_length(p, 1);
+  assert_type(STRING, car(p));
+  unlink(car(p)->string);
+  return unspecified();
 }
 
 }
