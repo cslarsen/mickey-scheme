@@ -1,6 +1,10 @@
 ;; Mickey Scheme library structure
 
-;; Libraries loaded by REPL
+;; These are the libraries loaded by the REPL.
+;;
+;; It would be better to move these off the index and into a (mickey repl)
+;; library instead).
+;;
 (define-repl-imports
   (scheme base)
   (scheme cxr)
