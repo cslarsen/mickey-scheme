@@ -2,25 +2,29 @@
 
 Mickey R7RS Scheme
 
-Copyright (C) 2012 Christian Stigen Larsen <csl@sublevel3.org>
+Copyright (C) 2012-2013 Christian Stigen Larsen <csl@sublevel3.org>
 http://csl.sublevel3.org                              _
                                                        \
 Distributed under the LGPL 2.1; see LICENSE            /\
 Please post bugfixes and suggestions to the author.   /  \_
 
- |#
-
-(define-library (scheme math)
+|#
+(define-library (scheme inexact)
   (import (only (scheme base) define)
           (mickey library))
-  (export
-    exp log sin cos tan
-    asin acos atan sqrt
-    ceiling floor)
-
+  (export acos
+          asin
+          atan
+          ceiling
+          cos
+          exp
+          floor
+          log
+          sin
+          sqrt
+          tan)
   (begin
     (open-internal-library "libscheme-math.so" 'lazy 'global)
-
     (define exp     (bind-procedure "proc_exp"))
     (define log     (bind-procedure "proc_log"))
     (define sin     (bind-procedure "proc_sin"))

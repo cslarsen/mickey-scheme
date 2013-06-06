@@ -17,7 +17,7 @@
 
 (import (scheme base)
         (scheme write)
-        (scheme math)
+        (scheme inexact)
         (scheme load))
 
 ;; Number of iterations, increase for more accurate

@@ -1,6 +1,6 @@
 (import (scheme base))
 (import (scheme write))
-(import (scheme math))
+(import (scheme inexact))
 
 ;; From SICP, section 1.1.8
 

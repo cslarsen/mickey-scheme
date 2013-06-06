@@ -3,7 +3,7 @@
       (scheme base)
       (scheme write)
       (scheme char)
-      (scheme math)
+      (scheme inexact)
       (scheme char)
       (mickey environment)
       (test unit-test))

@@ -4,7 +4,7 @@
         (scheme cxr)
         (scheme lazy)
         (scheme load)
-        (scheme math)
+        (scheme inexact)
         (scheme process-context)
         (scheme repl)
         (scheme write)

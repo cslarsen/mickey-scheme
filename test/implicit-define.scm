@@ -1,6 +1,6 @@
 (import (scheme base))
 (import (scheme write))
-(import (scheme math))
+(import (scheme inexact))
 
 (define (square n)
   (* n n))

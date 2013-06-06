@@ -43,7 +43,7 @@
   ((scheme file)             "scheme/file.scm")
   ((scheme lazy)             "scheme/lazy.scm")
   ((scheme load)             "scheme/load.scm")
-  ((scheme math)             "scheme/math.scm")
+  ((scheme inexact)          "scheme/inexact.scm")
   ((scheme process-context)  "scheme/process-context.scm")
   ((scheme repl)             "scheme/repl.scm")
   ((scheme write)            "scheme/write.scm")

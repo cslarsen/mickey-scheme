@@ -6,7 +6,7 @@ Had to comment out a lot of the tests because of missing support.
 
 (import (scheme base))
 (import (scheme write))
-(import (scheme math))
+(import (scheme inexact))
 (import (scheme lazy))
 
 ;(import (scheme base) (scheme char) (scheme division) (scheme lazy)
