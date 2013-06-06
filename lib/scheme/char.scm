@@ -12,7 +12,7 @@ Please post bugfixes and suggestions to the author.   /  \_
 
 (define-library (scheme char)
   (import (scheme base)
-          (portable boolean-logic)
+          (portable booleans)
           (mickey library))
 
   (export
