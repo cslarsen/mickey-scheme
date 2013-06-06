@@ -772,7 +772,7 @@ int decimals_in(long double n)
 {
   int r = 0;
 
-  while ( !iswhole(n) ) {
+  while ( n!=0 && !iswhole(n) ) {
     ++r;
     n *= 10.0;
 
