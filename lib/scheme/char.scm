@@ -2,7 +2,7 @@
 
 Mickey R7RS Scheme
 
-Copyright (C) 2012 Christian Stigen Larsen <csl@sublevel3.org>
+Copyright (C) 2012-2013 Christian Stigen Larsen <csl@sublevel3.org>
 http://csl.sublevel3.org                              _
                                                        \
 Distributed under the LGPL 2.1; see LICENSE            /\
@@ -11,7 +11,7 @@ Please post bugfixes and suggestions to the author.   /  \_
 |#
 
 (define-library (scheme char)
-  (import (only (scheme base) define not cadr memv if)
+  (import (scheme base)
           (mickey library))
 
   (export
@@ -23,7 +23,10 @@ Please post bugfixes and suggestions to the author.   /  \_
     char-upcase
     char-upper-case?
     char-whitespace?
-    digit-value)
+    digit-value
+    string-downcase
+    string-foldcase
+    string-upcase)
 
   (begin
     #|
@@ -64,4 +67,16 @@ Please post bugfixes and suggestions to the author.   /  \_
     (define (char-foldcase char)
       ; simply call `char-downcase`
       ; note that this might not be entirely correct
-      (char-downcase char))))
+      (char-downcase char))
+
+    (define (map-string thunk string)
+      (list->string (map thunk (string->list string))))
+
+    (define (string-downcase s)
+      (map-string char-downcase s))
+
+    (define (string-upcase s)
+      (map-string char-upcase s))
+
+    (define (string-foldcase s)
+      (map-string char-foldcase s))))
