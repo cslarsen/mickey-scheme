@@ -89,6 +89,7 @@ TARGETS_SO = \
 						 libscheme-char.so \
 						 libscheme-load.so \
 						 libscheme-math.so \
+						 libscheme-file.so \
 						 libscheme-process-context.so \
 						 libscheme-repl.so \
 						 libscheme-write.so \

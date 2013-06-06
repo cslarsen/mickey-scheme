@@ -33,6 +33,7 @@
   ((scheme case-lambda)      "scheme/case-lambda.scm")
   ((scheme char)             "scheme/char.scm")
   ((scheme cxr)              "scheme/cxr.scm")
+  ((scheme file)             "scheme/file.scm")
   ((scheme lazy)             "scheme/lazy.scm")
   ((scheme load)             "scheme/load.scm")
   ((scheme math)             "scheme/math.scm")

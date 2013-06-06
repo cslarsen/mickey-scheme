@@ -19,8 +19,6 @@ Please post bugfixes and suggestions to the author.   /  \_
     command-line
     emergency-exit
     exit
-    delete-file
-    file-exists?
     get-environment-variable
     get-environment-variables)
 
@@ -30,7 +28,5 @@ Please post bugfixes and suggestions to the author.   /  \_
     (define command-line (bind-procedure "proc_command_line"))
     (define exit (bind-procedure "proc_exit"))
     (define emergency-exit (bind-procedure "proc_emergency_exit"))
-    (define file-exists? (bind-procedure "proc_file_existsp"))
-    (define delete-file (bind-procedure "proc_delete_file"))
     (define get-environment-variable (bind-procedure "proc_get_environment_variable"))
     (define get-environment-variables (bind-procedure "proc_get_environment_variables"))))
