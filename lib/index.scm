@@ -37,6 +37,7 @@
   ((scheme base)             "scheme/base/base.scm")
   ((scheme case-lambda)      "scheme/case-lambda.scm")
   ((scheme char)             "scheme/char.scm")
+  ((scheme complex)          "scheme/complex.scm")
   ((scheme cxr)              "scheme/cxr.scm")
   ((scheme file)             "scheme/file.scm")
   ((scheme lazy)             "scheme/lazy.scm")
