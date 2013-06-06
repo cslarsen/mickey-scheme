@@ -6,7 +6,7 @@
    Distributed under any of LGPL v2.1, LGPL 3.0, GPL 2.0 or GPL 3.0
 
 |#
-(define-library (scheme-experimental unit-testing)
+(define-library (experimental unit-testing)
   (import (scheme base)
           (scheme write))
   (export unit-tests assert assert-eqv)

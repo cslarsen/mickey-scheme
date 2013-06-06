@@ -1,4 +1,4 @@
-(import (scheme-experimental unit-testing)
+(import (experimental unit-testing)
         (scheme base)
         (prefix (ffi libffi) ffi-))
 
