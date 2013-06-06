@@ -87,6 +87,7 @@ TARGETS_SO = \
 						 libmickey-misc.so \
 						 libscheme-base.so \
 						 libscheme-char.so \
+						 libscheme-read.so \
 						 libscheme-load.so \
 						 libscheme-math.so \
 						 libscheme-file.so \
