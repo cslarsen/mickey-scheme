@@ -18,7 +18,7 @@
 
 struct options_t
 {
-  bool verbose;
+  int verbose;
   bool read_stdin;
   bool eval_next;
   port_t current_output_device;

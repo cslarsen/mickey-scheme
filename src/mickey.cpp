@@ -83,7 +83,7 @@ bool parse_option(const char* s, struct options_t* p)
   } else if ( !strcmp(s, "-") ) {
     // TODO: read from standard input
   } else if ( ARGHIT("-v", "--verbose") ) {
-    p->verbose = true;
+    ++p->verbose;
   } else if ( ARGHIT("-V", "--version") ) {
     version();
     exit(0);
@@ -125,7 +125,7 @@ void help()
     "  -I<path>      Set include path for (load)\n"
     "  -L<path>      Set location for library imports\n"
     "  -V --version  Print version\n"
-    "  -v --verbose  Verbose operation\n"
+    "  -v --verbose  Increase verbosity level for each -v\n"
     "  -z --zero-env Start REPL with only (import) defined\n"
     "\n");
 }

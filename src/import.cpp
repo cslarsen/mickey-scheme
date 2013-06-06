@@ -510,7 +510,7 @@ static std::string library_file(const std::string& basename)
 
 static library_t* import_lib(environment_t* target, const std::string& filename)
 {
-  if ( global_opts.verbose )
+  if ( global_opts.verbose > 1 )
     fprintf(stderr, "Loading file %s\n", filename.c_str());
 
   program_t *p = parse(slurp(open_file(filename)), target);
