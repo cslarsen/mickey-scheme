@@ -24,6 +24,7 @@ Please post bugfixes and suggestions to the author.   /  \_
     char-upper-case?
     char-whitespace?
     digit-value
+    string-ci=?
     string-downcase
     string-foldcase
     string-upcase)
@@ -69,8 +70,13 @@ Please post bugfixes and suggestions to the author.   /  \_
       ; note that this might not be entirely correct
       (char-downcase char))
 
+    ;; Helper function
     (define (map-string thunk string)
       (list->string (map thunk (string->list string))))
+
+    ;; Helper function
+    (define (boolean->integer b)
+      (if b 1 0))
 
     (define (string-downcase s)
       (map-string char-downcase s))
@@ -79,4 +85,24 @@ Please post bugfixes and suggestions to the author.   /  \_
       (map-string char-upcase s))
 
     (define (string-foldcase s)
-      (map-string char-foldcase s))))
+      (map-string char-foldcase s))
+
+    (define (string-ci=? a b)
+      ;; This body would be nicer if we could
+      ;; do (apply and (list #t #t ...)) but that
+      ;; doesn't work in any Schemes because of the
+      ;; macro system.... (I *think* some dialects
+      ;; have fixed it, and MIT Scheme at least has
+      ;; boolean/and). Then the code would be simply:
+      ;;
+      ;; (and (= (string-length a)
+      ;;         (string-length b))
+      ;;      (and (map char-ci=? (string->list a)
+      ;;                          (string->list b))))
+      ;;
+      (and (= (string-length a) (string-length b))
+           (= 1 (apply * (map boolean->integer
+                              (map char-ci=? (string->list a)
+                                             (string->list b)))))))
+
+))
