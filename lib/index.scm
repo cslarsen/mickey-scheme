@@ -45,6 +45,7 @@
   ((scheme lazy)             "scheme/lazy.scm")
   ((scheme load)             "scheme/load.scm")
   ((scheme process-context)  "scheme/process-context.scm")
+  ((scheme r5rs)             "scheme/r5rs.scm")
   ((scheme read)             "scheme/read.scm")
   ((scheme repl)             "scheme/repl.scm")
   ((scheme time)             "scheme/time.scm")

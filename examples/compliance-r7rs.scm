@@ -15,7 +15,7 @@
         (scheme lazy)
         (scheme load)
         (scheme process-context)
-        ;;(scheme r5rs) ; skip for now
+        (scheme r5rs)
         (scheme read)
         (scheme repl)
         (scheme time)
