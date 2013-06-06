@@ -619,13 +619,33 @@ cons_t* proc_exact_to_inexact(cons_t* p, environment_t*)
 cons_t* proc_exact(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
-  return make_exact(car(p));
+
+  cons_t* n = car(p);
+  assert_number(n);
+
+  if ( realp(n) ) {
+    real_t r = n->number.real;
+    if ( std::isnan(r) ) raise(runtime_exception("Not a number"));
+    if ( std::isinf(r) ) raise(runtime_exception("Infinite number"));
+  }
+
+  return make_exact(n);
 }
 
 cons_t* proc_inexact(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
-  return make_inexact(car(p));
+
+  cons_t* n = car(p);
+  assert_number(n);
+
+  if ( realp(n) ) {
+    real_t r = n->number.real;
+    if ( std::isnan(r) ) raise(runtime_exception("Not a number"));
+    if ( std::isinf(r) ) raise(runtime_exception("Infinite number"));
+  }
+
+  return make_inexact(n);
 }
 
 } // extern "C"
