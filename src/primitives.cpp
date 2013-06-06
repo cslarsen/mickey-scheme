@@ -765,6 +765,8 @@ environment_t* null_import_environment()
  *
  * So, even though we use long_real_t we are bound to overflow one time or
  * another (well, not as long as we only support real_t as the base type).
+ *
+ * RETURNS -1 to indicate failure.
  */
 int decimals_in(long double n)
 {
@@ -773,6 +775,9 @@ int decimals_in(long double n)
   while ( !iswhole(n) ) {
     ++r;
     n *= 10.0;
+
+    if ( isinf(n) || isnan(n) )
+      return -1;
   }
 
   return r;
@@ -802,6 +807,11 @@ cons_t* make_exact(cons_t* z)
 
   if ( realp(z) ) {
     integer_t decimals = decimals_in(z->number.real);
+
+    // Could not convert? Just truncate
+    if ( decimals == -1 )
+      return integer(static_cast<integer_t>(z->number.real), false);
+
     integer_t magnitude = pow10(decimals);
 
     rational_t r;
