@@ -11,7 +11,7 @@ Please post bugfixes and suggestions to the author.   /  \_
 
  |#
 
-(define-library (scheme math)
+(define-library (srfi 16)
   (import (mickey library))
   (export case-lambda)
   (begin
