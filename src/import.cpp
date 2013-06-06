@@ -280,7 +280,7 @@ void import(environment_t *e,
             named_function_t *p,
             const std::string& lib_name)
 {
-  if ( global_opts.verbose )
+  if ( global_opts.verbose && !lib_name.empty() )
     fprintf(stderr, "Importing internal library %s\n",
         lib_name.c_str());
 
@@ -305,9 +305,16 @@ void import_defaults(environment_t *e)
 {
   load_library_index();
 
+  const bool print =  global_opts.verbose &&
+                     !global_opts.empty_repl_env &&
+                      repl_libraries != NULL &&
+                     *repl_libraries != NULL;
+
   if ( !global_opts.empty_repl_env ) {
-    for ( const char** s = repl_libraries; *s != NULL; ++s )
+    for ( const char** s = repl_libraries; *s != NULL; ++s ) {
+      if ( print ) fprintf(stderr, "Importing %s\n", *s);
       merge(e, import_library(*s));
+    }
   }
 }
 
