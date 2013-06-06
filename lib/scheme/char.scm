@@ -12,6 +12,7 @@ Please post bugfixes and suggestions to the author.   /  \_
 
 (define-library (scheme char)
   (import (scheme base)
+          (portable boolean-logic)
           (mickey library))
 
   (export
@@ -95,14 +96,9 @@ Please post bugfixes and suggestions to the author.   /  \_
       ;; have fixed it, and MIT Scheme at least has
       ;; boolean/and). Then the code would be simply:
       ;;
-      ;; (and (= (string-length a)
-      ;;         (string-length b))
-      ;;      (and (map char-ci=? (string->list a)
-      ;;                          (string->list b))))
-      ;;
-      (and (= (string-length a) (string-length b))
-           (= 1 (apply * (map boolean->integer
-                              (map char-ci=? (string->list a)
-                                             (string->list b)))))))
-
+      (and (= (string-length a)
+              (string-length b))
+           (apply boolean/and
+                  (map char-ci=? (string->list a)
+                                 (string->list b)))))
 ))
