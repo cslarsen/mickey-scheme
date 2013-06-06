@@ -47,6 +47,7 @@
   ((scheme process-context)  "scheme/process-context.scm")
   ((scheme read)             "scheme/read.scm")
   ((scheme repl)             "scheme/repl.scm")
+  ((scheme time)             "scheme/time.scm")
   ((scheme write)            "scheme/write.scm")
   ((srfi 0)                  "srfi/srfi-0.scm")
   ((srfi 1)                  "srfi/srfi-1.scm")

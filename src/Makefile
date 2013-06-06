@@ -83,21 +83,22 @@ TARGETS_SO = \
 						 libc-stdio.so \
 						 libmickey-environment.so \
 						 libmickey-gensym.so \
+						 libeval-cont.so \
 						 libmickey-internals.so \
 						 libmickey-misc.so \
 						 libscheme-base.so \
 						 libscheme-char.so \
-						 libscheme-read.so \
+						 libscheme-file.so \
 						 libscheme-load.so \
 						 libscheme-math.so \
-						 libscheme-file.so \
 						 libscheme-process-context.so \
+						 libscheme-read.so \
 						 libscheme-repl.so \
+						 libscheme-time.so \
 						 libscheme-write.so \
 						 libsrfi-0.so \
 						 libsrfi-16.so \
 						 libsrfi-4.so \
-						 libeval-cont.so \
 						 libunix-dlopen.so \
 						 libunix-exit.so \
 						 libunix-fork.so \
