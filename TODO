@@ -1,3 +1,15 @@
+IMPORT BUG
+
+It's possible to export an identifier that's not bound, e.g.
+
+(define-library (foo)
+  (export foo bar)
+  (begin
+    (define foo 123)))
+
+Here bar is exported but does not have a value. The import procedure should
+raise an error in that sitaution; currently mickey does not.
+
 MULTIPLY-BUG
 
 (* 10.0 23/27)
