@@ -94,6 +94,16 @@ bool parse_option(const char* s, struct options_t* p)
     p->eval_next = true;
   } else if ( ARGHIT("-z", "--zero-env") ) {
     p->empty_repl_env = true;
+  } else if ( s[0]=='-' && strlen(s+1)>1 ) {
+    // several args
+    char buf[3] = "-?";
+    bool rest = false;
+    for ( size_t i=1; s[i] != '\0'; ++i ) {
+      buf[1] = s[i];
+      if ( parse_option(buf, p) )
+        rest = true;
+    }
+    if ( rest ) return rest; // rest is files
   } else {
     fprintf(stderr, "Unknown option: %s\n\n", s);
     help();
