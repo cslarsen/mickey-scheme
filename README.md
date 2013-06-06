@@ -93,7 +93,6 @@ Current Shortcomings
     on.  These will be added when call/cc is implemented.
 
 ## Compliance
--------------
 
 The table below shows how many of the definitions in R7RS-small that have
 been implemented in Mickey Scheme.
