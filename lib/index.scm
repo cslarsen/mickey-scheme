@@ -39,6 +39,7 @@
   ((scheme char)             "scheme/char.scm")
   ((scheme complex)          "scheme/complex.scm")
   ((scheme cxr)              "scheme/cxr.scm")
+  ((scheme eval)             "scheme/eval.scm")
   ((scheme file)             "scheme/file.scm")
   ((scheme lazy)             "scheme/lazy.scm")
   ((scheme load)             "scheme/load.scm")
