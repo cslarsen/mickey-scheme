@@ -599,16 +599,16 @@
 
 (define (digits n)
   "Returns number of digits in n."
-  (+ 1 (exact (truncate (log10 n)))))
+  (cond
+    ((zero? n) 1)
+    ((negative? n) (+ 1 (digits (- n))))
+    (else
+      (+ 1 (exact (truncate (log10 n)))))))
 
 (define (spaces obj)
   (cond
-    ((number? obj)
-     (if (negative? obj)
-       (+ 1 (digits (- obj)))
-       (digits obj)))
-    ((string? obj)
-     (string-length obj))
+    ((number? obj) (digits obj))
+    ((string? obj) (string-length obj))
     (else (error "spaces: unknown object type"))))
 
 (define (right-align width obj)

@@ -17,7 +17,7 @@ The name will change as the project matures.
 Current Features
 ----------------
 
-  * Implements 76% of R7RS-small; see [compliance report](#compliance)
+  * Implements 77% of R7RS-small; see [compliance report](#compliance)
   * Quotation and quasiquotation
   * All non-syntactic `let`-forms
   * Variadic functions
