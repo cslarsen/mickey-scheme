@@ -1,3 +1,22 @@
+QUASIQUOTE BUG
+
+Mickey doesn't allow nested quasiquotes:
+
+`(a `(b ,(+ 1 2) ,(foo ,(+ 1 3) d) e) f)
+
+does not work.
+
+From r7rs draft 9:
+
+"""
+Substitutions are made only for unquoted components appearing at the same
+nesting level as the outermost quasiquote. 
+"""
+
+In mickey, I just parse along and eval anything that is unquoted.
+By using a counter to keep track of current quotation level, one simply only
+evals stuff at the outermost level (level=0).
+
 ADD
 
 Add delete-file to (scheme process-context)
