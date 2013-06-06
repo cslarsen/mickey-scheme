@@ -593,33 +593,84 @@
 (define (boolean->integer b)
   (if b 1 0))
 
-(define *total* 0)
-(define *bound* 0)
-(define *missing* 0)
+(define (log10 n)
+  "Return the base-10 logarithm of n."
+  (/ (log n) (log 10)))
 
-(println "R7RS-small compliance / coverage for Mickey Scheme")
+(define (digits n)
+  "Returns number of digits in n."
+  (+ 1 (exact (truncate (log10 n)))))
 
-(for-each
-  (lambda (library symbols)
-    (let*
-      ((total (length symbols))
-       (bound (apply + (map boolean->integer
-                            (map bound? symbols))))
-       (missing (- total bound)))
+(define (spaces obj)
+  (cond
+    ((number? obj)
+     (if (negative? obj)
+       (+ 1 (digits (- obj)))
+       (digits obj)))
+    ((string? obj)
+     (string-length obj))
+    (else (error "spaces: unknown object type"))))
 
-      (set! *total* (+ *total* total))
-      (set! *bound* (+ *bound* bound))
-      (set! *missing* (+ *missing* missing))
+(define (right-align width obj)
+  (let
+    ((chars (spaces obj)))
+    (string-append
+      (make-string (abs (- width chars)))
+      (cond
+        ((number? obj) (number->string obj))
+        ((string? obj) obj)
+        (else (error "Unknown object type"))))))
 
-      (println library " "
-               bound "/" total " "
-               (inexact (* 100 (/ bound total))) "% "
-               "-" missing " ")))
+(define (main)
+  (define *total* 0)
+  (define *bound* 0)
+  (define *missing* 0)
 
-  (map car libraries)
-  (map cadr libraries))
+  (println
+    "The table below shows how many of the definitions in R7RS-small that have\n"
+    "been implemented in Mickey Scheme.\n"
+    "\n"
+    "The first number shows the coverage in percent, then number of implemented\n"
+    "definitions, definitions required by R7RS-small, missing definitions and\n"
+    "name of the library.\n")
 
-(println "summary "
-         *bound* "/" *total* " "
-         (inexact (* 100 (/ *bound* *total*))) "% "
-         "-" *missing* " ")
+  (for-each
+    (lambda (library symbols)
+      (let*
+        ((total (length symbols))
+         (bound (apply + (map boolean->integer
+                              (map bound? symbols))))
+         (missing (- total bound))
+         (percent (round (* 100 (/ bound total)))))
+
+        (set! *total* (+ *total* total))
+        (set! *bound* (+ *bound* bound))
+        (set! *missing* (+ *missing* missing))
+
+        (println (right-align 7 percent) "% "
+                 (right-align 7
+                   (string-append
+                     (number->string bound) "/"
+                     (number->string total))) " "
+                 (right-align 4 (- missing)) " "
+                 library)))
+    (map car libraries)
+    (map cadr libraries))
+
+  (define *percent* (round (* 100 (/ *bound* *total*))))
+
+  (println (right-align 7 *percent*) "% "
+           (right-align 7
+             (string-append
+               (number->string *bound*) "/"
+               (number->string *total*))) " "
+           (right-align 4 (- *missing*)) " <all>")
+
+  (println "\n"
+           "In summary, Mickey implements " *bound* " of "
+           *total* " definitions in R7RS-small.\n"
+           *missing* " definitions have not been implemented.\n"
+           "\n"
+           "This corresponds to " *percent* "% coverage."))
+
+(main)

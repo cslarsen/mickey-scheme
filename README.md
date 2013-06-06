@@ -14,10 +14,10 @@ The current project goals are to
 Note that _Mickey_ is just a codeword for the early stages of this project.
 The name will change as the project matures.
 
-Current Status and Features
----------------------------
+Current Features
+----------------
 
-  * Supports 421 of the 550 R7RS-small definitions (76%)
+  * Implements 76% of R7RS-small; see [compliance report](#compliance)
   * Quotation and quasiquotation
   * All non-syntactic `let`-forms
   * Variadic functions
@@ -92,12 +92,38 @@ Current Shortcomings
   * Other missing features include dynamic-wind, exception handling and so
     on.  These will be added when call/cc is implemented.
 
-Status of R7RS compliance
--------------------------
+## Compliance
+-------------
 
-The 8th draft of R7RS was recently published.  This version of Mickey Scheme
-has not been updated to the latest draft.  It's currently somewhere between
-draft 5 and 6.
+The table below shows how many of the definitions in R7RS-small that have
+been implemented in Mickey Scheme.
+
+The first number shows the coverage in percent, then number of implemented
+definitions, definitions required by R7RS-small, missing definitions and
+name of the library.
+
+     67% 158/236  -78 (scheme base)
+    100%     1/1    0 (scheme case-lambda)
+    100%   22/22    0 (scheme char)
+      0%     0/6   -6 (scheme complex)
+    100%   24/24    0 (scheme cxr)
+     50%     1/2   -1 (scheme eval)
+     20%    2/10   -8 (scheme file)
+    100%   12/12    0 (scheme inexact)
+     40%     2/5   -3 (scheme lazy)
+    100%     1/1    0 (scheme load)
+    100%     5/5    0 (scheme process-context)
+    100%     1/1    0 (scheme read)
+    100%     1/1    0 (scheme repl)
+    100%     3/3    0 (scheme time)
+     50%     2/4   -2 (scheme write)
+     86% 186/217  -31 (scheme r5rs)
+     77% 421/550 -129 <all>
+
+In summary, Mickey implements 421 of 550 definitions in R7RS-small.
+129 definitions have not been implemented.
+
+This corresponds to 77% coverage.
 
 Compiling
 ---------
