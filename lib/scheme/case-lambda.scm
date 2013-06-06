@@ -10,6 +10,6 @@ Please post bugfixes and suggestions to the author.   /  \_
 
  |#
 
-(define-library (scheme math)
+(define-library (scheme case-lambda)
   (import (srfi 16))
   (export case-lambda))
