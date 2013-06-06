@@ -42,6 +42,12 @@ run: all
 runz: all
 	@LD_LIBRARY_PATH=".:" ./mickey -z
 
+runv: all
+	@LD_LIBRARY_PATH=".:" ./mickey -v
+
+runvz: all
+	@LD_LIBRARY_PATH=".:" ./mickey -v -z
+
 check: all
 	LD_LIBRARY_PATH=".:" ./mickey -Itest test/tests.scm
 
