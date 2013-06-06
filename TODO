@@ -1,3 +1,11 @@
+DEFINE-BUG
+
+Can actually do this:
+
+(define '(scheme base) 123)
+
+Define should check that its first argument is a symbol.
+
 QUASIQUOTE BUG
 
 Mickey doesn't allow nested quasiquotes:
