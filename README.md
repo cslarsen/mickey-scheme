@@ -14,10 +14,10 @@ The current project goals are to
 Note that _Mickey_ is just a codeword for the early stages of this project.
 The name will change as the project matures.
 
-Current Features
-----------------
+Current Status and Features
+---------------------------
 
-  * Most core scheme functions: Supports 226 of 336 R7RS-small library definitions
+  * Supports 421 of the 550 R7RS-small definitions (76%)
   * Quotation and quasiquotation
   * All non-syntactic `let`-forms
   * Variadic functions
