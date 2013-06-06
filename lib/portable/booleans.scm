@@ -20,7 +20,9 @@
 ;;
 (define-library (portable booleans)
   (import
-    (scheme base))
+    (scheme base)
+    (scheme case-lambda)
+    (portable print))
 
   (export
     boolean/and
@@ -68,10 +70,14 @@
         (else (apply boolean/or (cdr x)))))
 
     ;; True iff "a" and "b" are either both true or both false.
-    ;; TODO: Make procedure variadic.
+    ;; Takes two or more arguments.
     ;;
-    (define (boolean=? a b)
-      (true? (or (and a b)
-                 (and (not a)
-                      (not b)))))
+    (define (boolean=? a b . c)
+      (and
+         (true? (or (and a b)
+                    (and (not a)
+                         (not b))))
+         (if (not (null? (car c)))
+           (apply boolean=? (list b (car c) (cdr c)))
+           #t)))
 ))
