@@ -26,7 +26,7 @@
   ((mickey internals)        "mickey/internals.scm")
   ((mickey library)          "mickey/library.scm")
   ((mickey misc)             "mickey/misc.scm")
-  ((portable atom?)          "portable/atom.scm")
+  ((portable atom?)          "portable/atom?.scm")
   ((portable boolean-logic)  "portable/boolean-logic.scm")
   ((portable flatten)        "portable/flatten.scm")
   ((portable gensym)         "portable/gensym.scm")
