@@ -1001,6 +1001,10 @@
 ;; (+ <a unevaluated> (* <value of b> 10)).
 ;; TODO: Add a test for this.
 
+;; Other tests
+(test (make-list 3 2) '(2 2 2))
+(test (make-list 3) '(#f #f #f))
+(test (make-list 2 '(a b)) '((a b) (a b)))
 
 (display "\nResults\n")
 (display (string-append

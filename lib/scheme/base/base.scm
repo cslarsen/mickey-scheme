@@ -116,6 +116,7 @@ The larger part of this library resides in libscheme-base.so.
     list-tail
     list?
     make-bytevector
+    make-list
     make-string
     make-vector
     map
@@ -191,6 +192,7 @@ The larger part of this library resides in libscheme-base.so.
 
   (include "bind-shared-library.scm")
   (include "define-record-type.scm")
+  (include "make-list.scm")
 
   (begin
     (define (compare-all op v)
