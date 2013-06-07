@@ -102,7 +102,7 @@ std::string sprint(const bytevector_t* v, std::string&, bool)
   for ( std::vector<uint8_t>::const_iterator i = p.begin();
         i != p.end(); ++i )
   {
-    s += space + to_s(*i);
+    s += space + to_s(static_cast<integer_t>(*i));
     space = " ";
   }
 
@@ -126,7 +126,7 @@ std::string sprint(const pointer_t* p, std::string&, bool)
   return format("#<pointer '%s' %p>", p->tag, p->value);
 }
 
-std::string to_s(integer_t n)
+std::string to_s(const integer_t& n)
 {
   char buf[64];
   sprintf(buf, "%d", n);

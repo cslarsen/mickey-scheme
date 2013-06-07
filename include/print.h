@@ -47,7 +47,7 @@ std::string to_s(continuation_t*);
 std::string to_s(real_t n);
 std::string to_s(enum type_t);
 std::string to_s(environment_t*);
-std::string to_s(integer_t n);
+std::string to_s(const integer_t& n);
 std::string to_s(rational_t n);
 std::string to_s(port_t*);
 std::string to_s(struct cons_t *p);;

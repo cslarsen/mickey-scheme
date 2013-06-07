@@ -269,7 +269,7 @@ cons_t* proc_vector_ref(cons_t* p, environment_t*)
   assert_type(INTEGER, cadr(p));
 
   vector_t *v = car(p)->vector;
-  int ref = cadr(p)->number.integer;
+  integer_t ref = cadr(p)->number.integer;
 
   if ( ref<0 || static_cast<size_t>(ref) >= v->vector.size() )
     raise(runtime_exception("vector-ref index out of range: " + to_s(ref)));
@@ -284,7 +284,7 @@ cons_t* proc_vector_set(cons_t* p, environment_t*)
   assert_type(INTEGER, cadr(p));
 
   vector_t *v = car(p)->vector;
-  int ref = cadr(p)->number.integer;
+  integer_t ref = cadr(p)->number.integer;
   cons_t *set = caddr(p);
 
   if ( ref<0 || static_cast<size_t>(ref) >= v->vector.size() )
