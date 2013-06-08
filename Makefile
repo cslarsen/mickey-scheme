@@ -48,6 +48,9 @@ runv: all
 runvz: all
 	@LD_LIBRARY_PATH=".:" ./mickey -v -z
 
+status: all
+	@LD_LIBRARY_PATH=".:" ./mickey examples/compliance-r7rs.scm
+
 check: all
 	LD_LIBRARY_PATH=".:" ./mickey -Itest test/tests.scm
 
