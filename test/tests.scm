@@ -458,6 +458,8 @@
         (a2 b2 c2)
         (a3 b3 c3)
         (a4 b4 c4)))
+(test (map (lambda (a b) (list a b)) '(a1 a2 a3) '(b1 b2 b3))
+      '((a1 b1) (a2 b2) (a3 b3)))
 
 ;; The following two string-map tests are from R7RS draft 6:
 ;;
