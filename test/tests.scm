@@ -447,8 +447,17 @@
 (testq (char-downcase #\a) #\a)
 (testq (char-downcase #\Z) #\z)
 
+(test (map - '(1 2 3)) '(-1 -2 -3))
 (test (map + '(1 2) '(3 4) '(4 5)) '(8 11))
 (test (map * '(1 2) '(3 4) '(4 5)) '(12 40))
+(test (map (lambda (a b c) (list a b c))
+           '(a1 a2 a3 a4)
+           '(b1 b2 b3 b4)
+           '(c1 c2 c3 c4))
+      '((a1 b1 c1)
+        (a2 b2 c2)
+        (a3 b3 c3)
+        (a4 b4 c4)))
 
 ;; The following two string-map tests are from R7RS draft 6:
 ;;
