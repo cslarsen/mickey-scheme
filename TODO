@@ -1,3 +1,30 @@
+PRINTER CONS BUG:
+
+> (cons 1 2)
+
+outputs "1 . 2" instead of "(1 . 2)". Fix it.
+
+PRINTER STRING BUG:
+
+> (display '("hey"))
+(hey)
+
+Should in fact print
+("hey")
+
+This works though:
+
+> "hey"
+"hey"
+
+CDR-bug:
+
+CDR should check if it's in fact a proper pair:
+
+In mickey, this works:
+> (cdr '())
+In other schemes, it fails with an error "Not a pair"
+
 IMPORT BUG
 
 It's possible to export an identifier that's not bound, e.g.
@@ -418,7 +445,6 @@ Should return (1 . 2) or the same as (cons 1 2).
 - Add parsing of quoted vectors, i.e.: '#(1 2 3)
 - Trampoline more stuff in eval()
 - Add PROPER support for '()
-- Add for-each
 - Add vector-map
 - Add vector-for-each
 - Add support for case-folding and other hash-bang stuff
