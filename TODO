@@ -1,3 +1,12 @@
+LAMBDA FORMALS
+
+It should be an error to use the same variable name more than once in a
+lambda formals list:
+
+> (lambda (x x) x)
+
+This works in mickey but should not.
+
 DISJOINTNESS OF RECORD TYPES
 
 Note that R7RS, chapter 3.2 says that "no object satisfies more than one of
