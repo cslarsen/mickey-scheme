@@ -1,3 +1,13 @@
+DISJOINTNESS OF RECORD TYPES
+
+Note that R7RS, chapter 3.2 says that "no object satisfies more than one of
+the following predicates ... and all predicates create by
+define-record-type".  So, it's not enough to have define-record-type use
+compund-objects such as (list (list <record-name>) <data> ...) as it would
+satisfy both pair? and <record-name-predicate>?. Fix this either by creating
+an API from Mickey C to Scheme with access to the dynamic type system, or
+similar.
+
 PRINTER CONS BUG:
 
 > (cons 1 2)
