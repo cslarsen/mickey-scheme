@@ -1,3 +1,8 @@
+RECORDS
+
+- Seems that defmacro and record-types do not work again,
+  check HEAD^2
+
 MAP / FOR-EACH
 
 - More tests for *map, *for-each (map, string-map, vector-map, etc)
