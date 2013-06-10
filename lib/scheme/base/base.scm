@@ -200,6 +200,7 @@ The larger part of this library resides in libscheme-base.so.
   (include "positive?.scm")
   (include "negative?.scm")
   (include "zero?.scm")
+  (include "member.scm")
 
   (begin
     (define (compare-all op v)

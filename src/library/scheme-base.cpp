@@ -973,42 +973,6 @@ cons_t* proc_list_set(cons_t* p, environment_t*)
   return unspecified();
 }
 
-/*
- * Used by member, memq and memv
- */
-static cons_t* proc_member_fptr(cons_t* p, environment_t*, bool (*compare)(const cons_t*, const cons_t*))
-{
-  assert_length(p, 2);
-  assert_type(PAIR, cadr(p));
-
-  cons_t *needle = car(p),
-       *haystack = cadr(p);
-
-  while ( !nullp(haystack) ) {
-    if ( compare(needle, car(haystack)) )
-      return haystack;
-
-    haystack = cdr(haystack);
-  }
-
-  return boolean(false);
-}
-
-cons_t* proc_member(cons_t* p, environment_t* e)
-{
-  return proc_member_fptr(p, e, equalp);
-}
-
-cons_t* proc_memv(cons_t* p, environment_t* e)
-{
-  return proc_member_fptr(p, e, eqvp);
-}
-
-cons_t* proc_memq(cons_t* p, environment_t* e)
-{
-  return proc_member_fptr(p, e, eqp);
-}
-
 cons_t* proc_string_to_list(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
