@@ -193,6 +193,10 @@ The larger part of this library resides in libscheme-base.so.
   (include "bind-shared-library.scm")
   (include "define-record-type.scm")
   (include "make-list.scm")
+  (include "map.scm")
+  (include "for-each.scm")
+  (include "string-map.scm")
+  (include "string-for-each.scm")
 
   (begin
     (define (compare-all op v)
@@ -225,83 +229,6 @@ The larger part of this library resides in libscheme-base.so.
     (define (cadr s) (car (cdr s)))
     (define (cdar s) (cdr (car s)))
     (define (cddr s) (cdr (cdr s)))
-
-    #|
-       R7RS string-map
-
-       Explicitly require at least one string.
-    |#
-    (define (string-map proc first-string . remaining-strings)
-      (let*
-        ((output  '())
-         (input   (cons first-string remaining-strings))
-         (args    (length input))
-         (strings (map string->list input)))
-        (let loop
-          ((chars (map car strings))
-           (rest  (map cdr strings)))
-          (if (= args (length chars))
-            (begin
-              (set! output (cons (apply proc chars) output))
-              (if (> (apply * (map length rest)) 0)
-                (loop 
-                  (map car rest)
-                  (map cdr rest))))))
-        (list->string (reverse output))))
-
-    #|
-       R7RS string-for-each
-
-       If n strings are given as input, then `proc` must take n parameters.
-
-       Explicitly requires at least one string.
-    |#
-    (define (string-for-each proc first-string . remaining-strings)
-      (let*
-        ((input   (cons first-string remaining-strings))
-         (args    (length input))
-         (strings (map string->list input)))
-        (let loop
-          ((chars (map car strings))
-           (rest  (map cdr strings)))
-          (if (= args (length chars))
-            (begin
-              (if (> (apply * (map length rest)) 0)
-                (begin
-                  (apply proc chars)
-                  (loop 
-                    (map car rest)
-                    (map cdr rest)))))))))
-
-    #|
-       This is a naive, straight-forward implementation.
-
-       TODO: for-each is supposed to handle circular lists, as long as not
-       all of them are circular.
-
-       This implementation will NOT handle that situation, as it will go
-       into an infinite loop, instead of raising an error.
-
-       I think it basically means that we have to check for circularity on
-       each input.
-     |#
-    (define (for-each procedure list1 . etc)
-      (let*
-        ((lists (cons list1 etc))
-         (count (length lists)))
-        (let loop
-          ((arguments (map car lists))
-           (remaining (map cdr lists)))
-          ;;
-          ;; terminate when the shortest list is finished
-          (if (= (length arguments) count)
-            (begin
-              ;; call procedure with input parameters
-              (apply procedure arguments)
-
-              ;; ... and keep going
-              (loop (map car remaining)
-                    (map cdr remaining)))))))
 
     (define (exact-integer? z)
       (and (integer? z) (exact? z)))

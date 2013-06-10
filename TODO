@@ -1,3 +1,8 @@
+MAP / FOR-EACH
+
+- More tests for *map, *for-each (map, string-map, vector-map, etc)
+- nested maps, nested for-each, nested map/foreach
+
 COND-EXPAND
 
 Allow top-level, unimported cond-expand with a program switch.

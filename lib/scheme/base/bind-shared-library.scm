@@ -85,7 +85,6 @@
 (define make-bytevector (bind-procedure "proc_make_bytevector"))
 (define make-string (bind-procedure "proc_make_string"))
 (define make-vector (bind-procedure "proc_make_vector"))
-(define map (bind-procedure "proc_map"))
 (define max (bind-procedure "proc_max"))
 (define member (bind-procedure "proc_member"))
 (define memq (bind-procedure "proc_memq"))
