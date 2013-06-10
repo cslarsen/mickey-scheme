@@ -1,3 +1,8 @@
+COND-EXPAND
+
+Allow top-level, unimported cond-expand with a program switch.
+For loading portable programs.
+
 LAMBDA FORMALS
 
 It should be an error to use the same variable name more than once in a
