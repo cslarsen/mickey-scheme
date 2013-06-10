@@ -463,6 +463,16 @@
 (test (map list (list)) '())
 (test (map list '(0)) '((0)))
 (test (map list '(0 1)) '((0) (1)))
+(test (map list '(1 2 3)) '((1) (2) (3)))
+(test (map list '()) '())
+(test (map (lambda (a b) (list b a))
+           '(1 2 3 4)
+           '(a b c d))
+      '((a 1) (b 2) (c 3) (d 4)))
+(test (map (lambda (a b) (list b a))
+           '(1 2 3 4)
+           '(a b d))
+      '((a 1) (b 2) (d 3)))
 
 ;; The following two string-map tests are from R7RS draft 6:
 ;;
