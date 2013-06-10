@@ -68,11 +68,6 @@ cons_t* proc_nullp(cons_t* p, environment_t*)
   return boolean(nullp(car(p)));
 }
 
-cons_t* proc_zerop(cons_t* p, environment_t*)
-{
-  return boolean(zerop(car(p)));
-}
-
 cons_t* proc_pairp(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
@@ -211,6 +206,32 @@ cons_t* proc_eqnump(cons_t* p, environment_t*)
 
     if ( integerp(l) && integerp(r) ) {
       if ( l->number.integer == r->number.integer )
+        continue;
+      return boolean(false);
+    }
+
+    /*
+     * To compare fraction with integer:
+     * a/b == c
+     * a == c*b
+     *
+     * So just see if a == c*b. There is a potential for arithmetic overflow
+     * during this, so please add detection for that (TODO).
+     *
+     * In case of overflow (it can be detected, e.g. if c*b<b and c*b<c,
+     * then c*b has overflown), then try to see if a is divisible by both c
+     * and b, e.g. a%c==0 && a&b==0.
+     *
+     */
+    if ( rationalp(l) && integerp(r) ) {
+      if ( l->number.rational.numerator ==
+           l->number.rational.denominator * r->number.integer )
+        continue;
+      return boolean(false);
+    }
+    if ( rationalp(r) && integerp(l) ) {
+      if ( r->number.rational.numerator ==
+           r->number.rational.denominator * l->number.integer )
         continue;
       return boolean(false);
     }

@@ -197,6 +197,9 @@ The larger part of this library resides in libscheme-base.so.
   (include "for-each.scm")
   (include "string-map.scm")
   (include "string-for-each.scm")
+  (include "positive?.scm")
+  (include "negative?.scm")
+  (include "zero?.scm")
 
   (begin
     (define (compare-all op v)
