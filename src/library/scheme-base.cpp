@@ -808,51 +808,6 @@ cons_t* proc_begin(cons_t* p, environment_t*)
   return cons(symbol("begin"), p);
 }
 
-cons_t* proc_assq(cons_t* p, environment_t* e)
-{
-  assert_length(p, 2);
-
-  cons_t *find = car(p),
-        *alist = cadr(p);
-
-  for ( p = alist; !nullp(p); p = cdr(p) )
-    if ( proc_eqp(list(find, caar(p)), e)->boolean )
-      return car(p);
-
-  // Not found
-  return boolean(false);
-}
-
-cons_t* proc_assv(cons_t* p, environment_t* e)
-{
-  assert_length(p, 2);
-
-  cons_t *find = car(p),
-        *alist = cadr(p);
-
-  for ( p = alist; !nullp(p); p = cdr(p) )
-    if ( proc_eqvp(list(find, caar(p)), e)->boolean )
-      return car(p);
-
-  // Not found
-  return boolean(false);
-}
-
-cons_t* proc_assoc(cons_t* p, environment_t* e)
-{
-  assert_length(p, 2);
-
-  cons_t *find = car(p),
-        *alist = cadr(p);
-
-  for ( p = alist; !nullp(p); p = cdr(p) )
-    if ( proc_equalp(list(find, caar(p)), e)->boolean )
-      return car(p);
-
-  // Not found
-  return boolean(false);
-}
-
 cons_t* proc_error(cons_t* p, environment_t*)
 {
   /*

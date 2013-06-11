@@ -205,6 +205,7 @@ The larger part of this library resides in libscheme-base.so.
   (include "member.scm")
   (include "vector-map.scm")
   (include "vector-for-each.scm")
+  (include "assoc.scm")
 
   (begin
     (define (compare-all op v)
