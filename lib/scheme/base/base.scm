@@ -181,7 +181,9 @@ The larger part of this library resides in libscheme-base.so.
     vector->string
     vector-copy
     vector-fill!
+    vector-for-each
     vector-length
+    vector-map
     vector-ref
     vector-set!
     vector?
@@ -201,6 +203,8 @@ The larger part of this library resides in libscheme-base.so.
   (include "negative?.scm")
   (include "zero?.scm")
   (include "member.scm")
+  (include "vector-map.scm")
+  (include "vector-for-each.scm")
 
   (begin
     (define (compare-all op v)
