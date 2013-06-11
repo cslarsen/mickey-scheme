@@ -130,19 +130,21 @@ cons_t* proc_car(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   assert_type(PAIR, car(p));
+
+  if ( nullp(car(p)) )
+    raise(runtime_exception("Cannot get the car of an empty list"));
+
   return car(car(p));
 }
 
 cons_t* proc_cdr(cons_t* p, environment_t*)
 {
-  /*
-   * NOTE:  We have a special (and potentially UGLY) case
-   *        of doing "(cdr (list 1))" which should give "()",
-   *        so we explicitly check for it here, although we
-   *        probably SHOULD NOT (TODO).
-   */
   assert_length(p, 1);
   assert_type(PAIR, car(p));
+
+  if ( nullp(car(p)) )
+    raise(runtime_exception("Cannot get the cdr of an empty list"));
+
   cons_t *r = cdr(car(p));
   return nil_coalesce(r);
 }

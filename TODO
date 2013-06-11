@@ -1,9 +1,3 @@
-TWO BUGS
-
-- proc_car and proc_cdr must check for empty list arg:
-  if ( nullp(car(p)) ) raise(runtime_exception("..."));
-  (but this breaks some mickey implementation code, so fix that as well)
-
 RECORDS
 
 - Seems that defmacro and record-types do not work again,

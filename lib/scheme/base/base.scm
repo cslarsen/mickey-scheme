@@ -206,18 +206,23 @@ The larger part of this library resides in libscheme-base.so.
   (include "vector-map.scm")
   (include "vector-for-each.scm")
   (include "assoc.scm")
+  (include "number?.scm")
 
   (begin
-    (define (compare-all op v)
-      (let loop ((v v))
-        (if (null? (cadr v)) #t
-            (if (or (nan? (car v))
-                    (not (op (car v) (cadr v)))) #f
-                (loop (cdr v))))))
+    (define (compare-all cmp? v)
+      (cond
+        ((or (null? v)
+             (null? (cdr v))) #t)
+        ((cmp? (car v)
+               (cadr v))
+         (compare-all cmp? (cdr v)))
+        (else
+          #f)))
 
     (define (>= x1 x2 . xn)
       (compare-all (lambda (a b)
-                     (or (> a b) (= a b)))
+                     (or (> a b)
+                         (= a b)))
                    `(,x1 ,x2 ,@xn)))
 
     (define (<= x1 x2 . xn)
