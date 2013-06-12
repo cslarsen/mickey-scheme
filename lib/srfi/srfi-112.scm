@@ -54,11 +54,11 @@
                            (= 64 longlong)) "ll" "")
                   "p64"))
           ((32) (string-append
-                  (if (= 32 int) "i" "")
+                  (if (= 32 int)  "i" "")
                   (if (= 32 long) "l" "")
                   "p32"))
           ((16) (string-append
-                  (if (= 16 int) "i" "")
+                  (if (= 16 int)  "i" "")
                   (if (= 16 long) "l" "")
                   "p16")))))
 
