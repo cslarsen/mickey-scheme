@@ -7,7 +7,6 @@
 (define < (bind-procedure "proc_less"))
 (define = (bind-procedure "proc_eqnump"))
 (define > (bind-procedure "proc_greater"))
-(define abs (bind-procedure "proc_abs"))
 (define and (bind-syntax "proc_dummy_placeholder"))
 (define append (bind-procedure "proc_append"))
 (define apply (bind-syntax "proc_dummy_placeholder"))

@@ -207,6 +207,7 @@ The larger part of this library resides in libscheme-base.so.
   (include "vector-for-each.scm")
   (include "assoc.scm")
   (include "number?.scm")
+  (include "abs.scm")
 
   (begin
     (define (compare-all cmp? v)

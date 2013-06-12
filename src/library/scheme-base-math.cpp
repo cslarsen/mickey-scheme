@@ -15,18 +15,110 @@
 
 extern "C" {
 
-cons_t* proc_abs(cons_t* p, environment_t*)
+integer_t intval(cons_t* n)
 {
-  assert_length(p, 1);
-  assert_number(car(p));
+  assert_type(INTEGER, n);
+  return n->number.integer;
+}
 
-  if ( realp(car(p)) ) {
-    real_t n = car(p)->number.real;
-    return real(n<0.0? -n : n);
+real_t realval(cons_t* n)
+{
+  assert_type(REAL, n);
+  return n->number.real;
+}
+
+rational_t ratval(cons_t* n)
+{
+  assert_type(RATIONAL, n);
+  return n->number.rational;
+}
+
+/*
+ * Hair code ahead, rewrite the entire arithmetics module later.
+ */
+bool number_equalp(cons_t* a, cons_t* b)
+{
+  type_t ta = type_of(a);
+  type_t tb = type_of(b);
+
+  if ( ta == tb ) {
+    if ( ta == INTEGER )  return intval(a)  == intval(b);
+    if ( ta == REAL )     return realval(a) == realval(b);
+    if ( ta == RATIONAL ) return ratval(a)  == ratval(b);
   }
 
-  int n = car(p)->number.integer;
-  return integer(n<0? -n : n);
+  if ( ta == INTEGER && tb == REAL )
+    return static_cast<real_t>(intval(a)) == realval(b);
+
+  if ( ta == INTEGER && tb == RATIONAL )
+      return make_rational(intval(a)) == ratval(b);
+
+  if ( ta == REAL && tb == RATIONAL ) {
+    rational_t rb = ratval(b);
+    return realval(a) == static_cast<real_t>(rb.numerator) /
+                         static_cast<real_t>(rb.denominator);
+  }
+
+  // reverse operand types and check
+  return number_equalp(b, a);
+}
+
+bool number_greaterp(cons_t* a, cons_t* b);
+
+bool number_lessp(cons_t* a, cons_t* b)
+{
+  type_t ta = type_of(a);
+  type_t tb = type_of(b);
+
+  if ( ta == tb ) {
+    if ( ta == INTEGER )  return intval(a)  < intval(b);
+    if ( ta == RATIONAL ) return ratval(a)  < ratval(b);
+    if ( ta == REAL )     return realval(a) < realval(b);
+  }
+
+  if ( ta == INTEGER && tb == REAL )
+    return static_cast<real_t>(intval(a)) < realval(b);
+
+  if ( ta == INTEGER && tb == RATIONAL )
+      return make_rational(intval(a)) < ratval(b);
+
+  if ( ta == REAL && tb == RATIONAL ) {
+    rational_t rb = ratval(b);
+    return realval(a) < static_cast<real_t>(rb.numerator) /
+                        static_cast<real_t>(rb.denominator);
+  }
+
+  // reverse operand types and check
+  // a < b ==> b > a
+  return number_greaterp(b, a);
+}
+
+bool number_greaterp(cons_t* a, cons_t* b)
+{
+  type_t ta = type_of(a);
+  type_t tb = type_of(b);
+
+  if ( ta == tb ) {
+    if ( ta == INTEGER )  return intval(a)  > intval(b);
+    if ( ta == REAL )     return realval(a) > realval(b);
+    if ( ta == RATIONAL ) return ratval(a)  > ratval(b);
+  }
+
+  if ( ta == INTEGER && tb == REAL )
+    return static_cast<real_t>(intval(a)) > realval(b);
+
+  if ( ta == INTEGER && tb == RATIONAL )
+      return make_rational(intval(a)) > ratval(b);
+
+  if ( ta == REAL && tb == RATIONAL ) {
+    rational_t rb = ratval(b);
+    return realval(a) > static_cast<real_t>(rb.numerator) /
+                        static_cast<real_t>(rb.denominator);
+  }
+
+  // reverse operand types and check
+  // a > b ==> b < a
+  return number_lessp(b, a);
 }
 
 cons_t* proc_addf(cons_t *p, environment_t*)
@@ -263,15 +355,13 @@ cons_t* proc_less(cons_t* p, environment_t*)
     if ( nanp(car(p)) || nanp(cadr(p)) )
       return boolean(false);
 
-    assert_number(car(p));
-    assert_number(cadr(p));
+    cons_t *a = car(p);
+    cons_t* b = cadr(p);
 
-    real_t x = integerp(car(p))? car(p)->number.integer :
-                                 car(p)->number.real;
+    assert_number(a);
+    assert_number(b);
 
-    real_t y = integerp(cadr(p))? cadr(p)->number.integer :
-                                  cadr(p)->number.real;
-    if ( !(x < y) )
+    if ( !number_lessp(a, b) )
       return boolean(false);
   }
 
@@ -289,15 +379,13 @@ cons_t* proc_greater(cons_t* p, environment_t*)
     if ( nanp(car(p)) || nanp(cadr(p)) )
       return boolean(false);
 
-    assert_number(car(p));
-    assert_number(cadr(p));
+    cons_t *a = car(p);
+    cons_t *b = cadr(p);
 
-    real_t x = integerp(car(p))? car(p)->number.integer :
-                                 car(p)->number.real;
+    assert_number(a);
+    assert_number(b);
 
-    real_t y = integerp(cadr(p))? cadr(p)->number.integer :
-                                  cadr(p)->number.real;
-    if ( !(x > y) )
+    if ( !number_greaterp(a, b) )
       return boolean(false);
   }
 

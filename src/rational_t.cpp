@@ -99,6 +99,24 @@ bool rational_t::operator==(const rational_t& r) const
   return numerator == r.numerator && denominator == r.denominator;
 }
 
+/*
+ * Compare fractions by doing
+ *
+ *     a/b < c/d ==>
+ *     a*d < c*b
+ *
+ */
+bool rational_t::operator<(const rational_t& r) const
+{
+  return numerator*r.denominator <
+         r.numerator*denominator;
+}
+
+bool rational_t::operator>(const rational_t& r) const
+{
+  return !((*this) == r && (*this) < r);
+}
+
 rational_t operator/(const rational_t& n, const rational_t& d)
 {
   if ( d.numerator == 0 )
