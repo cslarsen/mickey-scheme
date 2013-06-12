@@ -173,9 +173,16 @@ cons_t* proc_syntax_expand(cons_t* p, environment_t *e)
 
 cons_t* proc_version(cons_t*, environment_t*)
 {
-  return list(
-    string(VERSION),
-    string(format("Compiler version: %s", __VERSION__).c_str()));
+  std::string s = format("%s %d.%d %s",
+      MICKEY_NAME,
+      MICKEY_VERSION_MAJOR,
+      MICKEY_VERSION_MINOR,
+      MICKEY_COPYRIGHT);
+
+  return cons(cons(symbol("version"), cons(string(s.c_str()))),
+              cons(symbol("compiler"),
+                   string(format("Compiler version: %s",
+                                 __VERSION__).c_str())));
 }
 
 cons_t* proc_type_of(cons_t* p, environment_t*)

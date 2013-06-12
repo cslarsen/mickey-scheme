@@ -41,7 +41,8 @@ TARGETS_O =  \
             syntax-rules.o \
             system-features.o \
             tokenizer.o \
-            util.o
+            util.o \
+						version.o
 
 TARGETS_LIB_O = \
 								library/scheme-base-math.o \
@@ -77,7 +78,8 @@ LIB_DEPS =  \
             syntax-rules.o \
             system-features.o \
             tokenizer.o \
-            util.o
+            util.o \
+						version.o
 
 TARGETS_SO = \
 						 libc-stdio.so \

@@ -212,8 +212,14 @@ void print_banner(environment_t*)
       (rl_readline_version & 0xFF00) >> 8, rl_readline_version & 0x00FF);
   #endif
 
+  std::string s = format("%s %d.%d %s",
+      MICKEY_NAME,
+      MICKEY_VERSION_MAJOR,
+      MICKEY_VERSION_MINOR,
+      MICKEY_COPYRIGHT);
+
   printf("#| %-63s _\n", "");
-  printf("   %-63s  \\\n", VERSION);
+  printf("   %-63s  \\\n", s.c_str());
   printf("   %-63s  /\\\n", __VERSION__);
   printf("   %-63s /  \\_\n", readline_version.c_str());
 }

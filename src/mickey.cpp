@@ -132,7 +132,11 @@ void help()
 
 void version()
 {
-  printf("%s\n", VERSION);
+  printf("%s %d.%d %s\n",
+      MICKEY_NAME,
+      MICKEY_VERSION_MAJOR,
+      MICKEY_VERSION_MINOR,
+      MICKEY_COPYRIGHT);
   printf("Compiler version: %s\n", __VERSION__);
 }
 
