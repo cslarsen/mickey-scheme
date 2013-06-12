@@ -34,6 +34,7 @@ extern "C" cons_t* proc_sizeof(cons_t* p, environment_t*)
     {"char", sizeof(char)},
     {"int", sizeof(int)},
     {"long", sizeof(long)},
+    {"longlong", sizeof(long long)},
     {"pointer", sizeof(void*)}, // shorthand
     {"short", sizeof(short)},
     {"void*", sizeof(void*)},

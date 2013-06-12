@@ -40,7 +40,27 @@
 
     (define (c-memory-model)
       ;; Table from http://www.unix.org/whitepapers/64bit.html
-      #f)
+      (let
+        ((int      (* 8 (size-of 'int)))
+         (long     (* 8 (size-of 'long)))
+         (longlong (* 8 (size-of 'longlong)))
+         (pointer  (* 8 (size-of 'void*))))
+
+        (case pointer
+          ((64) (string-append
+                  (if (= 64 int)  "i" "")
+                  (if (= 64 long) "l" "")
+                  (if (and (= 32 int long)
+                           (= 64 longlong)) "ll" "")
+                  "p64"))
+          ((32) (string-append
+                  (if (= 32 int) "i" "")
+                  (if (= 32 long) "l" "")
+                  "p32"))
+          ((16) (string-append
+                  (if (= 16 int) "i" "")
+                  (if (= 16 long) "l" "")
+                  "p16")))))
 
     (define (system-instance)
       (lookup 'nodename (uname)))
