@@ -12,9 +12,7 @@
 (define-library (srfi 112)
   (import (scheme base)
           (unix uname)
-          (rename (implementation version)
-            (name implementation-name)
-            (version implementation-version)))
+          (implementation base))
 
   (export
     c-memory-model
@@ -41,6 +39,7 @@
       (lookup 'machine (uname)))
 
     (define (c-memory-model)
+      ;; Table from http://www.unix.org/whitepapers/64bit.html
       #f)
 
     (define (system-instance)

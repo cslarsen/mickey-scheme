@@ -41,8 +41,7 @@ TARGETS_O =  \
             syntax-rules.o \
             system-features.o \
             tokenizer.o \
-            util.o \
-						version.o
+            util.o
 
 TARGETS_LIB_O = \
 								library/scheme-base-math.o \
@@ -78,14 +77,14 @@ LIB_DEPS =  \
             syntax-rules.o \
             system-features.o \
             tokenizer.o \
-            util.o \
-						version.o
+            util.o
 
 TARGETS_SO = \
 						 libc-stdio.so \
 						 libmickey-environment.so \
-						 libmickey-gensym.so \
 						 libeval-cont.so \
+						 libimplementation-base.so \
+						 libmickey-gensym.so \
 						 libmickey-internals.so \
 						 libmickey-misc.so \
 						 libscheme-base.so \

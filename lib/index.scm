@@ -21,7 +21,7 @@
   ((experimental endianness) "experimental/endianness.scm")
   ((experimental eval-with-continuation) "experimental/eval-with-continuation.scm")
   ((experimental unit-testing) "experimental/unit-testing.scm")
-  ((implementation version)  "implementation/version.scm")
+  ((implementation base)     "implementation/base.scm")
   ((maclisp)                 "maclisp/maclisp.scm")
   ((mickey environment)      "mickey/environment.scm")
   ((mickey gensym)           "mickey/gensym.scm")
