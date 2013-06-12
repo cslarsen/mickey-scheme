@@ -128,16 +128,12 @@ std::string sprint(const pointer_t* p, std::string&, bool)
 
 std::string to_s(const integer_t& n)
 {
-  char buf[64];
-  sprintf(buf, "%d", n);
-  return std::string(buf);
+  return format("%d", n);
 }
 
 std::string to_s(rational_t n)
 {
-  char buf[64];
-  sprintf(buf, "%d/%d", n.numerator, n.denominator);
-  return std::string(buf);
+  return format("%d/%d", n.numerator, n.denominator);
 }
 
 std::string to_s(real_t n)
@@ -145,10 +141,7 @@ std::string to_s(real_t n)
   if ( is_nan(n) ) return "+nan.0";
   if ( is_neg_inf(n) ) return "-inf.0";
   if ( is_pos_inf(n) ) return "+inf.0";
-
-  char buf[64];
-  sprintf(buf, "%g", n);
-  return std::string(buf);
+  return format("%g", n);
 }
 
 std::string to_s(bool f)
