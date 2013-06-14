@@ -29,7 +29,7 @@
 ;;
 ;;  EXAMPLE USAGE
 ;;
-;;  #; mickey> (import (prng lcg))
+;;  #; mickey> (import (portable prng lcg))
 ;;  #; mickey> (define random (lcg-simple 123))
 ;;  #; mickey> (random)
 ;;  142
@@ -40,7 +40,7 @@
 ;;  #; mickey> (random)
 ;;  87
 ;;
-(define-library (prng lcg)
+(define-library (portable prng lcg)
   (import (scheme base)
           (scheme case-lambda))
 

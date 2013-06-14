@@ -34,7 +34,7 @@
   ((portable gensym)         "portable/gensym.scm")
   ((portable print)          "portable/print.scm")
   ((portable sequence)       "portable/sequence.scm")
-  ((prng lcg)                "prng/lcg.scm")
+  ((portable prng lcg)       "portable/prng-lcg.scm")
   ((scheme base)             "scheme/base/base.scm")
   ((scheme case-lambda)      "scheme/case-lambda.scm")
   ((scheme char)             "scheme/char.scm")
