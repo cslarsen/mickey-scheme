@@ -480,61 +480,6 @@ cons_t* proc_max(cons_t* p, environment_t*)
   return max;
 }
 
-cons_t* proc_expt(cons_t* p, environment_t*)
-{
-  assert_length(p, 2);
-
-  cons_t *base = car(p),
-         *expn = cadr(p);
-
-  assert_number(base);
-  assert_number(expn);
-
-  bool exact = integerp(base) && integerp(expn);
-
-  if ( exact ) {
-    int a = base->number.integer,
-        n = expn->number.integer,
-        r = a;
-
-    // Per definition
-    if ( n == 0 )
-      return integer(1);
-
-    if ( n < 0 )
-      raise(runtime_exception("Negative exponents not implemented"));
-
-    // This is a slow version
-    // TODO: Implement O(log n) version
-    while ( n-- > 1 )
-      r *= a;
-
-    return integer(r);
-  }
-
-  // Floating point exponentiation
-  real_t a = number_to_real(base),
-            n = number_to_real(expn),
-            r = a;
-
-  if ( n == 0.0 )
-    return real(1.0);
-
-  if ( n < 0.0 )
-    raise(runtime_exception("Negative exponents not implemented"));
-
-  while ( floor(n) > 1.0 ) {
-    r *= a;
-    n -= 1.0;
-  }
-
-  if ( n > 1.0 )
-    raise(runtime_exception("Fractional exponents not supported"));
-
-  // TODO: Compute r^n, where n is in [0..1)
-  return real(r);
-}
-
 cons_t* proc_modulo(cons_t* p, environment_t*)
 {
   assert_length(p, 2);

@@ -208,6 +208,7 @@ The larger part of this library resides in libscheme-base.so.
   (include "assoc.scm")
   (include "number?.scm")
   (include "abs.scm")
+  (include "expt.scm")
 
   (begin
     (define (compare-all cmp? v)
