@@ -109,40 +109,47 @@
     (define (lcg-glibc seed)
       (make-lcg (expt 2 31)
                 1103515245
-                12345))
+                12345
+                seed))
 
     ; Knuth's MMIX
     (define (lcg-mmix seed)
       (make-lcg (expt 2 64)
                 6364136223846793005
-                1442695040888963407))
+                1442695040888963407
+                seed))
 
     ; Java's java.util.Random
     (define (lcg-java seed)
       (make-lcg (expt 2 48)
                 25214903917
-                11))
+                11
+                seed))
 
     ; Forth's LC53
     (define (lcg-forth seed)
       (make-lcg (- (expt 2 32 5))
                 (- (expt 2 32) 333333333)
-                0))
+                0
+                seed))
 
     ; Newlib C library
     (define (lcg-newlib seed)
       (make-lcg (expt 2 64)
                 6364136223846793005
-                1))
+                1
+                seed))
 
     ; Microsoft Visual Basic 6 and earlier
     (define (lcg-vb6 seed)
       (make-lcg (expt 2 24)
                 #x43FD43FD
-                #xC39EC3))
+                #xC39EC3
+                seed))
 
     ; Apple CarbonLib
     (define (lcg-carbonlib seed)
       (make-lcg (- (expt 2 31) 1)
                 #x7FFFFFED
-                #x7FFFFFC3))))
+                #x7FFFFFC3
+                seed))))
