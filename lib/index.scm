@@ -18,6 +18,7 @@
 (define-library-index
   ((c stdio)                 "c/stdio.scm")
   ((cross-platform sdl)      "cross-platform/sdl.scm")
+  ((examples lisp-quotes)    "examples/lisp-quotes.scm")
   ((experimental endianness) "experimental/endianness.scm")
   ((experimental eval-with-continuation) "experimental/eval-with-continuation.scm")
   ((experimental unit-testing) "experimental/unit-testing.scm")
