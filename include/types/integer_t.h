@@ -9,4 +9,6 @@
  *
  */
 
-typedef int integer_t;
+#include <inttypes.h>
+
+typedef int64_t integer_t;

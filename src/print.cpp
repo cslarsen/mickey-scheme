@@ -128,7 +128,16 @@ std::string sprint(const pointer_t* p, std::string&, bool)
 
 std::string to_s(const integer_t& n)
 {
-  return format("%d", n);
+  const char* fmt = "%d";
+
+  switch ( sizeof(integer_t) ) {
+  case 8: fmt = "%" PRId64; break;
+  case 4: fmt = "%" PRId32; break;
+  case 2: fmt = "%" PRId16; break;
+  default: break;
+  }
+
+  return format(fmt, n);
 }
 
 std::string to_s(rational_t n)
