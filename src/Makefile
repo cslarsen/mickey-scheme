@@ -106,9 +106,10 @@ TARGETS_SO = \
 						 libposix-fork.so \
 						 libposix-kill.so \
 						 libposix-signal.so \
+						 libposix-sysconf.so \
+						 libposix-time.so \
 						 libposix-uname.so \
 						 libposix-unistd.so \
-						 libposix-time.so \
 						 libposix-wait.so
 
 TARGETS = $(TARGETS_O) $(TARGETS_SO) $(TARGETS_LIB_O) libmickey.so mickey

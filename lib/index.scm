@@ -66,6 +66,7 @@
   ((posix fork)              "posix/fork.scm")
   ((posix kill)              "posix/kill.scm")
   ((posix signal)            "posix/signal.scm")
+  ((posix sysconf)           "posix/sysconf.scm")
   ((posix time)              "posix/time.scm")
   ((posix uname)             "posix/uname.scm")
   ((posix unistd)            "posix/unistd.scm")
