@@ -1,12 +1,12 @@
 #|
 
-   UNIX signal facilities for Mickey Scheme
+   POSIX signal facilities for Mickey Scheme
 
    Copyright (C) 2013 Christian Stigen Larsen
    Distributed under the LGPL 2.1; see LICENSE
 
 |#
-(define-library (unix signal)
+(define-library (posix signal)
   (import (scheme base)
           (mickey library))
 
@@ -18,7 +18,7 @@
     signal-table)
 
   (begin
-    (open-internal-library "libunix-signal.so" 'lazy 'global)
+    (open-internal-library "libposix-signal.so" 'lazy 'global)
 
     (define signal-table
       '( 1 sighup

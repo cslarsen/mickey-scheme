@@ -10,7 +10,7 @@
  *
  * To use it,
  *
- * (import (unix dlopen))
+ * (import (posix dlopen))
  * (define lib (dlopen "libuname.so" 'lazy))
  * (define uname (dlsym lib "proc_uname"))
  * (display (uname))

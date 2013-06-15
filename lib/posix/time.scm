@@ -1,13 +1,13 @@
 #|
 
-UNIX time(3) and friends for Mickey Scheme
+POSIX time(3) and friends for Mickey Scheme
 
 Copyright (C) 2013 Christian Stigen Larsen
 Distributed under the LGPL 2.1; see LICENSE
 
 Example usage:
 
-  > (import (unix time))
+  > (import (posix time))
   > (define now (time))
   > (ctime now)
   "Sun May 12 23:20:10 2013\n"
@@ -20,7 +20,7 @@ Example usage:
 
 |#
 
-(define-library (unix time)
+(define-library (posix time)
   (export
     ctime
     gmtime
@@ -38,7 +38,7 @@ Example usage:
     (only (scheme base) define))
 
   (begin
-    (open-internal-library "libunix-time.so" 'lazy 'global)
+    (open-internal-library "libposix-time.so" 'lazy 'global)
 
     (define months
       #(january

@@ -1,12 +1,12 @@
 #|
 
-   UNIX wait(2) for Mickey Scheme
+   POSIX wait(2) for Mickey Scheme
 
    Copyright (C) 2013 Christian Stigen Larsen
    Distributed under the LGPL 2.1; see LICENSE
 
 |#
-(define-library (unix wait)
+(define-library (posix wait)
   (export
     coredump?
     exited?
@@ -20,10 +20,10 @@
   (import
     (mickey library)
     (only (scheme base) define)
-    (unix signal))
+    (posix signal))
 
   (begin
-    (open-internal-library "libunix-wait.so" 'lazy 'global)
+    (open-internal-library "libposix-wait.so" 'lazy 'global)
 
     ;; Calls wait(2) and returns (<pid> <status>)
     ;;

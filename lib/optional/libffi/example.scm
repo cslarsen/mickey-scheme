@@ -8,7 +8,7 @@
         (scheme base)
         (scheme write)
         (portable print)
-        (unix dlopen))
+        (posix dlopen))
 
 (define (find-library path library-name)
   (string-append

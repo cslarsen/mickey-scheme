@@ -101,15 +101,15 @@ TARGETS_SO = \
 						 libsrfi-0.so \
 						 libsrfi-16.so \
 						 libsrfi-4.so \
-						 libunix-dlopen.so \
-						 libunix-exit.so \
-						 libunix-fork.so \
-						 libunix-kill.so \
-						 libunix-signal.so \
-						 libunix-uname.so \
-						 libunix-unistd.so \
-						 libunix-time.so \
-						 libunix-wait.so
+						 libposix-dlopen.so \
+						 libposix-exit.so \
+						 libposix-fork.so \
+						 libposix-kill.so \
+						 libposix-signal.so \
+						 libposix-uname.so \
+						 libposix-unistd.so \
+						 libposix-time.so \
+						 libposix-wait.so
 
 TARGETS = $(TARGETS_O) $(TARGETS_SO) $(TARGETS_LIB_O) libmickey.so mickey
 

@@ -10,7 +10,7 @@ Distributed under any of LGPL v2.1, LGPL 3.0, GPL 2.0 or GPL 3.0
 (define-library (ffi)
   (import (scheme base)
           (ffi libffi)
-          (unix dlopen))
+          (posix dlopen))
 
   (export
 

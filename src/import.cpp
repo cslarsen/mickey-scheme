@@ -536,7 +536,7 @@ static void import_scheme_file(environment_t *r, const char* file)
   import(r, library_file(file));
 }
 
-static void import_unix_dlopen(environment_t* r)
+static void import_posix_dlopen(environment_t* r)
 {
   /*
    * This is the only library we don't load dynamically from a scheme
@@ -546,11 +546,11 @@ static void import_unix_dlopen(environment_t* r)
    * when process exit (we'll deal with resource handling like that later)
    * (TODO)
    */
-  static void *lib = dlopen(library_file("libunix-dlopen.so").c_str(),
+  static void *lib = dlopen(library_file("libposix-dlopen.so").c_str(),
                        RTLD_LAZY | RTLD_GLOBAL);
 
   if ( lib == NULL )
-    raise(runtime_exception(format("(unix dlopen): %s", dlerror())));
+    raise(runtime_exception(format("(posix dlopen): %s", dlerror())));
 
   /*
    * Exported name on left, dlsym name on right
@@ -569,7 +569,7 @@ static void import_unix_dlopen(environment_t* r)
     void *f = dlsym(lib, *(s+1));
 
     if ( f == NULL )
-      raise(runtime_exception(format("(unix dlopen): %s", dlerror())));
+      raise(runtime_exception(format("(posix dlopen): %s", dlerror())));
 
     r->define(*s, reinterpret_cast<lambda_t>(f));
   }
@@ -584,8 +584,8 @@ environment_t* import_library(const std::string& name)
    * This library needs special treatment; all other libraries depend on it
    * to load dynamic shared object files.
    */
-  if ( name == "(unix dlopen)" ) {
-    import_unix_dlopen(r);
+  if ( name == "(posix dlopen)" ) {
+    import_posix_dlopen(r);
     return r;
   }
 

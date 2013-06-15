@@ -22,8 +22,8 @@
 ;; We stop looping when we catch SIGINT
 ;; Exiting gracefully ...
 ;;
-(import (unix signal)
-        (unix unistd)
+(import (posix signal)
+        (posix unistd)
         (c stdio)
         (portable print)
         (scheme base))

@@ -1,19 +1,19 @@
 #|
 
-   UNIX fork(2) for Mickey Scheme
+   POSIX fork(2) for Mickey Scheme
 
    Copyright (C) 2013 Christian Stigen Larsen
    Distributed under the LGPL 2.1; see LICENSE
 
 |#
-(define-library (unix fork)
+(define-library (posix fork)
   (export child-process?
           fork)
 
   (import (only (scheme base) define)
           (mickey library))
   (begin
-    (open-internal-library "libunix-fork.so" 'lazy 'global)
+    (open-internal-library "libposix-fork.so" 'lazy 'global)
 
     ;; (fork) is a wrapper around fork(2).
     ;;

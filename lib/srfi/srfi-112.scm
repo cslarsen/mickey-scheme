@@ -11,7 +11,7 @@
 
 (define-library (srfi 112)
   (import (scheme base)
-          (unix uname)
+          (posix uname)
           (implementation base))
 
   (export

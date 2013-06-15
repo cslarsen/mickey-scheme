@@ -3,7 +3,7 @@
         (scheme write)
         (scheme char)
         (scheme cxr)
-        (unix time)
+        (posix time)
         (portable print))
 
 (define (capitalize s)

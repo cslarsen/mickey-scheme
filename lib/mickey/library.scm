@@ -8,7 +8,7 @@ Distributed under the LGPL 2.1; see LICENSE
 |#
 
 (define-library (mickey library)
-  (import (unix dlopen))
+  (import (posix dlopen))
 
   (export
     bind-procedure
@@ -44,7 +44,7 @@ Distributed under the LGPL 2.1; see LICENSE
     (define (current-file)   *file*)
 
     ;; Usage: (open-library file . options) where `options` are the same as
-    ;; for (dlopen) in (unix dlopen).
+    ;; for (dlopen) in (posix dlopen).
     ;;
     (define (open-library filename . options)
       (set! *file* filename)
@@ -55,7 +55,7 @@ Distributed under the LGPL 2.1; see LICENSE
           "Could not dlopen " *file* ": " (dlerror)))))
 
     ;; Usage: (open-self . options) where `options` are the same as
-    ;; for (dlopen) in (unix dlopen).
+    ;; for (dlopen) in (posix dlopen).
     ;;
     (define (open-self . options)
       (set! *file* "")

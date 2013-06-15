@@ -7,14 +7,14 @@ Distributed under the LGPL 2.1; see LICENSE
 
 |#
 
-(define-library (unix uname)
+(define-library (posix uname)
   (export uname)
 
   (import (only (scheme base) define)
           (mickey library))
 
   (begin
-    (open-internal-library "libunix-uname.so" 'lazy 'global)
+    (open-internal-library "libposix-uname.so" 'lazy 'global)
 
     (define uname
       (bind-procedure "proc_uname"))))

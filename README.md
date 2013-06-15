@@ -64,7 +64,7 @@ resist adding:
 
 It's also easy to write wrapper code for using C libraries:
 
-  * Dynamic loading of shared libraries via `(unix dlopen)`
+  * Dynamic loading of shared libraries via `(posix dlopen)`
     ([see dlopen example](#c-libraries))
 
 Current Shortcomings
@@ -589,7 +589,7 @@ To compile this, do something à la
         -L<mickey path> -lmickey -o libmickey-uname.so
 
 This should give you a libmickey-uname.so file.  To load this file from
-Mickey, we have to start mickey and then import the `(unix dlopen)` library.
+Mickey, we have to start mickey and then import the `(posix dlopen)` library.
 
     csl$ ./mickey
     #|                                                                 _
@@ -601,7 +601,7 @@ Mickey, we have to start mickey and then import the `(unix dlopen)` library.
        introduction.
     |#
 
-    #; mickey> (import (unix dlopen))
+    #; mickey> (import (posix dlopen))
 
 Let's load the library using the dlopen options `RTLD_NOW` and `RTLD_LOCAL`.
 You can omit the options to use default dlopen mode.  I'm just showing you

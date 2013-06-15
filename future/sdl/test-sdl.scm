@@ -1,4 +1,4 @@
-(import (unix dlopen)
+(import (posix dlopen)
         (scheme write)
         (scheme base))
 

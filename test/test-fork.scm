@@ -1,8 +1,8 @@
 (import (scheme base)
         (portable print)
-        (unix exit)
-        (unix fork)
-        (unix wait))
+        (posix exit)
+        (posix fork)
+        (posix wait))
 
 (println "fork(2) example in Mickey Scheme")
 

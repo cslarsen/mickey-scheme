@@ -12,7 +12,7 @@
 #include <dlfcn.h>
 #include <libgen.h>
 #include "cons.h"
-#include "library/unix-dlopen.h"
+#include "library/posix-dlopen.h"
 
 extern "C" {
 

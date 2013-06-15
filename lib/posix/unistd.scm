@@ -1,12 +1,12 @@
 #|
 
-   UNIX unistd.h for Mickey Scheme
+   POSIX unistd.h for Mickey Scheme
 
    Copyright (C) 2013 Christian Stigen Larsen
    Distributed under the LGPL 2.1; see LICENSE
 
 |#
-(define-library (unix wait)
+(define-library (posix wait)
   (export
     gethostname
     getpid
@@ -18,7 +18,7 @@
     (scheme base))
 
   (begin
-    (open-internal-library "libunix-unistd.so" 'lazy 'global)
+    (open-internal-library "libposix-unistd.so" 'lazy 'global)
 
     (define gethostname (bind-procedure "proc_gethostname"))
     (define getpid (bind-procedure "proc_getpid"))

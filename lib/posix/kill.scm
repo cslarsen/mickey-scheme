@@ -1,21 +1,21 @@
 #|
 
-   UNIX kill(2) for Mickey Scheme
+   POSIX kill(2) for Mickey Scheme
 
    Copyright (C) 2013 Christian Stigen Larsen
    Distributed under the LGPL 2.1; see LICENSE
 
 |#
-(define-library (unix wait)
+(define-library (posix wait)
   (export kill)
 
   (import
     (mickey library)
     (scheme base)
-    (unix signal))
+    (posix signal))
 
   (begin
-    (open-internal-library "libunix-kill.so" 'global 'lazy)
+    (open-internal-library "libposix-kill.so" 'global 'lazy)
 
     (define proc-kill (bind-procedure "proc_kill"))
 
