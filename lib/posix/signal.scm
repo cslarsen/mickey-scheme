@@ -14,6 +14,7 @@
     deactivate-signal
     integer->signal
     signal
+    signal=?
     signal->integer
     signal-table)
 
@@ -61,6 +62,26 @@
       (let ((n (memv signal (reverse signal-table))))
         (if (pair? n) (cadr n) 'unknown-signal)))
 
+    ;; Compare two signals.
+    ;;
+    ;; Examples:
+    ;; (signal=? caught-signal 2)
+    ;; (signal=? some-signal 'sigint)
+    ;; (signal=? 'sigint 2)
+    ;;
+    (define (signal=? a b)
+      (let
+        ((a (cond
+              ((symbol? a) (signal->integer a))
+              ((integer? a) a)
+              (else (error "Can only compare integers and symbols"))))
+
+         (b (cond
+              ((symbol? b) (signal->integer b))
+              ((integer? b) b)
+              (else (error "Can only compare integers and symbols")))))
+        (= a b)))
+
     (define (parse-signal signal)
       (cond
         ((symbol? signal) (signal->integer signal))
@@ -69,7 +90,8 @@
              (error (string-append "Unknown signal "
                                    (number->string signal)))))
         (else
-          (error "Unknown signal"))))
+          (error (string-append "Unknown signal "
+                                (symbol->string signal))))))
 
     (define proc-signal (bind-procedure "proc_signal"))
 
