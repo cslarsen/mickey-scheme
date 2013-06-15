@@ -17,8 +17,8 @@
   (export
     c-memory-model
     cpu-architecture
-    implementation-name
-    implementation-version
+    implementation-name ;; from (implementation base)
+    implementation-version ;; from (implementation base)
     os-type
     os-version
     system-instance)
