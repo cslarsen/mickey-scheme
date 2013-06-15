@@ -101,12 +101,12 @@ The first number shows the coverage in percent, then number of implemented
 definitions, definitions required by R7RS-small, missing definitions and
 name of the library.
 
-     67% 158/236  -78 (scheme base)
+     68% 161/236  -75 (scheme base)
     100%     1/1    0 (scheme case-lambda)
     100%   22/22    0 (scheme char)
       0%     0/6   -6 (scheme complex)
     100%   24/24    0 (scheme cxr)
-     50%     1/2   -1 (scheme eval)
+    100%     2/2    0 (scheme eval)
      20%    2/10   -8 (scheme file)
     100%   12/12    0 (scheme inexact)
      40%     2/5   -3 (scheme lazy)
@@ -117,10 +117,10 @@ name of the library.
     100%     3/3    0 (scheme time)
      50%     2/4   -2 (scheme write)
      86% 186/217  -31 (scheme r5rs)
-     77% 421/550 -129 <all>
+     77% 425/550 -125 <all>
 
-In summary, Mickey implements 421 of 550 definitions in R7RS-small.
-129 definitions have not been implemented.
+In summary, Mickey implements 425 of 550 definitions in R7RS-small.
+125 definitions have not been implemented.
 
 This corresponds to 77% coverage.
 

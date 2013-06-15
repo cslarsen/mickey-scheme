@@ -96,6 +96,7 @@ TARGETS_SO = \
 						 libscheme-read.so \
 						 libscheme-repl.so \
 						 libscheme-time.so \
+						 libscheme-eval.so \
 						 libscheme-write.so \
 						 libsrfi-0.so \
 						 libsrfi-16.so \

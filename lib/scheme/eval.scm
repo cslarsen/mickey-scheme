@@ -13,6 +13,11 @@ Please post bugfixes and suggestions to the author.   /  \_
 (define-library (scheme eval)
   (import (scheme base)
           (mickey library))
-  (export eval)
+  (export
+    environment
+    eval)
+
   (begin
-    (define eval 'dummy-value)))
+    (open-internal-library "libscheme-eval.so" 'lazy 'global)
+    (define eval 'dummy-value)
+    (define environment (bind-procedure "proc_environment"))))

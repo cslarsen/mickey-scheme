@@ -321,8 +321,15 @@ cons_t* eval(cons_t* p, environment_t* e)
         return proc_and(cdr(p), e);
 
       if ( name == "eval" ) {
-        p = car(evlis(cdr(p), e));
-        continue;
+        assert_length(cdr(p), 2);
+
+        cons_t *code = cadr(p);
+        assert_type(PAIR, code);
+
+        cons_t *enviro = eval(caddr(p), e);
+        assert_type(ENVIRONMENT, enviro);
+
+        return eval(eval(code, e), enviro->environment);
       }
 
       if ( name == "apply" ) {

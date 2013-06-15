@@ -712,7 +712,7 @@ DO_NOT_IMPORT:
   return r;
 }
 
-static environment_t* import_set(cons_t* p)
+environment_t* import_set(cons_t* p)
 {
   std::string s = symbol_name(car(p));
 
