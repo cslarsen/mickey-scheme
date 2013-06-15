@@ -157,13 +157,19 @@ extern "C" cons_t* proc_sysconf(cons_t* p, environment_t*)
 {
   assert_length(p, 1);
   assert_type(SYMBOL, car(p));
-  int value = lookup(symbol_name(car(p)).c_str());
+  int name = lookup(symbol_name(car(p)).c_str());
 
-  // not found?
-  if ( value < 0 )
+  // symbol not recognized?
+  if ( name < 0 )
     return boolean(false);
 
-  return integer(sysconf(value));
+  int ret = sysconf(name);
+
+  // name not recognized?
+  if ( ret == -1 )
+    return boolean(false);
+
+  return integer(ret);
 }
 
 extern "C" cons_t* proc_sysconf_symbols(cons_t* p, environment_t*)
