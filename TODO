@@ -1,3 +1,8 @@
+TIME
+
+Fix current-jiffy.
+Add subsecond precision to current-second by using floats.
+
 RECORDS
 
 - Seems that defmacro and record-types do not work again,
