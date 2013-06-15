@@ -8,13 +8,15 @@
 |#
 (define-library (posix sysconf)
   (export
-    sysconf)
+    sysconf
+    sysconf-symbols)
 
   (import
     (mickey library)
-    (only (scheme base) define)
+    (scheme base)
     (posix signal))
 
   (begin
     (open-internal-library "libposix-sysconf.so" 'lazy 'global)
-    (define sysconf (bind-procedure "proc_sysconf"))))
+    (define sysconf (bind-procedure "proc_sysconf"))
+    (define sysconf-symbols (bind-procedure "proc_sysconf_symbols"))))
