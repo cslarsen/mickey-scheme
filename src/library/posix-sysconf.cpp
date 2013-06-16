@@ -1,8 +1,9 @@
 /*
- * UNIX wait for Mickey Scheme
+ * Part of Mickey Scheme
  *
  * Copyright (C) 2013 Christian Stigen Larsen
- * Distributed under the LGPL 2.1; see LICENSE
+ * Distributed under the LGPL 2.1; see the LICENSE file
+ *
  */
 
 #include <unistd.h>
