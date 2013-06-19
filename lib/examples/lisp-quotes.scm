@@ -24,6 +24,29 @@
         (set! prng prng-proc)
         (error "Not a procedure")))
 
+    (define (lookup key alist)
+      (let
+        ((value (assq key alist)))
+        (if value (cadr value) "")))
+
+    (define (has-key key alist)
+      (if (assq key alist) #t #f))
+
+    (define (random-quote)
+      (let*
+        ((no (modulo (prng) (length quotes)))
+         (data (list-ref quotes no)))
+        (string-append
+          (apply string-append (cdr (assq 'quote data)))
+          "\n"
+          "      -- " (if (has-key 'author data)
+                        (lookup 'author data)
+                        "Unknown")
+          (if (positive? (string-length (lookup 'source data)))
+            (string-append ", " (lookup 'source data)) ""))))
+
+    (define (all-quotes) quotes)
+
     (define quotes '(
       ((quote
          "Lisp is a programmable programming language.")
@@ -95,7 +118,7 @@
 
       ((quote
          "To understand a program, you must become both the machine and the program.")
-       (author "Alan Perlis")
+       (author "Alan J. Perlis")
        (source "\"Epigrams in programming\", ACM SIGPLAN, September 1982"))
 
       ((quote
@@ -123,27 +146,74 @@
          "up and cheer.\"")
        (author "Kenny Tilton"))
 
-    )
+      ((quote "Lisp isn't a language, it's a building material.")
+       (author "Alan Kay"))
 
-    (define (all-quotes) quotes)
+      ((quote
+          "Lisp [...] made me aware that software could be close to executable\n"
+          "mathematics.")
+       (author "L. Peter Deutsch")
+       (source "ACM Fellow Profile"))
 
-    (define (lookup key alist)
-      (let
-        ((value (assq key alist)))
-        (if value (cadr value) "")))
+      ((quote "I object to doing things that computers can do.")
+       (author "Olin Shivers"))
 
-    (define (has-key key alist)
-      (if (assq key alist) #t #f))
+      ((quote
+          "Anyone could learn Lisp in one day, except that if they already knew\n"
+          "Fortran, it would take three days.")
+       (author "Marvin Minsky"))
 
-    (define (random-quote)
-      (let*
-        ((no (modulo (prng) (length quotes)))
-         (data (list-ref quotes no)))
-        (string-append
-          (apply string-append (cdr (assq 'quote data)))
+      ((quote "Lisp doesn't look any deader than usual to me.")
+       (author "David Thornley"))
+
+      ((quote
+         "LISP programmers know the value of everything and the "
+         "cost of nothing.")
+       (author "Alan J. Perlis"))
+
+      ((quote "Syntactic sugar causes cancer of the semicolon.")
+       (author "Alan J. Perlis"))
+
+      ((quote
+          "Lisp has all the visual appeal of oatmeal with fingernail clippings mixed\n"
+          "in.")
+       (author "Larry Wall"))
+
+      ((quote
+          "By policy, LISP has never really catered to mere mortals. And, of course,\n"
+          "mere mortals have never really forgiven LISP for not catering to them.")
+       (author "Larry Wall"))
+
+      ((quote
+        "The principle of linguistic relativity holds that the structure of a\n"
+        "language affects the ways in which its respective speakers conceptualize\n"
+        "their world, i.e. their world view, or otherwise influences their cognitive\n"
+        "processes.")
+       (source "Wikipedia article on The Sapir-Whorf Hypothesis"))
+
+      ((quote
+          "The key to performance is elegance, not battalions of special cases.")
+       (author "Jon Bentley and Doug McIlroy"))
+
+      ((quote
+          "APL is like a beautiful diamond --- flawless, beautifully symmetrical.\n"
+          "But you can't add anything to it.  If you try to glue on another diamond,\n"
+          "you don't get a bigger diamond.\n"
           "\n"
-          "      -- " (if (has-key 'author data)
-                        (lookup 'author data)
-                        "Unknown")
-          (if (positive? (string-length (lookup 'source data)))
-            (string-append ", " (lookup 'source data)) ""))))))
+          "Lisp is like a ball of mud.  Add more and it's still a ball of mud.")
+       (author "Joel Moses"))
+
+      ((quote
+        "In Lisp, if you want to do aspect-oriented programming, you just do a bunch\n"
+        "of macros and you're there. In Java, you have to get Gregor Kiczales to go\n"
+        "out and start a new company, taking months and years and try to get that to\n"
+        "work. Lisp still has the advantage there, it's just a question of people\n"
+        "wanting that.")
+       (author "Peter Norvig"))
+
+      ((quote
+        "(What the world needs (I think) is not (a Lisp (with fewer parentheses))\n"
+        "but (an English (with more.)))")
+       (author "Brian Hayes,"))
+
+    ))))
