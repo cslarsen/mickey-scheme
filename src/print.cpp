@@ -10,6 +10,11 @@
  */
 
 #include <stdarg.h>
+
+// Import print format macros
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
+
 #include "types/real_t.h"
 #include "print.h"
 #include "util.h"
