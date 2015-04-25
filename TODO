@@ -1,3 +1,15 @@
+Autotools
+  - partition src/* dir to src/lib or something, like it used to be
+  - put dl libs in /usr/share/mickey/0.1.0/lib*
+  - put scheme lib files in /usr/share/micke/0.1.0/modules or something
+  - add man files
+  - give a big fat warning about no garbage collector having been made yet, in
+  case people install mickey
+  - hard-coded libposix-dlopen.so, should use a portable way to load (or be
+  nasty and symlink .so to dylib etc).
+Other
+  - fix abs() long long compiler warning
+
 VECTOR-BUG
 
 #(1 2 foo) is ok, but (vector 1 2 foo) should evlis and fail.
