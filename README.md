@@ -76,7 +76,7 @@ Current Shortcomings
 
   * It's __incomplete__: Some key Scheme features are still missing, and
     quite some R7RS library functions (currently it supports 195 of 335
-    R7RS definitinos).
+    R7RS definitions).
 
   * It's __buggy__: There are inherent bugs in the engine as well as
     erronous implementations of library functions.
@@ -127,56 +127,47 @@ This corresponds to 77% coverage.
 Compiling
 ---------
 
-To install Mickey Scheme, you need a C++ compiler, dlopen et al. and
-readline.  If you don't have readline, remove `-DUSE_READLINE` from
-`src/Makefile`.
+If you're building from the github sources, you need GNU autotools.
 
-As the project is in its early stages, I haven't used any of the GNU
-autotools for building the project (should you feel inclined to create the
-configure scripts needed, patches are warmly welcomed!).
+    $ ./autogen.sh
+    $ mkdir debug
+    $ ./configure --prefix=`pwd`/debug
+    $ make -j
+
+To test it,
+
+    $ make -j check
+
+and to install it,
+
+    $ make -j install
+
+You should now be able to run mickey from `debug/bin/mickey`.
 
 The code has been developed on OS X and Linux, so if you have the packages
 mentioned above, compilation should go smoothly.
 
-To compile and run, just type
+Note that the above command will build with default flags. To see how you can
+build with optimization flags, look at the script `build-release.sh`.
 
-    $ make -j run
+For instance, you could do
 
-to fire up a REPL.  On Linux, you have to set `LD_LIBRARY_PATH` to be able to
-locate dynamic shared objects in your current directory:
+    $ CPPFLAGS="-DNDEBUG" \
+      CXXFLAGS="-O3 -march=native -mtune=native -ffast-math" \
+        ./configure && make -j
 
-    $ CXX=c++ make -ej
-    ...
-    $ LD_LIBRARY_PATH=".:" ./mickey
-
-or, alternatively just export it into your environment:
-
-    $ export LD_LIBRARY_PATH=".:"
-    $ ./mickey
-
-The equivalent on Mac OS X is `DYLD_LIBRARY_PATH`.
-
-To run some test code, just type
-
-    $ make check
-
-or
-
-    $ make check-all
-
-That's all there is to it!
+to generate code tuned for your specific CPU.
 
 Feature flags
 -------------
 
-  * `-DUSE_READLINE` and `-lreadline` for readline support (including TAB
-     completion)
+See `./configure --help`.
 
 License
 -------
 
 Mickey R7RS Scheme
-Copyright (C) 2011-2013 Christian Stigen Larsen
+Copyright (C) 2011-2015 Christian Stigen Larsen
 
 Distributed under version 2.1 of the Lesser GNU Public License (LGPL) while
 also allowing anyone to change the license on a particular copy of the code

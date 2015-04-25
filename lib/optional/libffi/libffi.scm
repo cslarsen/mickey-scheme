@@ -24,7 +24,7 @@
     version)
 
   (begin
-    (open-internal-library "libffi.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libffi" 'lazy 'global)
 
     (define call-function     (bind-procedure "proc_ffi_call"))
     (define make-interface    (bind-procedure "proc_ffi_prep_cif"))

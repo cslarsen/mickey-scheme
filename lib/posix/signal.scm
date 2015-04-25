@@ -19,7 +19,7 @@
     signal-table)
 
   (begin
-    (open-internal-library "libposix-signal.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libposix-signal" 'lazy 'global)
 
     (define signal-table
       '( 1 sighup

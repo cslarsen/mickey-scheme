@@ -536,6 +536,21 @@ static void import_scheme_file(environment_t *r, const char* file)
   import(r, library_file(file));
 }
 
+static const char* dlext()
+{
+  // See http://sourceforge.net/p/predef/wiki/OperatingSystems/
+#if defined(__gnu_linux__)
+  return "so";
+#elif defined(_WIN32)
+  return "dll";
+#elif defined(__APPLE__) && defined(__MACH__)
+  return "dylib";
+#else
+# error "Unknown platform."
+  return NULL;
+#endif
+}
+
 static void import_posix_dlopen(environment_t* r)
 {
   /*
@@ -546,8 +561,8 @@ static void import_posix_dlopen(environment_t* r)
    * when process exit (we'll deal with resource handling like that later)
    * (TODO)
    */
-  static void *lib = dlopen(library_file("libposix-dlopen.so").c_str(),
-                       RTLD_LAZY | RTLD_GLOBAL);
+  static void *lib = dlopen(library_file(format("libposix-dlopen.%s",
+          dlext())).c_str(), RTLD_LAZY | RTLD_GLOBAL);
 
   if ( lib == NULL )
     raise(runtime_exception(format("(posix dlopen): %s", dlerror())));
@@ -560,6 +575,9 @@ static void import_posix_dlopen(environment_t* r)
     "dlerror",         "proc_dlerror",
     "dlopen",          "proc_dlopen",
     "dlopen-internal", "proc_dlopen_internal",
+    "dlopen-internal-determine-extension",
+      "proc_dlopen_internal_determine_extension",
+    "dlopen-determine-extension", "proc_dlopen_determine_extension",
     "dlopen-self",     "proc_dlopen_self",
     "dlsym",           "proc_dlsym",
     "dlsym-syntax",    "proc_dlsym_syntax",

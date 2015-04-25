@@ -13,7 +13,7 @@
   (import (only (scheme base) define)
           (mickey library))
   (begin
-    (open-internal-library "libposix-fork.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libposix-fork" 'lazy 'global)
 
     ;; (fork) is a wrapper around fork(2).
     ;;

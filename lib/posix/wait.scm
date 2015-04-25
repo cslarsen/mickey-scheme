@@ -23,7 +23,7 @@
     (posix signal))
 
   (begin
-    (open-internal-library "libposix-wait.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libposix-wait" 'lazy 'global)
 
     ;; Calls wait(2) and returns (<pid> <status>)
     ;;

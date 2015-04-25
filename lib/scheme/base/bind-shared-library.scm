@@ -1,4 +1,4 @@
-(open-internal-library "libscheme-base.so" 'lazy 'global)
+(open-internal-library-determine-extension "libscheme-base" 'lazy 'global)
 
 (define * (bind-procedure "proc_mul"))
 (define + (bind-procedure "proc_add"))

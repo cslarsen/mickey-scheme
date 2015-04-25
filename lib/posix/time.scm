@@ -38,7 +38,7 @@ Example usage:
     (only (scheme base) define))
 
   (begin
-    (open-internal-library "libposix-time.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libposix-time" 'lazy 'global)
 
     (define months
       #(january

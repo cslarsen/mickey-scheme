@@ -9,7 +9,7 @@
  *
  */
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <stdint.h>
 #include <limits.h>
 #include <math.h>
@@ -695,7 +695,7 @@ static int gcd_binary(int u, int v)
 
 int gcd(int a, int b)
 {
-  return gcd_binary(abs(a), abs(b));
+  return gcd_binary(std::abs(a), std::abs(b));
 }
 
 int lcm(int a, int b)

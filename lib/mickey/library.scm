@@ -1,7 +1,7 @@
 #|
 
-Copyright (C) 2012 Christian Stigen Larsen
-http://csl.sublevel3.org
+Copyright (C) 2012-2015 Christian Stigen Larsen
+http://csl.name
 
 Distributed under the LGPL 2.1; see LICENSE
 
@@ -15,6 +15,7 @@ Distributed under the LGPL 2.1; see LICENSE
     bind-syntax
     current-handle
     open-internal-library
+    open-internal-library-determine-extension
     open-library
     open-self)
 
@@ -27,7 +28,7 @@ Distributed under the LGPL 2.1; see LICENSE
     ;; so we don't need to do anything about those yet.
 
     (define base
-      (dlopen-internal "libscheme-base.so" 'lazy 'global))
+      (dlopen-internal-determine-extension "libscheme-base" 'lazy 'global))
 
     (define cons          (dlsym base "proc_cons"))
     (define error         (dlsym base "proc_error"))
@@ -76,6 +77,15 @@ Distributed under the LGPL 2.1; see LICENSE
         (error (string-append
           "Could not dlopen " *file* ": " (dlerror)))))
 
+    ;; Same as open-internal-library but automatically adds proper dynamic
+    ;; library extension per platform.
+    (define (open-internal-library-determine-extension basename . options)
+      (set! *file* basename)
+      (set! *handle* (apply dlopen-internal-determine-extension
+                        (cons *file* options)))
+      (if (not *handle*)
+        (error (string-append
+          "Could not dlopen " *file* ": " (dlerror)))))
 
     ;; Usage: (bind-procedure "some_c_function")
     ;;

@@ -14,7 +14,7 @@ Distributed under the LGPL 2.1; see LICENSE
           (mickey library))
 
   (begin
-    (open-internal-library "libposix-uname.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libposix-uname" 'lazy 'global)
 
     (define uname
       (bind-procedure "proc_uname"))))

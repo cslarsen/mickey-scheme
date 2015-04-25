@@ -19,7 +19,7 @@ Please post bugfixes and suggestions to the author.   /  \_
     jiffies-per-second)
 
   (begin
-    (open-internal-library "libscheme-time.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libscheme-time" 'lazy 'global)
     (define current-second (bind-procedure "proc_current_second"))
     (define current-jiffy (bind-procedure "proc_current_jiffy"))
     (define jiffies-per-second (bind-procedure "proc_jiffies_per_second"))))

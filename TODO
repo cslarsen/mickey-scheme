@@ -1,3 +1,25 @@
+Autotools
+  - Use mickey/$VERSION subfolders for
+    - C++ include files
+    - C++ library files
+    - Scheme library files
+  - Add man-pages
+  - Print a warning about Mickey not having any GC yet in the REPL.
+  - Loading of libposix-dlopen.so doesn't work on Linux.
+  - Readline doesn't compile on Linux
+  - Make it possible to deactivate readline with configure --without-readline
+  - Add --with-xxx for optional libraries (SDL, gpg, etc.)
+
+EQUAL?-EXACTNESS-BUG
+
+> (equal? #e-17 #i-17) should return #f, because it should compare exactness as
+well, but it doesn't.
+
+IMPORT-BUG
+
+(import (only (scheme base) display)) <== display is in (scheme write), so that
+should be an error, but mickey silently ignores it.
+
 VECTOR-BUG
 
 #(1 2 foo) is ok, but (vector 1 2 foo) should evlis and fail.

@@ -24,7 +24,7 @@ Please post bugfixes and suggestions to the author.   /  \_
           sqrt
           tan)
   (begin
-    (open-internal-library "libscheme-math.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libscheme-math" 'lazy 'global)
     (define exp     (bind-procedure "proc_exp"))
     (define log     (bind-procedure "proc_log"))
     (define sin     (bind-procedure "proc_sin"))

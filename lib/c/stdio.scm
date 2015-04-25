@@ -22,7 +22,7 @@ Distributed under the LGPL 2.1; see LICENSE
           (mickey library))
 
   (begin
-    (open-internal-library "libc-stdio.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libc-stdio" 'lazy 'global)
 
     (define fclose (bind-procedure "proc_fclose"))
     (define feof (bind-procedure "proc_feof"))

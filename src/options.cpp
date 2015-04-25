@@ -1,18 +1,18 @@
 /*
  * Mickey Scheme
  *
- * Copyright (C) 2011 Christian Stigen Larsen <csl@sublevel3.org>
- * http://csl.sublevel3.org                              _
- *                                                        \
- * Distributed under the LGPL 2.1; see LICENSE            /\
- * Please post bugfixes and suggestions to the author.   /  \_
- *                                                          
+ * Copyright (C) 2011, 2015 Christian Stigen Larsen
+ * Distributed under the LGPL 2.1; see LICENSE
+ *
  */
+
+#include "config.h"
 
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/param.h>
 #include <libgen.h>
+
 #include "mickey.h"
 #include "options.h"
 #include "cons.h"
@@ -41,7 +41,9 @@ void set_default(struct options_t* p, int argc, char** argv)
    */
   static char t[1+MAXPATHLEN];
   p->mickey_absolute_path = dirname(realpath(argv[0], t));
-  p->mickey_absolute_lib_path = strdup(format("%s/lib/").c_str());
+  p->mickey_absolute_lib_path = strdup(realpath(
+    format("%s/../share/mickey/" PACKAGE_VERSION "/lib/",
+      p->mickey_absolute_path).c_str(), t));
 
   /*
    * Set up feature environment

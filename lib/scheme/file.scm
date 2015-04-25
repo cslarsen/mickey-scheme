@@ -20,7 +20,7 @@ Please post bugfixes and suggestions to the author.   /  \_
     delete-file)
 
   (begin
-    (open-internal-library "libscheme-file.so" 'global 'lazy)
+    (open-internal-library-determine-extension "libscheme-file" 'global 'lazy)
 
     (define file-exists? (bind-procedure "proc_file_existsp"))
     (define delete-file (bind-procedure "proc_delete_file"))))
