@@ -20,6 +20,7 @@ include/config.h
 include/config.h.in
 include/stamp-h1
 install-sh
+library.m4
 libtool
 ltmain.sh
 m4
