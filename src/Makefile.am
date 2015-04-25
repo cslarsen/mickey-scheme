@@ -1,15 +1,16 @@
 AM_CPPFLAGS = -I$(top_srcdir)/include
 
-bin_PROGRAMS=mickey
+bin_PROGRAMS = mickey
+
 # Note, see
 # https://www.gnu.org/software/automake/manual/html_node/Objects-created-both-with-libtool-and-without.html
 # Perhaps we could make a library archive, then have mickey executable link
 # against that.
 #mickey_CXXFLAGS = $(AM_CXXFLAGS)
-mickey_LDADD=libmickey.la
-mickey_SOURCES=mickey.cpp repl.cpp
+mickey_LDADD = libmickey.la
+mickey_SOURCES = mickey.cpp repl.cpp
 
-lib_LTLIBRARIES=libmickey.la \
+pkglib_LTLIBRARIES = libmickey.la \
 								libc-stdio.la \
 								libeval-cont.la \
 								libimplementation-base.la \
