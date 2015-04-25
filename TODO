@@ -8,6 +8,7 @@ Autotools
   - hard-coded libposix-dlopen.so, should use a portable way to load (or be
   nasty and symlink .so to dylib etc).
   - use HAVE_READLINE instead of USE_READLINE
+  - Also install mickey.h, TODO: rename to .hpp
 Other
   - fix abs() long long compiler warning
 
