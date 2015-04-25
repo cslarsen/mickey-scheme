@@ -7,6 +7,10 @@ IMMUTABLE STUFF
 The (scheme eval) (environment) procedure should return an IMMUTABLE
 environment. Currently, it's mutable (everything in Mickey is).
 
+List print bug
+
+> (cons 'a 'b) ==> a . b instead of (a . b)
+
 REPL bug
 
 #; mickey> 2 . 3
