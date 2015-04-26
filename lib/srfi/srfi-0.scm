@@ -9,5 +9,5 @@
   (import (mickey library))
   (export cond-expand)
   (begin
-    (open-internal-library "libsrfi-0.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libsrfi-0" 'lazy 'global)
     (define cond-expand (bind-syntax "srfi0_cond_expand"))))

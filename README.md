@@ -76,7 +76,7 @@ Current Shortcomings
 
   * It's __incomplete__: Some key Scheme features are still missing, and
     quite some R7RS library functions (currently it supports 195 of 335
-    R7RS definitinos).
+    R7RS definitions).
 
   * It's __buggy__: There are inherent bugs in the engine as well as
     erronous implementations of library functions.

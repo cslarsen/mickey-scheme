@@ -34,11 +34,31 @@ named_function_t exports_dlopen[] = {
   {"dlclose", proc_dlclose, false},
   {"dlerror", proc_dlerror, false},
   {"dlopen", proc_dlopen, false},
+  {"dlopen-determine-extension", proc_dlopen_determine_extension, false},
   {"dlopen-internal", proc_dlopen_internal, false},
+  {"dlopen-internal-determine-extension",
+    proc_dlopen_internal_determine_extension, false},
   {"dlopen-self", proc_dlopen_self, false},
   {"dlsym", proc_dlsym, false},
   {"dlsym-syntax", proc_dlsym_syntax, false},
   {NULL, NULL, false}};
+
+/*
+ * Platform's native dynamic library extension.
+ * TODO: Is there a tool for doing stuff like this?
+ */
+  static const char dlextension[] =
+#ifdef LINUX
+    "so";
+#elif defined(__APPLE__) and defined(__MACH__)
+    "dylib";
+#elif defined(WINDOWS)
+    "dll";
+#elif defined(UNIX)
+    "so";
+#else
+# error "Unable to determine dynamic library extension for unknown platform."
+#endif
 
 /*
  * ... and the function to parse it
@@ -102,6 +122,24 @@ cons_t* proc_dlopen(cons_t* p, environment_t*)
 }
 
 /*
+ * Signature: (dlopen-determine-extension <basename> <mode options> ...)
+ *
+ * This is a wrapper around (dlopen) that accepts a filename without an
+ * extension like .dll, .so or .dylib. Based on compilation flags, it will add
+ * the proper extension.
+ */
+cons_t* proc_dlopen_determine_extension(cons_t* p, environment_t* env)
+{
+  assert_length_min(p, 1);
+  assert_type(STRING, car(p));
+
+  const std::string base = sbasename(car(p)->string) + "." + dlextension;
+  p = deep_copy(p);
+  car(p)->string = base.c_str();
+  return proc_dlopen(p, env);
+}
+
+/*
  * Signature: (dlopen <mode options> ...)
  *
  * Opens the currently running code.
@@ -153,6 +191,17 @@ cons_t* proc_dlopen_internal(cons_t* p, environment_t*)
   raise(runtime_exception(format("Could not find shared object file: %s",
     base.c_str())));
   return nil();
+}
+
+cons_t* proc_dlopen_internal_determine_extension(cons_t* p, environment_t* env)
+{
+  assert_length_min(p, 1);
+  assert_type(STRING, car(p));
+
+  const std::string base = sbasename(car(p)->string) + "." + dlextension;
+  p = deep_copy(p);
+  car(p)->string = base.c_str();
+  return proc_dlopen_internal(p, env);
 }
 
 static lambda_t dlsym_helper(cons_t* p)
