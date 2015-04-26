@@ -15,5 +15,5 @@ Please post bugfixes and suggestions to the author.   /  \_
   (import (mickey library))
   (export case-lambda)
   (begin
-    (open-internal-library "libsrfi-16.so" 'global 'lazy)
+    (open-internal-library-determine-extension "libsrfi-16" 'global 'lazy)
     (define case-lambda (bind-syntax "proc_case_lambda"))))

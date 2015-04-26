@@ -39,7 +39,7 @@ Please post bugfixes and suggestions to the author.   /  \_
        Basically all the functionality in this library resides in the shared
        object file below.
     |#
-    (open-internal-library "libscheme-char.so" 'global 'lazy)
+    (open-internal-library-determine-extension "libscheme-char" 'global 'lazy)
 
     (define char-alphabetic? (bind-procedure "proc_char_alphabeticp"))
     (define char-downcase    (bind-procedure "proc_char_downcase"))
