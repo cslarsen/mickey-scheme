@@ -154,8 +154,7 @@ int main(int argc, char** argv)
     if ( getenv(MICKEY_LIB) )
       add_lib_path(&global_opts, getenv(MICKEY_LIB));
     else {
-      const char* s = strdup(format("%s/lib/",
-                        global_opts.mickey_absolute_path).c_str());
+      const char* s = strdup(global_opts.mickey_absolute_lib_path);
       add_lib_path(&global_opts,s);
       global_opts.mickey_absolute_lib_path = s;
     }
