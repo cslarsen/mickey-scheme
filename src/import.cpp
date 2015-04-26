@@ -536,6 +536,19 @@ static void import_scheme_file(environment_t *r, const char* file)
   import(r, library_file(file));
 }
 
+static const char* dlext()
+{
+#ifdef LINUX
+  return "so";
+#elif defined(WINDOWS)
+  return "dll";
+#elif defined(__APPLE__)
+  return "dylib";
+#else
+# error "Unknown platform."
+#endif
+}
+
 static void import_posix_dlopen(environment_t* r)
 {
   /*
@@ -546,8 +559,8 @@ static void import_posix_dlopen(environment_t* r)
    * when process exit (we'll deal with resource handling like that later)
    * (TODO)
    */
-  static void *lib = dlopen(library_file("libposix-dlopen.so").c_str(),
-                       RTLD_LAZY | RTLD_GLOBAL);
+  static void *lib = dlopen(library_file(format("libposix-dlopen.%s",
+          dlext())).c_str(), RTLD_LAZY | RTLD_GLOBAL);
 
   if ( lib == NULL )
     raise(runtime_exception(format("(posix dlopen): %s", dlerror())));

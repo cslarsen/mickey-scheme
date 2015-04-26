@@ -10,6 +10,7 @@
  */
 
 #include <stdlib.h>
+#include <unistd.h>
 #include <libgen.h> // dirname
 #include "mickey.h"
 #include "repl.h"
@@ -155,10 +156,15 @@ int main(int argc, char** argv)
       add_lib_path(&global_opts, getenv(MICKEY_LIB));
     else {
       const char* s = strdup(global_opts.mickey_absolute_lib_path);
-      add_lib_path(&global_opts,s);
+      add_lib_path(&global_opts, s);
       global_opts.mickey_absolute_lib_path = s;
     }
   }
+
+  // dirty hack to add where to load dynamic libs from
+  char tmp[1+4096];
+  add_lib_path(&global_opts, realpath(format("%s/../lib/mickey/",
+          global_opts.mickey_absolute_path).c_str(), tmp));
 
   std::vector<std::string> files;
 

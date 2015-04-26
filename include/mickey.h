@@ -16,7 +16,7 @@
 #define MICKEY_VERSION_MINOR 1
 
 const char MICKEY_NAME[] = "Mickey Scheme";
-const char MICKEY_COPYRIGHT[] = "(C) 2011-2013 Christian Stigen Larsen";
+const char MICKEY_COPYRIGHT[] = "(C) 2011-2015 Christian Stigen Larsen";
 
 /*
  * The following files are REQUIRED to link to when making
