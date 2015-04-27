@@ -15,7 +15,7 @@
     (posix signal))
 
   (begin
-    (open-internal-library "libposix-kill.so" 'global 'lazy)
+    (open-internal-library-determine-extension "libposix-kill" 'global 'lazy)
 
     (define proc-kill (bind-procedure "proc_kill"))
 

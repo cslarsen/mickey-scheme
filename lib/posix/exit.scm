@@ -12,7 +12,7 @@
   (import (only (scheme base) define)
           (mickey library))
   (begin
-    (open-internal-library "libposix-exit.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libposix-exit" 'lazy 'global)
 
     ;; Calls exit(3) with given integer status (exit code).
     ;;

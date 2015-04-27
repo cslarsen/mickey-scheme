@@ -13,7 +13,8 @@
     size-of)
 
   (begin
-    (open-internal-library "libimplementation-base.so" 'global 'lazy)
+    (open-internal-library-determine-extension
+      "libimplementation-base" 'global 'lazy)
 
     (define implementation-version
       (bind-procedure "proc_implementation_version"))

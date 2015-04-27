@@ -18,7 +18,8 @@ Distributed under the LGPL 2.1
     global-options)
 
   (begin
-    (open-internal-library "libmickey-internals.so" 'global 'lazy)
+    (open-internal-library-determine-extension
+      "libmickey-internals" 'global 'lazy)
 
     (define global-options
       (bind-procedure "global_options"))))

@@ -18,7 +18,7 @@
     (scheme base))
 
   (begin
-    (open-internal-library "libposix-unistd.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libposix-unistd" 'lazy 'global)
 
     (define gethostname (bind-procedure "proc_gethostname"))
     (define getpid (bind-procedure "proc_getpid"))

@@ -22,7 +22,7 @@
     (posix signal))
 
   (begin
-    (open-internal-library "libposix-sysconf.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libposix-sysconf" 'lazy 'global)
 
     ;; Syntax: (sysconf <symbol>)
     ;;
