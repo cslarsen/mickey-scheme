@@ -12,6 +12,7 @@ Autotools
   - cross-platform sdl, add as an optional module to install (or just install
   if it's detected, make it possible to turn off)
   - add cxxflags -w -wall etc
+  - Add make check target to run tests (also add tests in dist)
 Other
   - fix abs() long long compiler warning
 

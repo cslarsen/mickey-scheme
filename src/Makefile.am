@@ -1,5 +1,5 @@
 AM_CPPFLAGS = -I$(top_srcdir)/include
-AM_CXXFLAGS = -g -W -Wall -fno-exceptions -fno-rtti -DDEBUG
+AM_CXXFLAGS = -W -Wall -fno-exceptions -fno-rtti
 
 bin_PROGRAMS = mickey
 
