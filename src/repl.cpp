@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifdef HAVE_READLINE
+#ifdef HAVE_LIBREADLINE
 # include <readline/readline.h>
 # include <readline/history.h>
 #endif
@@ -85,7 +85,7 @@ bool isprefix(const char* prefix, const char* fullstr)
   return *prefix == '\0';
 }
 
-#ifdef HAVE_READLINE
+#ifdef HAVE_LIBREADLINE
 char** auto_complete(const char *s, int, int)
 {
   /*
@@ -204,12 +204,12 @@ char* readline(const char* prompt)
 
   return *buf? buf : NULL;
 }
-#endif // HAVE_READLINE
+#endif // HAVE_LIBREADLINE
 
 void print_banner(environment_t*)
 {
   std::string readline_version;
-  #ifdef HAVE_READLINE
+  #ifdef HAVE_LIBREADLINE
     readline_version = format("Readline %d.%d",
       (rl_readline_version & 0xFF00) >> 8, rl_readline_version & 0x00FF);
   #endif
@@ -233,7 +233,7 @@ int repl()
 
   print_banner(env);
 
-  #ifdef HAVE_READLINE
+  #ifdef HAVE_LIBREADLINE
   init_readline();
   #endif
 
@@ -254,7 +254,7 @@ int repl()
       if ( *trimr(input) == '\0' )
         continue; // empty command
 
-      #ifdef HAVE_READLINE
+      #ifdef HAVE_LIBREADLINE
       add_history(input);
       #endif
 
@@ -303,7 +303,7 @@ int repl()
         s += input;
         delete p;
 
-        #ifdef HAVE_READLINE
+        #ifdef HAVE_LIBREADLINE
         free(input);
         input = NULL;
         #endif
@@ -311,7 +311,7 @@ int repl()
         p = parse(s.c_str(), env);
       }
 
-      #ifdef HAVE_READLINE
+      #ifdef HAVE_LIBREADLINE
       if ( input ) free(input);
       #endif
 
