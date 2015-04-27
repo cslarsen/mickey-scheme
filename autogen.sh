@@ -1,8 +1,14 @@
 #!/bin/bash
 
 echo "Generating autotools files; this may take a while ..."
+
+libtoolize=$(which glibtoolize)
+if ! [ -x "$libtoolize" ]; then
+  libtoolize=libtoolize
+fi
+
 python make-library-m4.py > library.m4
-glibtoolize
+$libtoolize
 aclocal
 autoheader
 automake --include-deps --add-missing --copy

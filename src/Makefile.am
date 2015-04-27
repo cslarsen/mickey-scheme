@@ -74,97 +74,97 @@ libmickey_la_SOURCES=apply.cpp \
 										 tokenizer.cpp \
 										 util.cpp
 
-libscheme_base_la_SOURCES=scheme-base.cpp \
-													scheme-base-math.cpp \
-													scheme-base-predicates.cpp
+libscheme_base_la_SOURCES=library/scheme-base.cpp \
+													library/scheme-base-math.cpp \
+													library/scheme-base-predicates.cpp
 libscheme_base_la_LIBADD=libmickey.la
 
-libposix_dlopen_la_SOURCES=posix-dlopen.cpp
+libposix_dlopen_la_SOURCES=library/posix-dlopen.cpp
 libposix_dlopen_la_LIBADD=libmickey.la
 
-libc_stdio_la_SOURCES=c-stdio.cpp
+libc_stdio_la_SOURCES=library/c-stdio.cpp
 libc_stdio_la_LIBADD=libmickey.la
 
-libmickey_environment_la_SOURCES=mickey-environment.cpp
+libmickey_environment_la_SOURCES=library/mickey-environment.cpp
 libmickey_environment_la_LIBADD=libmickey.la
 
-libeval_cont_la_SOURCES=eval-cont.cpp
+libeval_cont_la_SOURCES=library/eval-cont.cpp
 libeval_cont_la_LIBADD=libmickey.la
 
-libimplementation_base_la_SOURCES=implementation-base.cpp
+libimplementation_base_la_SOURCES=library/implementation-base.cpp
 libimplementation_base_la_LIBADD=libmickey.la
 
-libmickey_gensym_la_SOURCES=mickey-gensym.cpp
+libmickey_gensym_la_SOURCES=library/mickey-gensym.cpp
 libmickey_gensym_la_LIBADD=libmickey.la
 
-libmickey_internals_la_SOURCES=mickey-internals.cpp
+libmickey_internals_la_SOURCES=library/mickey-internals.cpp
 libmickey_internals_la_LIBADD=libmickey.la
 
-libmickey_misc_la_SOURCES=mickey-misc.cpp
+libmickey_misc_la_SOURCES=library/mickey-misc.cpp
 libmickey_misc_la_LIBADD=libmickey.la
 
-libscheme_char_la_SOURCES=scheme-char.cpp
+libscheme_char_la_SOURCES=library/scheme-char.cpp
 libscheme_char_la_LIBADD=libmickey.la
 
-libscheme_file_la_SOURCES=scheme-file.cpp
+libscheme_file_la_SOURCES=library/scheme-file.cpp
 libscheme_file_la_LIBADD=libmickey.la
 
-libscheme_load_la_SOURCES=scheme-load.cpp
+libscheme_load_la_SOURCES=library/scheme-load.cpp
 libscheme_load_la_LIBADD=libmickey.la
 
-libscheme_math_la_SOURCES=scheme-math.cpp
+libscheme_math_la_SOURCES=library/scheme-math.cpp
 libscheme_math_la_LIBADD=libmickey.la
 
-libscheme_process_context_la_SOURCES=scheme-process-context.cpp
+libscheme_process_context_la_SOURCES=library/scheme-process-context.cpp
 libscheme_process_context_la_LIBADD=libmickey.la
 
-libscheme_read_la_SOURCES=scheme-read.cpp
+libscheme_read_la_SOURCES=library/scheme-read.cpp
 libscheme_read_la_LIBADD=libmickey.la
 
-libscheme_repl_la_SOURCES=scheme-repl.cpp
+libscheme_repl_la_SOURCES=library/scheme-repl.cpp
 libscheme_repl_la_LIBADD=libmickey.la
 
-libscheme_time_la_SOURCES=scheme-time.cpp
+libscheme_time_la_SOURCES=library/scheme-time.cpp
 libscheme_time_la_LIBADD=libmickey.la
 
-libscheme_eval_la_SOURCES=scheme-eval.cpp
+libscheme_eval_la_SOURCES=library/scheme-eval.cpp
 libscheme_eval_la_LIBADD=libmickey.la
 
-libscheme_write_la_SOURCES=scheme-write.cpp
+libscheme_write_la_SOURCES=library/scheme-write.cpp
 libscheme_write_la_LIBADD=libmickey.la
 
-libsrfi_0_la_SOURCES=srfi-0.cpp
+libsrfi_0_la_SOURCES=library/srfi-0.cpp
 libsrfi_0_la_LIBADD=libmickey.la
 
-libsrfi_16_la_SOURCES=srfi-16.cpp
+libsrfi_16_la_SOURCES=library/srfi-16.cpp
 libsrfi_16_la_LIBADD=libmickey.la
 
-libsrfi_4_la_SOURCES=srfi-4.cpp
+libsrfi_4_la_SOURCES=library/srfi-4.cpp
 libsrfi_4_la_LIBADD=libmickey.la
 
-libposix_exit_la_SOURCES=posix-exit.cpp
+libposix_exit_la_SOURCES=library/posix-exit.cpp
 libposix_exit_la_LIBADD=libmickey.la
 
-libposix_fork_la_SOURCES=posix-fork.cpp
+libposix_fork_la_SOURCES=library/posix-fork.cpp
 libposix_fork_la_LIBADD=libmickey.la
 
-libposix_kill_la_SOURCES=posix-kill.cpp
+libposix_kill_la_SOURCES=library/posix-kill.cpp
 libposix_kill_la_LIBADD=libmickey.la
 
-libposix_signal_la_SOURCES=posix-signal.cpp
+libposix_signal_la_SOURCES=library/posix-signal.cpp
 libposix_signal_la_LIBADD=libmickey.la
 
-libposix_sysconf_la_SOURCES=posix-sysconf.cpp
+libposix_sysconf_la_SOURCES=library/posix-sysconf.cpp
 libposix_sysconf_la_LIBADD=libmickey.la
 
-libposix_time_la_SOURCES=posix-time.cpp
+libposix_time_la_SOURCES=library/posix-time.cpp
 libposix_time_la_LIBADD=libmickey.la
 
-libposix_uname_la_SOURCES=posix-uname.cpp
+libposix_uname_la_SOURCES=library/posix-uname.cpp
 libposix_uname_la_LIBADD=libmickey.la
 
-libposix_unistd_la_SOURCES=posix-unistd.cpp
+libposix_unistd_la_SOURCES=library/posix-unistd.cpp
 libposix_unistd_la_LIBADD=libmickey.la
 
-libposix_wait_la_SOURCES=posix-wait.cpp
+libposix_wait_la_SOURCES=library/posix-wait.cpp
 libposix_wait_la_LIBADD=libmickey.la

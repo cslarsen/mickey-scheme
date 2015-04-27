@@ -8,6 +8,10 @@ Autotools
   - hard-coded libposix-dlopen.so, should use a portable way to load (or be
   nasty and symlink .so to dylib etc).
   - Also install mickey.h, TODO: rename to .hpp
+  - HAVE_LIBREADLINE, inclusion breaks on linux
+  - cross-platform sdl, add as an optional module to install (or just install
+  if it's detected, make it possible to turn off)
+  - add cxxflags -w -wall etc
 Other
   - fix abs() long long compiler warning
 

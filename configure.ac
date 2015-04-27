@@ -6,7 +6,7 @@ AC_INIT([mickey], [0.1])
 AC_CONFIG_SRCDIR([src/mickey.cpp])
 AC_CONFIG_HEADERS([include/config.h])
 AC_CONFIG_MACRO_DIRS([m4])
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 LT_INIT
 
 # Checks for programs.
