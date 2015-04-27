@@ -18,6 +18,6 @@ Please post bugfixes and suggestions to the author.   /  \_
     eval)
 
   (begin
-    (open-internal-library "libscheme-eval.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libscheme-eval" 'lazy 'global)
     (define eval 'dummy-value)
     (define environment (bind-procedure "proc_environment"))))

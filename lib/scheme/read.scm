@@ -17,7 +17,7 @@ Please post bugfixes and suggestions to the author.   /  \_
   (export read)
 
   (begin
-    (open-internal-library "libscheme-read.so" 'lazy 'global)
+    (open-internal-library-determine-extension "libscheme-read" 'lazy 'global)
     (define read-port (bind-procedure "proc_read_from_port"))
 
     ;; (read) --> reads from current-input-port

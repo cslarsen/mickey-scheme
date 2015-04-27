@@ -23,7 +23,8 @@ Please post bugfixes and suggestions to the author.   /  \_
     get-environment-variables)
 
   (begin
-    (open-internal-library "libscheme-process-context.so" 'global 'lazy)
+    (open-internal-library-determine-extension
+      "libscheme-process-context" 'global 'lazy)
 
     (define command-line (bind-procedure "proc_command_line"))
     (define exit (bind-procedure "proc_exit"))
