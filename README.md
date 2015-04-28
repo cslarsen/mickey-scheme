@@ -130,20 +130,33 @@ Compiling
 If you're building from the github sources, you need GNU autotools.
 
     $ ./autogen.sh
-    $ mkdir inst; $ ./configure --prefix=`pwd`/inst
+    $ mkdir debug
+    $ ./configure --prefix=`pwd`/debug
+    $ make -j
 
 To test it,
 
     $ make -j check
 
-You can use another prefix if you like, of course.
+and to install it,
 
     $ make -j install
 
-You should now be able to run mickey from `inst/bin/mickey`.
+You should now be able to run mickey from `debug/bin/mickey`.
 
 The code has been developed on OS X and Linux, so if you have the packages
 mentioned above, compilation should go smoothly.
+
+Note that the above command will build with default flags. To see how you can
+build with optimization flags, look at the script `build-release.sh`.
+
+For instance, you could do
+
+    $ CPPFLAGS="-DNDEBUG" \
+      CXXFLAGS="-O3 -march=native -mtune=native -ffast-math" \
+        ./configure && make -j
+
+to generate code tuned for your specific CPU.
 
 Feature flags
 -------------
