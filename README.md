@@ -132,6 +132,10 @@ If you're building from the github sources, you need GNU autotools.
     $ ./autogen.sh
     $ mkdir inst; $ ./configure --prefix=`pwd`/inst
 
+To test it,
+
+    $ make -j check
+
 You can use another prefix if you like, of course.
 
     $ make -j install

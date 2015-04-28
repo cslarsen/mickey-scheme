@@ -25,3 +25,8 @@ pkginclude_HEADERS = \
 										 include/util.h
 
 include library.m4
+
+TESTS = test/tests.scm
+TEST_EXTENSIONS = .scm
+SCM_LOG_COMPILER = $(prefix)/bin/mickey
+AM_SCM_LOG_FLAGS = -Itest

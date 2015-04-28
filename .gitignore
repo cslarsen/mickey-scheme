@@ -35,4 +35,8 @@ src/Makefile.in
 src/library/.deps
 src/library/.dirstamp
 src/mickey
+test-driver
+test-suite.log
+test/tests.log
+test/tests.trs
 work/
