@@ -8,8 +8,8 @@ if ! [ -x "$libtoolize" ]; then
 fi
 
 python make-library-m4.py lib > library.m4
-$libtoolize
-aclocal
+$libtoolize --copy
+aclocal -I m4 --install
 autoheader
 automake --include-deps --add-missing --copy
 autoconf
