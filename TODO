@@ -12,6 +12,11 @@ Autotools
   - Add `make check` target to run tests
   - Have tests print out according to GNU standards (PASS/FAIL)
 
+IMPORT-BUG
+
+(import (only (scheme base) display)) <== display is in (scheme write), so that
+should be an error, but mickey silently ignores it.
+
 VECTOR-BUG
 
 #(1 2 foo) is ok, but (vector 1 2 foo) should evlis and fail.

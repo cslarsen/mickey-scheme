@@ -26,7 +26,13 @@ pkginclude_HEADERS = \
 
 include library.m4
 
-TESTS = test/tests.scm
+AM_COLOR_TESTS=no
 TEST_EXTENSIONS = .scm
 SCM_LOG_COMPILER = $(prefix)/bin/mickey
-AM_SCM_LOG_FLAGS = -Itest
+AM_SCM_LOG_FLAGS = -Itests
+TESTS = \
+				tests/test-scheme-base.scm \
+				tests/test-scheme-char.scm \
+				tests/test-scheme-cxr.scm \
+				tests/test-scheme-inexact.scm \
+				tests/test-scheme-load.scm
