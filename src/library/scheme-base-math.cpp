@@ -9,7 +9,7 @@
  *
  */
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <cmath>
 #include "library/scheme-base.h"
 
@@ -507,13 +507,13 @@ cons_t* proc_lcm(cons_t* p, environment_t* e)
 
   case 1:
     assert_type(INTEGER, car(p));
-    return integer(abs(car(p)->number.integer));
+    return integer(std::abs(car(p)->number.integer));
 
   case 2: {
     assert_type(INTEGER, cadr(p));
 
-    int a = abs(car(p)->number.integer),
-        b = abs(cadr(p)->number.integer);
+    int a = std::abs(car(p)->number.integer),
+        b = std::abs(cadr(p)->number.integer);
 
     return integer(lcm(a, b));
   }
@@ -576,14 +576,14 @@ cons_t* proc_gcd(cons_t* p, environment_t* e)
 
   case 1:
     assert_type(INTEGER, car(p));
-    return integer(abs(car(p)->number.integer));
+    return integer(std::abs(car(p)->number.integer));
 
   case 2: {
     assert_type(INTEGER, car(p));
     assert_type(INTEGER, cadr(p));
 
-    int a = abs(car(p)->number.integer),
-        b = abs(cadr(p)->number.integer);
+    int a = std::abs(car(p)->number.integer),
+        b = std::abs(cadr(p)->number.integer);
 
     return integer(gcd(a, b));
   }

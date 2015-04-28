@@ -11,7 +11,6 @@ Autotools
   - For optional libraries, compile if they have support (SDL, gpg, etc.)
   - Add `make check` target to run tests
   - Have tests print out according to GNU standards (PASS/FAIL)
-  - Fix abs() warning
 
 VECTOR-BUG
 
