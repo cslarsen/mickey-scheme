@@ -10,6 +10,11 @@ Autotools
   - Make it possible to deactivate readline with configure --without-readline
   - Add --with-xxx for optional libraries (SDL, gpg, etc.)
 
+EQUAL?-EXACTNESS-BUG
+
+> (equal? #e-17 #i-17) should return #f, because it should compare exactness as
+well, but it doesn't.
+
 IMPORT-BUG
 
 (import (only (scheme base) display)) <== display is in (scheme write), so that
