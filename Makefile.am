@@ -33,6 +33,7 @@ AM_SCM_LOG_FLAGS = -Itests
 TESTS = \
 				tests/programs/celsius-fahrenheit.scm \
 				tests/programs/fibonacci.scm \
+				tests/programs/tail-call-elimination.scm \
 				tests/test-scheme-base.scm \
 				tests/test-scheme-char.scm \
 				tests/test-scheme-cxr.scm \
