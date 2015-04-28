@@ -15,6 +15,7 @@ config.log
 config.status
 config.sub
 configure
+debug
 depcomp
 include/config.h
 include/config.h.in
@@ -26,6 +27,7 @@ ltmain.sh
 m4
 mickey
 missing
+release
 src/.deps/
 src/.libs
 src/Makefile
