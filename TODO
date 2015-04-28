@@ -8,9 +8,7 @@ Autotools
   - Loading of libposix-dlopen.so doesn't work on Linux.
   - Readline doesn't compile on Linux
   - Make it possible to deactivate readline with configure --without-readline
-  - For optional libraries, compile if they have support (SDL, gpg, etc.)
-  - Add `make check` target to run tests
-  - Have tests print out according to GNU standards (PASS/FAIL)
+  - Add --with-xxx for optional libraries (SDL, gpg, etc.)
 
 IMPORT-BUG
 
