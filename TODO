@@ -13,6 +13,7 @@ Autotools
   if it's detected, make it possible to turn off)
   - add cxxflags -w -wall etc
   - Add make check target to run tests (also add tests in dist)
+  - Change tests so they conform to automake, i.e. PASS/FAIL etc.
 Other
   - fix abs() long long compiler warning
 
