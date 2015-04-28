@@ -31,6 +31,7 @@ TEST_EXTENSIONS = .scm
 SCM_LOG_COMPILER = $(prefix)/bin/mickey
 AM_SCM_LOG_FLAGS = -Itests
 TESTS = \
+				tests/programs/celsius-fahrenheit.scm \
 				tests/programs/fibonacci.scm \
 				tests/test-scheme-base.scm \
 				tests/test-scheme-char.scm \
