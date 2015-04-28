@@ -46,18 +46,19 @@ named_function_t exports_dlopen[] = {
 /*
  * Platform's native dynamic library extension.
  * TODO: Is there a tool for doing stuff like this?
+ *
+ * See http://sourceforge.net/p/predef/wiki/OperatingSystems/ for macros.
  */
   static const char dlextension[] =
-#ifdef LINUX
+#ifdef defined(__gnu_linux__)
     "so";
-#elif defined(__APPLE__) and defined(__MACH__)
+#elif defined(__APPLE__) && defined(__MACH__)
     "dylib";
-#elif defined(WINDOWS)
+#elif defined(_WIN32)
     "dll";
-#elif defined(UNIX)
-    "so";
 #else
 # error "Unable to determine dynamic library extension for unknown platform."
+    "";
 #endif
 
 /*

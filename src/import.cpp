@@ -538,14 +538,16 @@ static void import_scheme_file(environment_t *r, const char* file)
 
 static const char* dlext()
 {
-#ifdef LINUX
+  // See http://sourceforge.net/p/predef/wiki/OperatingSystems/
+#if defined(__gnu_linux__)
   return "so";
-#elif defined(WINDOWS)
+#elif defined(_WIN32)
   return "dll";
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) && defined(__MACH__)
   return "dylib";
 #else
 # error "Unknown platform."
+  return NULL;
 #endif
 }
 
