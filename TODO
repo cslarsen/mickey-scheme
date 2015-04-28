@@ -1,6 +1,4 @@
 Autotools
-  - partition src/* dir to src/lib or something, like it used to be
-  - put dl libs in /usr/share/mickey/0.1.0/lib*
   - put scheme lib files in /usr/share/micke/0.1.0/modules or something
   - add man files
   - give a big fat warning about no garbage collector having been made yet, in
