@@ -5,11 +5,11 @@ Autotools
   case people install mickey
   - hard-coded libposix-dlopen.so, should use a portable way to load (or be
   nasty and symlink .so to dylib etc).
-  - Also install mickey.h, TODO: rename to .hpp
+  - For distributed include files, use include/mickey/0.1/foobar.h instead of
+  just mickey.
   - HAVE_LIBREADLINE, inclusion breaks on linux
   - cross-platform sdl, add as an optional module to install (or just install
   if it's detected, make it possible to turn off)
-  - add cxxflags -w -wall etc
   - Add make check target to run tests (also add tests in dist)
   - Change tests so they conform to automake, i.e. PASS/FAIL etc.
 Other
