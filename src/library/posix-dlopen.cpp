@@ -50,7 +50,7 @@ named_function_t exports_dlopen[] = {
  * See http://sourceforge.net/p/predef/wiki/OperatingSystems/ for macros.
  */
   static const char dlextension[] =
-#ifdef defined(__gnu_linux__)
+#if defined(__gnu_linux__)
     "so";
 #elif defined(__APPLE__) && defined(__MACH__)
     "dylib";
