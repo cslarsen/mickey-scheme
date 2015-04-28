@@ -3,7 +3,7 @@
 # Set prefix to your install location
 PREFIX=""
 CPPFLAGS="-DNDEBUG"
-CXXFLAGS="-O3"
+CXXFLAGS="-O3 -march=native -mtune=native -ffast-math"
 export CPPFLAGS CXXFLAGS
 
 if [ -z "$PREFIX" ]; then
