@@ -1,19 +1,17 @@
 Autotools
-  - put scheme lib files in /usr/share/micke/0.1.0/modules or something
-  - add man files
-  - give a big fat warning about no garbage collector having been made yet, in
-  case people install mickey
-  - hard-coded libposix-dlopen.so, should use a portable way to load (or be
-  nasty and symlink .so to dylib etc).
-  - For distributed include files, use include/mickey/0.1/foobar.h instead of
-  just mickey.
-  - HAVE_LIBREADLINE, inclusion breaks on linux
-  - cross-platform sdl, add as an optional module to install (or just install
-  if it's detected, make it possible to turn off)
-  - Add make check target to run tests (also add tests in dist)
-  - Change tests so they conform to automake, i.e. PASS/FAIL etc.
-Other
-  - fix abs() long long compiler warning
+  - Use mickey/$VERSION subfolders for
+    - C++ include files
+    - C++ library files
+    - Scheme library files
+  - Add man-pages
+  - Print a warning about Mickey not having any GC yet in the REPL.
+  - Loading of libposix-dlopen.so doesn't work on Linux.
+  - Readline doesn't compile on Linux
+  - Make it possible to deactivate readline with configure --without-readline
+  - For optional libraries, compile if they have support (SDL, gpg, etc.)
+  - Add `make check` target to run tests
+  - Have tests print out according to GNU standards (PASS/FAIL)
+  - Fix abs() warning
 
 VECTOR-BUG
 
