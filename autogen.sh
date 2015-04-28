@@ -7,7 +7,7 @@ if ! [ -x "$libtoolize" ]; then
   libtoolize=libtoolize
 fi
 
-python make-library-m4.py > library.m4
+python make-library-m4.py lib > library.m4
 $libtoolize
 aclocal
 autoheader
