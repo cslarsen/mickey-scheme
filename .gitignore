@@ -24,6 +24,7 @@ library.m4
 libtool
 ltmain.sh
 m4
+mickey-*
 missing
 release
 src/.deps/
