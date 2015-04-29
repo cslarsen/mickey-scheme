@@ -161,10 +161,13 @@ int main(int argc, char** argv)
     }
   }
 
-  // dirty hack to add where to load dynamic libs from
-  char tmp[1+4096];
-  add_lib_path(&global_opts, realpath(format("%s/../lib/mickey/",
-          global_opts.mickey_absolute_path).c_str(), tmp));
+  // TODO: Another dirty hack to add where to load dynamic libs from.
+  char *s = realpath(format("%s/../lib/mickey/",
+                           global_opts.mickey_absolute_path).c_str(), NULL);
+  if ( s != NULL ) {
+    add_lib_path(&global_opts, s);
+    free(s);
+  }
 
   std::vector<std::string> files;
 

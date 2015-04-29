@@ -28,7 +28,7 @@ include library.m4
 
 AM_COLOR_TESTS=no
 TEST_EXTENSIONS = .scm
-SCM_LOG_COMPILER = $(prefix)/bin/mickey -L$(prefix)/lib/mickey -L$(prefix)/lib
+SCM_LOG_COMPILER = src/mickey -Llib -Lsrc/.libs
 AM_SCM_LOG_FLAGS = -Itests
 TESTS = \
 				tests/programs/bytevector.scm \

@@ -41,9 +41,18 @@ void set_default(struct options_t* p, int argc, char** argv)
    */
   static char t[1+MAXPATHLEN];
   p->mickey_absolute_path = dirname(realpath(argv[0], t));
-  p->mickey_absolute_lib_path = strdup(realpath(
-    format("%s/../share/mickey/" PACKAGE_VERSION "/lib/",
-      p->mickey_absolute_path).c_str(), t));
+
+  // TODO: This is really dirty and should be fixed. We want a better way to
+  // find the library files.  Perhaps the shared objects should be placed in
+  // the share-folder instead, along with the Scheme library files.
+  char *lp = realpath(format("%s/../share/mickey/" PACKAGE_VERSION "/lib/",
+                             p->mickey_absolute_path).c_str(), NULL);
+  if ( lp != NULL ) {
+    p->mickey_absolute_lib_path = strdup(lp);
+    free(lp);
+  } else if ( p->mickey_absolute_lib_path == NULL ) {
+    p->mickey_absolute_lib_path = strdup(p->mickey_absolute_path);
+  }
 
   /*
    * Set up feature environment
