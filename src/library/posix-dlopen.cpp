@@ -53,12 +53,12 @@ named_function_t exports_dlopen[] = {
 #if defined(__gnu_linux__)
     "so";
 #elif defined(__APPLE__) && defined(__MACH__)
-    "dylib";
+    "so";
 #elif defined(_WIN32)
     "dll";
 #else
 # error "Unable to determine dynamic library extension for unknown platform."
-    "";
+    "so";
 #endif
 
 /*

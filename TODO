@@ -10,6 +10,7 @@ Autotools
   - Make it possible to deactivate readline with configure --without-readline
   - Add --with-xxx for optional libraries (SDL, gpg, etc.)
   - Installation to include/-folder lacks types subfolder.
+  - Use libltdl to load plugins.
 
 EQUAL?-EXACTNESS-BUG
 

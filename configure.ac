@@ -9,7 +9,7 @@ AC_CONFIG_HEADERS([include/config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([1.11 -Wall -Werror subdir-objects])
 AM_PROG_AR
-LT_INIT
+LT_INIT([dlopen])
 
 # Checks for programs.
 AC_PROG_CXX
@@ -40,7 +40,6 @@ AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 AC_TYPE_UINT8_T
-
 
 # Checks for library functions.
 AC_FUNC_FORK

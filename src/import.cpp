@@ -544,10 +544,10 @@ static const char* dlext()
 #elif defined(_WIN32)
   return "dll";
 #elif defined(__APPLE__) && defined(__MACH__)
-  return "dylib";
+  return "so";
 #else
 # error "Unknown platform."
-  return NULL;
+  return "so";
 #endif
 }
 
