@@ -276,7 +276,8 @@ int repl()
           printf("\n");
           printf("   To quit, hit CTRL+D or type (exit).  Use (help) for an introduction.\n");
           printf("   Distributed under the LGPL 2.1; see LICENSE\n");
-          printf("   Warning: There's no GC in Mickey, yet!\n");
+          printf("\n");
+          printf("   WARNING: There's no garbage collector in Mickey yet!\n");
           printf("|#\n\n");
 
           import_defaults(env);
