@@ -30,6 +30,8 @@ Distributed under the LGPL 2.1; see LICENSE
            (display (string-append
              (if success "PASS" "FAIL") ": "))
            (display file)
+           (display " ")
+           (display total-tests)
            (display " - ")
            (display (quote code))
 
@@ -40,8 +42,6 @@ Distributed under the LGPL 2.1; see LICENSE
 
            (display " ==> ")
            (display actual-result)
-           (display " ")
-           (display total-tests)
            (newline)))))
 
     (define-syntax perform-test-expect-failure
@@ -56,6 +56,8 @@ Distributed under the LGPL 2.1; see LICENSE
            (display (string-append
              (if success "XPASS" "XFAIL") ": "))
            (display file)
+           (display " ")
+           (display total-tests)
            (display " - ")
            (display (quote code))
 
@@ -66,8 +68,6 @@ Distributed under the LGPL 2.1; see LICENSE
 
            (display " ==> ")
            (display actual-result)
-           (display " ")
-           (display total-tests)
            (display " ")
            (display message)
            (newline)))))
