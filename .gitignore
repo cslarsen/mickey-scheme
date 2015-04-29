@@ -11,6 +11,8 @@ Makefile
 aclocal.m4
 autom4te.cache
 build-aux
+build-debug
+build-release
 compile
 config.guess
 config.status

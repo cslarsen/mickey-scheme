@@ -26,7 +26,7 @@ pkginclude_HEADERS = \
 
 include library.m4
 
-AM_COLOR_TESTS=no
+AM_COLOR_TESTS = no
 TEST_EXTENSIONS = .scm
 SCM_LOG_COMPILER = src/mickey -Llib -Lsrc/.libs
 AM_SCM_LOG_FLAGS = -Itests
