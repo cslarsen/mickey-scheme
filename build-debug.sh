@@ -1,17 +1,21 @@
 #!/bin/bash
 
-# Set prefix to your install location
-PREFIX=""
-CPPFLAGS="-DDEBUG"
-CXXFLAGS="-g -O0" # If your compiler supports -Og, use that.
-export CPPFLAGS CXXFLAGS
+# This is what I use to build Mickey. It will choose default settings for
+# install location and compilation flags.
+#
+# You can override these by setting them before invoking this script.
+# For example: PREFIX=foo CXXFLAGS="-g -O2" build-debug
 
-if [ -z "$PREFIX" ]; then
-  PREFIX=`pwd`/debug
-  if ! [ -d $PREFIX ]; then
-    mkdir $PREFIX
-  fi
-fi
+# Set prefix to your install location.
+DEFAULT_PREFIX=`pwd`/build-debug
+PREFIX=${PREFIX:-$DEFAULT_PREFIX}
+
+# Set compilation flags
+CPPFLAGS=${CPPFLAGS:-"-DDEBUG"}
+CXXFLAGS=${CXXFLAGS:-"-g -O0"}
+
+# Make these available to configure
+export CPPFLAGS CXXFLAGS
 
 function run() {
   echo $*
@@ -22,10 +26,19 @@ echo "PREFIX=$PREFIX"
 echo "CPPFLAGS=$CPPFLAGS"
 echo "CXXFLAGS=$CXXFLAGS"
 
+if ! [ -d $PREFIX ]; then
+  echo "Creating $PREFIX"
+  mkdir -p $PREFIX
+fi
+
 run ./autogen.sh
 run ./configure --prefix=$PREFIX
-run make -j
-run make -j check && run make -j install
+run make -j || exit 1
+run make -j check || exit 1
 
-echo ""
-echo "Debug build installed in $PREFIX"
+if [ ${PREFIX} == ${DEFAULT_PREFIX} ]; then
+  run make -j install
+  echo "Installed in $PREFIX"
+else
+  echo "Run make -j install to install to $PREFIX"
+fi
