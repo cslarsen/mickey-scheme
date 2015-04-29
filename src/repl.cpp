@@ -145,7 +145,7 @@ char* readline_auto_completion(const char* s, int state)
     for ( cons_t *p = all_commands; !nullp(p); p = cdr(p) )
       count += (symbolp(car(p)) &&
                  isprefix(s, car(p)->symbol->c_str()));
-  
+
     // build actual hits; readline will (hopefully!) free for us
     // (but TODO don't count on it)
     commands = (char**) malloc((1+count)*sizeof(char*));
@@ -276,6 +276,7 @@ int repl()
           printf("\n");
           printf("   To quit, hit CTRL+D or type (exit).  Use (help) for an introduction.\n");
           printf("   Distributed under the LGPL 2.1; see LICENSE\n");
+          printf("   Warning: There's no GC in Mickey, yet!\n");
           printf("|#\n\n");
 
           import_defaults(env);
