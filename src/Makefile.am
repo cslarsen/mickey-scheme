@@ -1,6 +1,24 @@
 AM_CPPFLAGS = -I$(top_srcdir)/include
 AM_CXXFLAGS = -W -Wall -fno-exceptions -fno-rtti
 
+
+AM_COLOR_TESTS = no
+TEST_EXTENSIONS = .scm
+SCM_LOG_COMPILER = $(builddir)/mickey -L$(top_srcdir)/lib -L$(builddir)/.libs
+AM_SCM_LOG_FLAGS = -I$(top_srcdir)/tests
+TESTS = \
+				../tests/programs/bytevector.scm \
+				../tests/programs/celsius-fahrenheit.scm \
+				../tests/programs/fibonacci.scm \
+				../tests/programs/hofstadter-seq.scm \
+				../tests/programs/let-fxy.scm \
+				../tests/programs/tail-call-elimination.scm \
+				../tests/test-scheme-base.scm \
+				../tests/test-scheme-char.scm \
+				../tests/test-scheme-cxr.scm \
+				../tests/test-scheme-inexact.scm \
+				../tests/test-scheme-load.scm
+
 # Note, see
 # https://www.gnu.org/software/automake/manual/html_node/Objects-created-both-with-libtool-and-without.html
 # Perhaps we could make a library archive, then have mickey executable link

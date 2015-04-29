@@ -25,20 +25,3 @@ pkginclude_HEADERS = \
 										 include/mickey/util.h
 
 include library.m4
-
-AM_COLOR_TESTS = no
-TEST_EXTENSIONS = .scm
-SCM_LOG_COMPILER = src/mickey -L$(srcdir)/lib -Lsrc/.libs
-AM_SCM_LOG_FLAGS = -Itests
-TESTS = \
-				tests/programs/bytevector.scm \
-				tests/programs/celsius-fahrenheit.scm \
-				tests/programs/fibonacci.scm \
-				tests/programs/hofstadter-seq.scm \
-				tests/programs/let-fxy.scm \
-				tests/programs/tail-call-elimination.scm \
-				tests/test-scheme-base.scm \
-				tests/test-scheme-char.scm \
-				tests/test-scheme-cxr.scm \
-				tests/test-scheme-inexact.scm \
-				tests/test-scheme-load.scm
