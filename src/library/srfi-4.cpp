@@ -14,10 +14,10 @@
 #include <limits>
 #include <stdlib.h>
 #include <inttypes.h>
-#include "assertions.h"
-#include "exceptions.h"
-#include "primitives.h"
-#include "print.h"
+#include "mickey/assertions.h"
+#include "mickey/exceptions.h"
+#include "mickey/primitives.h"
+#include "mickey/print.h"
 
 /*
  * Pointer tags

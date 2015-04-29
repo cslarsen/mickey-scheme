@@ -15,10 +15,10 @@
 #define __STDC_FORMAT_MACROS
 #include <inttypes.h>
 
-#include "types/real_t.h"
-#include "print.h"
-#include "util.h"
-#include "primitives.h"
+#include "mickey/types/real_t.h"
+#include "mickey/print.h"
+#include "mickey/util.h"
+#include "mickey/primitives.h"
 
 std::string sprint(const cons_t* p, std::string& s, bool escape)
 {

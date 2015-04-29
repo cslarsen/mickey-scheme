@@ -13,11 +13,11 @@
 #include <libgen.h>
 #include <ctype.h>
 #include <stdarg.h>
-#include "util.h"
-#include "primitives.h"
-#include "parser.h"
-#include "platform-limits.h"
-#include "print.h"
+#include "mickey/util.h"
+#include "mickey/primitives.h"
+#include "mickey/parser.h"
+#include "mickey/platform-limits.h"
+#include "mickey/print.h"
 
 std::string toupper(const std::string& str)
 {

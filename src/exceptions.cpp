@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stack>
-#include "exceptions.h"
+#include "mickey/exceptions.h"
 
 std::stack<jmp_buf*> catch_points;
 general_exception __exception;

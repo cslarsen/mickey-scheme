@@ -19,7 +19,7 @@
 # include <readline/history.h>
 #endif
 
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 /*
  * Max items to display in REPL for circular lists.

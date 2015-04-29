@@ -11,11 +11,11 @@
 
 #include <stdlib.h>
 #include <ctype.h>
-#include "exceptions.h"
-#include "parser.h"
-#include "print.h"
-#include "util.h"
-#include "primitives.h"
+#include "mickey/exceptions.h"
+#include "mickey/parser.h"
+#include "mickey/print.h"
+#include "mickey/util.h"
+#include "mickey/primitives.h"
 
 int count(const char *s, int (*check)(int))
 {

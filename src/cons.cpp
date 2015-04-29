@@ -10,8 +10,9 @@
  */
 
 #include <set>
-#include "cons.h"
-#include "exceptions.h"
+
+#include "mickey/cons.h"
+#include "mickey/exceptions.h"
 
 typedef std::set<symbol_t> symbols_t;
 static symbols_t symbols;

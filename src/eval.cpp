@@ -9,9 +9,9 @@
  *
  */
 
-#include "mickey.h"
-#include "core-transition.h"
-#include "assertions.h"
+#include "mickey/mickey.h"
+#include "mickey/core-transition.h"
+#include "mickey/assertions.h"
 
 extern "C" {
 

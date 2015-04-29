@@ -12,9 +12,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <libgen.h> // dirname
-#include "mickey.h"
-#include "repl.h"
-#include "import.h"
+#include "mickey/mickey.h"
+#include "mickey/repl.h"
+#include "mickey/import.h"
 
 /*
  * Environment variables:

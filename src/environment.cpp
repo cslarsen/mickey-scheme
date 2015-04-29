@@ -9,10 +9,10 @@
  *
  */
 
-#include "types/environment_t.h"
-#include "exceptions.h"
-#include "primitives.h"
-#include "print.h"
+#include "mickey/types/environment_t.h"
+#include "mickey/exceptions.h"
+#include "mickey/primitives.h"
+#include "mickey/print.h"
 
 cons_t* environment_t::lookup_or_throw(const std::string& name) const
 {

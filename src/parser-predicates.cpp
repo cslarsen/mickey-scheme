@@ -10,9 +10,9 @@
  */
 
 #include <stdlib.h>
-#include "exceptions.h"
-#include "parser.h"
-#include "util.h"
+#include "mickey/exceptions.h"
+#include "mickey/parser.h"
+#include "mickey/util.h"
 
 int isdot(int s)
 {

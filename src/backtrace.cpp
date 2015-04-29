@@ -10,9 +10,9 @@
  */
 
 #include <stack>
-#include "cons.h"
-#include "print.h"
-#include "primitives.h"
+#include "mickey/cons.h"
+#include "mickey/print.h"
+#include "mickey/primitives.h"
 
 // instruction stack for backtraces
 static std::stack<cons_t*> is;

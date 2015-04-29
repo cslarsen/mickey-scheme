@@ -9,15 +9,15 @@
  *
  */
 
-#include "debug.h"
-#include "exceptions.h"
-#include "parser.h"
-#include "primitives.h"
-#include "print.h"
-#include "strings.h"
-#include "types/radix_t.h"
-#include "types/real_t.h"
-#include "util.h"
+#include "mickey/debug.h"
+#include "mickey/exceptions.h"
+#include "mickey/parser.h"
+#include "mickey/primitives.h"
+#include "mickey/print.h"
+#include "mickey/strings.h"
+#include "mickey/types/radix_t.h"
+#include "mickey/types/real_t.h"
+#include "mickey/util.h"
 
 static cons_t* parse_bytevector(environment_t* e);
 static cons_t* parse_quasiquote(environment_t* e);

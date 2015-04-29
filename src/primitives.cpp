@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include <limits.h>
 #include <math.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 /*
  * Marks that return-value is unspecified.

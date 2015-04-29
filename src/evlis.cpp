@@ -9,10 +9,10 @@
  *
  */
 
-#include "evlis.h"
-#include "primitives.h"
-#include "eval.h"
-#include "print.h"
+#include "mickey/evlis.h"
+#include "mickey/primitives.h"
+#include "mickey/eval.h"
+#include "mickey/print.h"
 
 cons_t* evlis(cons_t* p, environment_t* e)
 {

@@ -13,18 +13,18 @@
 #include <stdlib.h>
 #include <dlfcn.h>
 #include <cassert>
-#include "cons.h"
-#include "primitives.h"
-#include "import.h"
-#include "assertions.h"
-#include "exceptions.h"
-#include "print.h"
-#include "options.h"
-#include "eval.h"
-#include "file-io.h"
-#include "debug.h"
-#include "system-features.h"
-#include "cond-expand.h"
+#include "mickey/cons.h"
+#include "mickey/primitives.h"
+#include "mickey/import.h"
+#include "mickey/assertions.h"
+#include "mickey/exceptions.h"
+#include "mickey/print.h"
+#include "mickey/options.h"
+#include "mickey/eval.h"
+#include "mickey/file-io.h"
+#include "mickey/debug.h"
+#include "mickey/system-features.h"
+#include "mickey/cond-expand.h"
 
 struct library_map_t {
   const char* library_name;

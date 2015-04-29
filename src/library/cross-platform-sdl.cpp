@@ -18,7 +18,7 @@
  */
 
 #include <SDL/SDL.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 template<typename K, typename V>
 struct key_value_t {

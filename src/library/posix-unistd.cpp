@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 #include <signal.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 extern "C" cons_t* proc_getpid(cons_t* p, environment_t*)
 {

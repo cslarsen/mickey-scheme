@@ -13,10 +13,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include "exceptions.h"
-#include "print.h"
-#include "tokenizer.h"
-#include "util.h"
+#include "mickey/exceptions.h"
+#include "mickey/print.h"
+#include "mickey/tokenizer.h"
+#include "mickey/util.h"
 
 static const char* source_start = NULL;
 static const char* source = NULL;

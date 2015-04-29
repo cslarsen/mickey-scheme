@@ -15,8 +15,8 @@
 
 #include <set>
 #include <limits>
-#include "system-features.h"
-#include "mickey.h"
+#include "mickey/system-features.h"
+#include "mickey/mickey.h"
 
 #ifdef __APPLE__
 # include "TargetConditionals.h"

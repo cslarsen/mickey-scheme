@@ -9,7 +9,7 @@
  *
  */
 
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 extern "C" {
   

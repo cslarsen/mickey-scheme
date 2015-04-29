@@ -9,9 +9,9 @@
  *
  */
 
-#include "circular.h"
-#include "primitives.h"
-#include "print.h"
+#include "mickey/circular.h"
+#include "mickey/primitives.h"
+#include "mickey/print.h"
 
 /*
  * Detect cycles using Floyd's algorithm:

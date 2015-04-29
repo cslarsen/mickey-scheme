@@ -10,7 +10,7 @@
  */
 
 #include <math.h>
-#include "types/real_t.h"
+#include "mickey/types/real_t.h"
 
 real_t minus_infinity()
 {

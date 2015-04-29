@@ -9,13 +9,13 @@
  *
  */
 
-#include "cons.h"
-#include "util.h"
-#include "primitives.h"
-#include "syntax-rules.h"
-#include "print.h"
-#include "exceptions.h"
-#include "arguments.h"
+#include "mickey/cons.h"
+#include "mickey/util.h"
+#include "mickey/primitives.h"
+#include "mickey/syntax-rules.h"
+#include "mickey/print.h"
+#include "mickey/exceptions.h"
+#include "mickey/arguments.h"
 
 extern "C" { // because I don't like name-mangling
 

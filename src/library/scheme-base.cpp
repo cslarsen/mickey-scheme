@@ -12,8 +12,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <cmath>
-#include "library/scheme-base.h"
-#include "system-features.h"
+#include "mickey/library/scheme-base.h"
+#include "mickey/system-features.h"
 
 extern "C" {
 

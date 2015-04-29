@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 extern "C" {
 

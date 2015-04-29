@@ -11,7 +11,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 extern char **environ;
 

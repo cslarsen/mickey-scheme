@@ -7,7 +7,7 @@
  */
 
 #include <unistd.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 typedef struct {
   const char* name;

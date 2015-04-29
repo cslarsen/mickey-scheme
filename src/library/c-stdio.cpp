@@ -11,7 +11,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 extern "C" {
 

@@ -9,7 +9,7 @@
  *
  */
 
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 /*
  * Avoid name mangling, so we can actually

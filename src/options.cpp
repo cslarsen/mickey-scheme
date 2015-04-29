@@ -13,11 +13,11 @@
 #include <sys/param.h>
 #include <libgen.h>
 
-#include "mickey.h"
-#include "options.h"
-#include "cons.h"
-#include "parser.h"
-#include "system-features.h"
+#include "mickey/mickey.h"
+#include "mickey/options.h"
+#include "mickey/cons.h"
+#include "mickey/parser.h"
+#include "mickey/system-features.h"
 
 options_t global_opts;
 

@@ -11,8 +11,8 @@
 
 #include <dlfcn.h>
 #include <libgen.h>
-#include "cons.h"
-#include "library/posix-dlopen.h"
+#include "mickey/cons.h"
+#include "mickey/library/posix-dlopen.h"
 
 extern "C" {
 

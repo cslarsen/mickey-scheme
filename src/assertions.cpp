@@ -9,12 +9,12 @@
  *                                                          
  */
 
-#include "assertions.h"
-#include "primitives.h"
-#include "print.h"
-#include "util.h"
-#include "circular.h"
-#include "exceptions.h"
+#include "mickey/assertions.h"
+#include "mickey/primitives.h"
+#include "mickey/print.h"
+#include "mickey/util.h"
+#include "mickey/circular.h"
+#include "mickey/exceptions.h"
 
 void assert_length(const cons_t* p, const size_t e)
 {

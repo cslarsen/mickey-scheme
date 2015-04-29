@@ -6,7 +6,7 @@
  */
 
 #include <stdlib.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 extern "C" cons_t* proc_exit(cons_t* p, environment_t*)
 {

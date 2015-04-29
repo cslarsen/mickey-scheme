@@ -9,10 +9,10 @@
  *
  */
 
-#include "arguments.h"
-#include "primitives.h"
-#include "exceptions.h"
-#include "print.h"
+#include "mickey/arguments.h"
+#include "mickey/primitives.h"
+#include "mickey/exceptions.h"
+#include "mickey/print.h"
 
 size_t min_args(cons_t* p)
 {

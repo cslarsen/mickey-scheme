@@ -12,8 +12,9 @@
  */
 
 #include <stdlib.h>
-#include "mickey.h"
-#include "core-transition.h"
+
+#include "mickey/mickey.h"
+#include "mickey/core-transition.h"
 
 /*
  * This file is a placeholder for procedures that are actually syntactic,

@@ -9,7 +9,7 @@
  *
  */
 
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 cons_t* make_closure(cons_t* args, cons_t* body, environment_t* e)
 {

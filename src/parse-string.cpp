@@ -9,12 +9,12 @@
  *
  */
 
-#include "exceptions.h"
-#include "parser.h"
-#include "platform-limits.h"
-#include "primitives.h"
-#include "print.h"
-#include "util.h"
+#include "mickey/exceptions.h"
+#include "mickey/parser.h"
+#include "mickey/platform-limits.h"
+#include "mickey/primitives.h"
+#include "mickey/print.h"
+#include "mickey/util.h"
 
 /*
  * Get next character in string, if any left, and advance pointer.

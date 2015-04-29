@@ -6,7 +6,7 @@
  */
 
 #include <signal.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 extern "C" cons_t* proc_kill(cons_t* p, environment_t*)
 {

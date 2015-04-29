@@ -18,7 +18,7 @@
  */
 
 #include <sys/utsname.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 extern "C" cons_t* proc_uname(cons_t*, environment_t*)
 {

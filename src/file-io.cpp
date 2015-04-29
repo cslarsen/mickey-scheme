@@ -11,7 +11,7 @@
 
 #include <sys/stat.h>
 #include <string>
-#include "file-io.h"
+#include "mickey/file-io.h"
 
 std::string slurp(FILE *f)
 {

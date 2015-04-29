@@ -9,9 +9,9 @@
  *
  */
 
-#include "primitives.h"
-#include "types/rational_t.h"
-#include "exceptions.h"
+#include "mickey/primitives.h"
+#include "mickey/types/rational_t.h"
+#include "mickey/exceptions.h"
 
 rational_t& simplify(rational_t& r)
 {

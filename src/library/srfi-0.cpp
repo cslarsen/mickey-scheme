@@ -9,8 +9,8 @@
  *
  */
 
-#include "mickey.h"
-#include "cond-expand.h"
+#include "mickey/mickey.h"
+#include "mickey/cond-expand.h"
 
 extern "C" cons_t* srfi0_cond_expand(const cons_t* p, environment_t* e)
 {

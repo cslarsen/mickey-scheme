@@ -9,6 +9,8 @@ Autotools
   - Readline doesn't compile on Linux
   - Make it possible to deactivate readline with configure --without-readline
   - Add --with-xxx for optional libraries (SDL, gpg, etc.)
+  - Installation to include/-folder lacks types subfolder.
+  - Use -L to run make check before make install.
 
 EQUAL?-EXACTNESS-BUG
 

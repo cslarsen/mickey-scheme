@@ -9,8 +9,8 @@
  *
  */
 
-#include "apply.h"
-#include "eval.h"
+#include "mickey/apply.h"
+#include "mickey/eval.h"
 
 /*
  * TODO: Add environment argument, and do this

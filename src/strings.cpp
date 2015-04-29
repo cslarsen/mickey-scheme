@@ -9,7 +9,7 @@
  *
  */
 
-#include "strings.h"
+#include "mickey/strings.h"
 
 std::string string_foldcase(std::string s)
 {

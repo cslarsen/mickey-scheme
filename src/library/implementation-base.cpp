@@ -5,7 +5,7 @@
  * Distributed under the LGPL 2.1; see LICENSE
  */
 
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 
 extern "C" cons_t* proc_implementation_name(cons_t* p, environment_t*)

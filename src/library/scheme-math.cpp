@@ -10,7 +10,7 @@
  */
 
 #include <math.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 /*
  * All <math.h> procedures have identical signatures,

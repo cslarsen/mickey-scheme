@@ -3,26 +3,26 @@ EXTRA_DIST = autogen.sh lib include tests
 SUBDIRS = src
 
 pkginclude_HEADERS = \
-										 include/apply.h \
-										 include/arguments.h \
-										 include/assertions.h \
-										 include/backtrace.h \
-										 include/circular.h \
-										 include/cons.h \
-										 include/debug.h \
-										 include/eval.h \
-										 include/evlis.h \
-										 include/exceptions.h \
-										 include/file-io.h \
-										 include/import.h \
-										 include/mickey.h \
-										 include/options.h \
-										 include/parser.h \
-										 include/primitives.h \
-										 include/print.h \
-										 include/syntax-rules.h \
-										 include/tokenizer.h \
-										 include/util.h
+										 include/mickey/apply.h \
+										 include/mickey/arguments.h \
+										 include/mickey/assertions.h \
+										 include/mickey/backtrace.h \
+										 include/mickey/circular.h \
+										 include/mickey/cons.h \
+										 include/mickey/debug.h \
+										 include/mickey/eval.h \
+										 include/mickey/evlis.h \
+										 include/mickey/exceptions.h \
+										 include/mickey/file-io.h \
+										 include/mickey/import.h \
+										 include/mickey/mickey.h \
+										 include/mickey/options.h \
+										 include/mickey/parser.h \
+										 include/mickey/primitives.h \
+										 include/mickey/print.h \
+										 include/mickey/syntax-rules.h \
+										 include/mickey/tokenizer.h \
+										 include/mickey/util.h
 
 include library.m4
 

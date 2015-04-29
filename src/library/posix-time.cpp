@@ -8,7 +8,7 @@
 #include <time.h>
 #include <errno.h>
 #include <string.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 static const char* id_time_t = "<time.h> time_t";
 static const char* id_struct_tm = "<time.h> struct tm";

@@ -6,7 +6,7 @@
  */
 
 #include <unistd.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 extern "C" cons_t* proc_fork(cons_t* p, environment_t*)
 {

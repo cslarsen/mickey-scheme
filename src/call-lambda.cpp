@@ -9,7 +9,7 @@
  *
  */
 
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 cons_t* call_lambda(cons_t *p, closure_t* proc, environment_t* e)
 {

@@ -7,7 +7,7 @@
 
 #include <signal.h>
 #include <errno.h>
-#include "mickey.h"
+#include "mickey/mickey.h"
 
 static const int SIGHANDLERS = 31;
 static closure_t* sighandlers[SIGHANDLERS] = {NULL};
