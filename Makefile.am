@@ -1,5 +1,5 @@
-ACLOCAL_AMFLAGS=-I m4
-EXTRA_DIST = autogen.sh lib include tests
+ACLOCAL_AMFLAGS=-I m4 --install
+EXTRA_DIST = autogen.sh lib include tests m4/.dummy
 SUBDIRS = src
 
 pkginclude_HEADERS = \

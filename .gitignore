@@ -10,6 +10,7 @@
 Makefile
 aclocal.m4
 autom4te.cache
+build-aux
 compile
 config.guess
 config.status
@@ -23,7 +24,7 @@ install-sh
 library.m4
 libtool
 ltmain.sh
-m4
+m4/*
 mickey-*
 missing
 release

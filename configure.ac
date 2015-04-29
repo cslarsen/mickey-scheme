@@ -1,16 +1,18 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
+AC_INIT([mickey], [0.1], [csl@csl.name], [mickey],
+        [http://github.com/cslarsen/mickey-scheme])
 AC_PREREQ([2.69])
-AC_INIT([mickey], [0.1])
 AC_CONFIG_SRCDIR([src/mickey.cpp])
 AC_CONFIG_HEADERS([include/config.h])
-AM_INIT_AUTOMAKE([subdir-objects])
+AC_CONFIG_AUX_DIR([build-aux])
+AM_INIT_AUTOMAKE([1.11 -Wall -Werror subdir-objects])
+AM_PROG_AR
 LT_INIT
 
 # Checks for programs.
 AC_PROG_CXX
-AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
@@ -21,6 +23,8 @@ AC_CHECK_LIB([readline], [readline])
 
 # Checks for header files.
 AC_CHECK_HEADERS([inttypes.h limits.h stdint.h stdlib.h string.h sys/param.h unistd.h])
+
+AC_CONFIG_MACRO_DIR([m4])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
@@ -36,6 +40,7 @@ AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 AC_TYPE_UINT8_T
+
 
 # Checks for library functions.
 AC_FUNC_FORK
