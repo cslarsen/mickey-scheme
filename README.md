@@ -127,36 +127,33 @@ This corresponds to 77% coverage.
 Compiling
 ---------
 
-If you're building from the github sources, you need GNU autotools.
+In short, you need GNU autoconf, automake and libtool to build Mickey from the
+GitHub sources.  If you want to build to a `build` directory, to this:
 
     $ ./autogen.sh
-    $ mkdir debug
-    $ ./configure --prefix=`pwd`/debug
+    $ mkdir build
+    $ ./configure --prefix=`pwd`/install
     $ make -j
 
-To test it,
+You should run the test suite as well:
 
     $ make -j check
 
-and to install it,
+Then you can install into the `build` subdirectory with
 
     $ make -j install
 
-You should now be able to run mickey from `debug/bin/mickey`.
-
-The code has been developed on OS X and Linux, so if you have the packages
-mentioned above, compilation should go smoothly.
-
-Note that the above command will build with default flags. To see how you can
-build with optimization flags, look at the script `build-release.sh`.
-
-For instance, you could do
+If you want to build with different flags, you can take a look at the
+`build-debug.sh` and `build-release.sh` scripts.  As an example, if you want to
+build an optimized version compiled to your native architecture, you can do
 
     $ CPPFLAGS="-DNDEBUG" \
       CXXFLAGS="-O3 -march=native -mtune=native -ffast-math" \
-        ./configure && make -j
+        ./configure && make -j all check
 
-to generate code tuned for your specific CPU.
+To build a redistributable package, you should be able to do
+
+    $ make -j distcheck
 
 Feature flags
 -------------
@@ -178,18 +175,23 @@ See the file COPYING for the full text of the LGPL 2.1.
 Author
 ------
 
-Christian Stigen Larsen <csl@sublevel3.org> http://csl.sublevel3.org
+Christian Stigen Larsen <csl@csl.name> http://csl.name
 
 ## Examples
 
-Here are a few example code snippets for Mickey Scheme.  
+Here are a few example code snippets for Mickey Scheme.
 
 Besides demonstrating the basic capabilities of Mickey, it also serves as a
 kind of soft introduction to Scheme.
 
 First, let's start `mickey`.
 
-    $ ./mickey
+If you're on Linux, you may have to use the `-L` flag to tell Mickey where it
+can find Scheme and compiled dynamic libraries. It accepts several `-L` options.
+
+If you've installed mickey, you should be able to simply type
+
+    $ mickey
     #|                                                                 _
        Mickey Scheme (C) 2011-2012 Christian Stigen Larsen              \
        4.2.1 Compatible Apple Clang 4.0 ((tags/Apple/clang-421.0.57))   /\
@@ -200,11 +202,6 @@ First, let's start `mickey`.
     |#
 
     #; mickey> 
-
-If you're on Linux, you may have to set `LD_LIBRARY_PATH` to find the shared
-object files:
-
-    $ LD_LIBRARY_PATH=".:" ./mickey
 
 This is the REPL, short for _read-evaluate-print loop_.
 
