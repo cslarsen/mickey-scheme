@@ -27,6 +27,5 @@ run ./configure --prefix=$PREFIX
 run make -j
 run make -j install
 
+echo ""
 echo "Release build installed in debug/"
-echo "To test, you can run:"
-echo "debug/bin/mickey -Itest test/mandelbrot.scm"
