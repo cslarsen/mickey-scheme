@@ -25,7 +25,7 @@ echo "CXXFLAGS=$CXXFLAGS"
 run ./autogen.sh
 run ./configure --prefix=$PREFIX
 run make -j
-run make -j install
+run make -j check && run make -j install
 
 echo ""
-echo "Debug build installed in debug/"
+echo "Debug build installed in $PREFIX"
