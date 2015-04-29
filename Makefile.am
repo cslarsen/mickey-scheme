@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS=-I m4
-EXTRA_DIST = autogen.sh lib include
+EXTRA_DIST = autogen.sh lib include tests
 SUBDIRS = src
 
 pkginclude_HEADERS = \
