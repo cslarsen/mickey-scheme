@@ -25,7 +25,7 @@ TESTS = \
 # against that.
 #mickey_CXXFLAGS = $(AM_CXXFLAGS)
 bin_PROGRAMS = mickey
-mickey_LDADD=libmickey.la
+mickey_LDADD=libmickey.la $(LIBREADLINE)
 mickey_SOURCES=mickey.cpp repl.cpp
 
 # ORDER DEPENDENCY: libmickey.la must be first!

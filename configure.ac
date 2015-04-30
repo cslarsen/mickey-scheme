@@ -19,7 +19,6 @@ AC_PROG_MAKE_SET
 # Checks for libraries.
 AC_CHECK_LIB([dl], [dlopen])
 AC_CHECK_LIB([ffi], [ffi_call])
-AC_CHECK_LIB([readline], [readline])
 
 # Checks for header files.
 AC_CHECK_HEADERS([inttypes.h limits.h stdint.h stdlib.h string.h sys/param.h unistd.h])
@@ -49,6 +48,24 @@ AC_CHECK_FUNCS([floor getcwd gethostname localtime_r memset realpath sqrt strchr
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
+
+# Optional removal of readline support
+AC_ARG_WITH([readline],
+            [AS_HELP_STRING([--without-readline],
+                            [Disable support for readline])],
+                            [],
+                            [with_readline=yes])
+
+LIBREADLINE=
+AS_IF([test "x$with_readline" != xno],
+      [AC_CHECK_LIB([readline], [readline],
+                    [AC_SUBST([LIBREADLINE], ["-lreadline -lncurses"])
+                     AC_DEFINE([HAVE_LIBREADLINE], [1],
+                               [Define if you have libreadline])
+                     ],
+                     [AC_MSG_FAILURE(
+                      [readline test failed (--without-readline to disable)])],
+                      [-lncurses])])
 
 # TODO: Add these using --with-.... flags
 # lib/optional/Makefile
