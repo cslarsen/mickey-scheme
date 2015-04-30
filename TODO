@@ -4,13 +4,14 @@ Autotools
     - C++ library files
     - Scheme library files
   - Add man-pages
-  - Print a warning about Mickey not having any GC yet in the REPL.
-  - Loading of libposix-dlopen.so doesn't work on Linux.
   - Readline doesn't compile on Linux
   - Make it possible to deactivate readline with configure --without-readline
   - Add --with-xxx for optional libraries (SDL, gpg, etc.)
   - Installation to include/-folder lacks types subfolder.
   - Use libltdl to load plugins.
+  - Use #ifdef HAVE_CONFIG_H before including config.h. Check out the
+  conventions for this stuff, and probably also use #if HAVE_LIBREADLINE
+  insteadof #ifdef, because those are set to 0 or 1.
 
 EQUAL?-EXACTNESS-BUG
 
