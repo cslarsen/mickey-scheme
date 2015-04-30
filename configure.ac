@@ -7,6 +7,7 @@ AC_PREREQ([2.69])
 AC_CONFIG_SRCDIR([src/mickey.cpp])
 AC_CONFIG_HEADERS([include/config.h])
 AC_CONFIG_AUX_DIR([build-aux])
+AC_REQUIRE_AUX_FILE([tap-driver.sh])
 AM_INIT_AUTOMAKE([1.11 -Wall -Werror subdir-objects])
 AM_PROG_AR
 LT_INIT([dlopen])

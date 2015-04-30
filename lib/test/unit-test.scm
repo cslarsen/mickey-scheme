@@ -9,18 +9,23 @@ Distributed under the LGPL 2.1; see LICENSE
 (define-library (test unit-test)
   (import (scheme base))
   (export
-    testq
-    xfailq
-    testv
+    get-test-results
+    result
+    tap-results
     test
-    result)
+    testq
+    testv
+    xfailq)
   (begin
     (define total-tests 0)
     (define failed-tests 0)
 
+    (define (get-test-results)
+      (list total-tests failed-tests))
+
     (define-syntax perform-test
       (syntax-rules ()
-        ((_ eq-op code expected file)
+        ((_ eq-op code expected)
          (let*
            ((actual-result code)
             (success (eq-op actual-result expected)))
@@ -28,9 +33,7 @@ Distributed under the LGPL 2.1; see LICENSE
            (set! failed-tests (+ failed-tests
                                  (if success 0 1)))
            (display (string-append
-             (if success "PASS" "FAIL") ": "))
-           (display file)
-           (display " ")
+             (if success "ok" "not ok") " "))
            (display total-tests)
            (display " - ")
            (display (quote code))
@@ -46,7 +49,7 @@ Distributed under the LGPL 2.1; see LICENSE
 
     (define-syntax perform-test-expect-failure
       (syntax-rules ()
-        ((_ eq-op code expected file message)
+        ((_ eq-op code expected message)
          (let*
            ((actual-result code)
             (success (eq-op actual-result expected)))
@@ -54,9 +57,7 @@ Distributed under the LGPL 2.1; see LICENSE
            (set! failed-tests (+ failed-tests
                                  (if success 0 1)))
            (display (string-append
-             (if success "XPASS" "XFAIL") ": "))
-           (display file)
-           (display " ")
+             (if success "ok" "not ok") " "))
            (display total-tests)
            (display " - ")
            (display (quote code))
@@ -74,23 +75,30 @@ Distributed under the LGPL 2.1; see LICENSE
 
     (define-syntax testq
       (syntax-rules ()
-        ((_ file code expected)
-         (perform-test eq? code expected file))))
+        ((_ code expected)
+         (perform-test eq? code expected))))
 
     (define-syntax xfailq
       (syntax-rules ()
-        ((_ file code expected message)
-         (perform-test-expect-failure eq? code expected message file))))
+        ((_ code expected message)
+         (perform-test-expect-failure
+            eq? code expected (string-append "# TODO: " message)))))
 
     (define-syntax testv
       (syntax-rules ()
-        ((_ file code expected)
-         (perform-test eqv? code expected file))))
+        ((_ code expected)
+         (perform-test eqv? code expected))))
 
     (define-syntax test
       (syntax-rules ()
-        ((_ file code expected)
-         (perform-test equal? code expected file))))
+        ((_ code expected)
+         (perform-test equal? code expected))))
+
+    (define (tap-results)
+       (display (string-append
+                  "1.."
+                  (number->string (car (get-test-results)))
+                  "\n")))
 
     (define (result)
       (list (list 'total total-tests)

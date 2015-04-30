@@ -7,11 +7,10 @@ Autotools
   - Add --with-xxx for optional libraries (SDL, gpg, etc.)
   - Installation to include/-folder lacks types subfolder.
   - Use libltdl to load plugins.
-  - Use #ifdef HAVE_CONFIG_H before including config.h. Check out the
-  conventions for this stuff, and probably also use #if HAVE_LIBREADLINE
-  insteadof #ifdef, because those are set to 0 or 1.
   - Make distcheck work correctly (the tests are broken as they are now)
-  - Make proper TAP tests
+  - Add more TAP tests
+  - Fix TAP testing harness so I don't have to use run.sh and all that stuff.
+    Would be best if I could simply do "TESTS = test1.scm test2.scm ..."
 
 EQUAL?-EXACTNESS-BUG
 
