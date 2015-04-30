@@ -14,6 +14,11 @@ Autotools
   - Make a separate (test tap) library. Rename (tap-results) to (tap-range) for
     instance.
 
+BUGS
+
+- (begin) should be exported by (scheme base), seems it's built-in to mickey.
+  Also, it's not expanded by readline when doing (b<TAB>.
+
 EQUAL?-EXACTNESS-BUG
 
 > (equal? #e-17 #i-17) should return #f, because it should compare exactness as
