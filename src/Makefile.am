@@ -7,11 +7,11 @@ TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
 									$(top_srcdir)/build-aux/tap-driver.sh
 TEST_LOG_DRIVER_FLAGS = --comments --ignore-exit
 TESTS = \
-				../tests/test-scheme-base.test \
-				../tests/test-scheme-char.test \
-				../tests/test-scheme-cxr.test \
-				../tests/test-scheme-inexact.test \
-				../tests/test-scheme-load.test
+				scheme-base.test \
+				scheme-char.test \
+				scheme-cxr.test \
+				scheme-inexact.test \
+				scheme-load.test
 
 EXTRA_DIST = $(TESTS)
 
