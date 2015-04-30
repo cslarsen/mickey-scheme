@@ -7,6 +7,7 @@ TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
 									$(top_srcdir)/build-aux/tap-driver.sh
 TEST_LOG_DRIVER_FLAGS = --comments --ignore-exit
 TESTS = \
+				begin.test \
 				bytevector.test \
 				celsius-fahrenheit.test \
 				fibonacci.test \
