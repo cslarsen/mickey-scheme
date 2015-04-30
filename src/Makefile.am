@@ -28,7 +28,9 @@ bin_PROGRAMS = mickey
 mickey_LDADD=libmickey.la
 mickey_SOURCES=mickey.cpp repl.cpp
 
+# ORDER DEPENDENCY: libmickey.la must be first!
 pkglib_LTLIBRARIES = \
+										 libmickey.la \
 										 libc-stdio.la \
 										 libeval-cont.la \
 										 libimplementation-base.la \
@@ -36,7 +38,6 @@ pkglib_LTLIBRARIES = \
 										 libmickey-gensym.la \
 										 libmickey-internals.la \
 										 libmickey-misc.la \
-										 libmickey.la \
 										 libposix-dlopen.la \
 										 libposix-exit.la \
 										 libposix-fork.la \
