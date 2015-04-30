@@ -21,7 +21,7 @@ Current Features
   * Quotation and quasiquotation
   * All non-syntactic `let`-forms
   * Variadic functions
-  * Two macro systems: `syntax-rules` (incomplete support) and
+  * Two macro systems: `syntax-rules` (buggy, incomplete support) and
                        `define-macro` (unhygienic)
   * Lazy evaluation with memoization in `(scheme lazy)`
   * Full support for the R7RS library system `define-library`
@@ -75,7 +75,7 @@ Current Shortcomings
     priority.
 
   * It's __incomplete__: Some key Scheme features are still missing, and
-    quite some R7RS library functions (currently it supports 195 of 335
+    quite some R7RS library functions (currently it supports 426 of 550
     R7RS definitions).
 
   * It's __buggy__: There are inherent bugs in the engine as well as
@@ -128,11 +128,11 @@ Compiling
 ---------
 
 In short, you need GNU autoconf, automake and libtool to build Mickey from the
-GitHub sources.  If you want to build to a `build` directory, to this:
+GitHub sources.  If you want to build to a `build` directory, do this:
 
     $ ./autogen.sh
     $ mkdir build
-    $ ./configure --prefix=`pwd`/install
+    $ ./configure --prefix=`pwd`/build
     $ make -j
 
 You should run the test suite as well:
