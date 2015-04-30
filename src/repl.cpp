@@ -9,12 +9,14 @@
  *
  */
 
-#include "config.h"
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifdef HAVE_LIBREADLINE
+#if HAVE_LIBREADLINE
 # include <readline/readline.h>
 # include <readline/history.h>
 #endif

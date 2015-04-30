@@ -4,7 +4,6 @@ Autotools
     - C++ library files
     - Scheme library files
   - Add man-pages
-  - Readline doesn't compile on Linux
   - Make it possible to deactivate readline with configure --without-readline
   - Add --with-xxx for optional libraries (SDL, gpg, etc.)
   - Installation to include/-folder lacks types subfolder.
