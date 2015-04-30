@@ -155,6 +155,12 @@ To build a redistributable package, you should be able to do
 
     $ make -j distcheck
 
+If you want to start the executable while developing, you do the usual
+`configure` and `make -j` invocations. If you don't use a separate build
+directory, you should be able to start mickey from the top directory with
+
+    $ src/mickey -Llib
+
 Feature flags
 -------------
 
