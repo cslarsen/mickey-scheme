@@ -87,7 +87,7 @@ bool isprefix(const char* prefix, const char* fullstr)
   return *prefix == '\0';
 }
 
-#ifdef HAVE_LIBREADLINE
+#if HAVE_LIBREADLINE
 char** auto_complete(const char *s, int, int)
 {
   /*
@@ -211,7 +211,7 @@ char* readline(const char* prompt)
 void print_banner(environment_t*)
 {
   std::string readline_version;
-  #ifdef HAVE_LIBREADLINE
+  #if HAVE_LIBREADLINE
     readline_version = format("Readline %d.%d",
       (rl_readline_version & 0xFF00) >> 8, rl_readline_version & 0x00FF);
   #endif
@@ -235,7 +235,7 @@ int repl()
 
   print_banner(env);
 
-  #ifdef HAVE_LIBREADLINE
+  #if HAVE_LIBREADLINE
   init_readline();
   #endif
 
