@@ -11,6 +11,8 @@ Autotools
   - Add more TAP tests
   - Fix TAP testing harness so I don't have to use run.sh and all that stuff.
     Would be best if I could simply do "TESTS = test1.scm test2.scm ..."
+  - Make a separate (test tap) library. Rename (tap-results) to (tap-range) for
+    instance.
 
 EQUAL?-EXACTNESS-BUG
 

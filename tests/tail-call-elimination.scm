@@ -17,9 +17,7 @@
   (set! *counter* (+ *counter* 1))
   (display ""))
 
-(let
-  ((name "tail-call-elimination.scm"))
-
-  ;; Have my-loop recurse 60000 times, which should break the stack if tail
-  ;; call elimination is not implemented.
-  (test name (my-loop do-something 60000 0) (values 0 *counter*)))
+;; Have my-loop recurse 60000 times, which should break the stack if tail
+;; call elimination is not implemented.
+(test (my-loop do-something 60000 0) (values 0 *counter*))
+(tap-results)

@@ -13,6 +13,5 @@
        (* y b)
        (* a b))))
 
-(let
-  ((name "let-fxy.scm"))
-  (testq name (f 10 20) 399811))
+(testq (f 10 20) 399811)
+(tap-results)

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+source `dirname $0`/run.sh
+run ${0%.*}.scm
