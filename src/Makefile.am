@@ -19,6 +19,7 @@ TESTS = \
 				scheme-cxr.test \
 				scheme-inexact.test \
 				scheme-load.test \
+				spaced-symbols.test \
 				tail-call-elimination.test
 
 EXTRA_DIST = $(TESTS)
