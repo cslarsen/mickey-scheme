@@ -36,7 +36,11 @@ cons_t* proc_current_second(cons_t* p, environment_t*)
    * See also http://cr.yp.to/proto/utctai.html
    */
   assert_length(p, 0);
-  return integer(static_cast<integer_t>(time(NULL)-10), false);
+
+  // TODO: The offset changes depending on a table of leap seconds added for
+  // different date ranges.
+  const double offset = +35;
+  return integer(static_cast<integer_t>(time(NULL) + offset), false);
 }
 
 }
