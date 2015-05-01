@@ -10,6 +10,7 @@
 
 (display "(2) Testing nested comments\n")
 
+;; Nested block comments
 #|
   (display "This line should NOT be shown (2)\n")
   #| (display "This line should NOT be shown (3)\n") |#
@@ -18,6 +19,6 @@
 
 (display "(3) Should get 2 here: ")
 (display (+  #| this is a #| nested |# block comment |# 2))
-(newline)
+(display "\n")
 
 (display "(4) End of comment-tests\n")

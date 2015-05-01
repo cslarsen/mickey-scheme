@@ -1,0 +1,4 @@
+(1) Testing block comments
+(2) Testing nested comments
+(3) Should get 2 here: 2
+(4) End of comment-tests

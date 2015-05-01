@@ -8,6 +8,7 @@ TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
 TEST_LOG_DRIVER_FLAGS = --comments --ignore-exit
 TESTS = \
 				begin.test \
+				block-comment.test \
 				bytevector.test \
 				celsius-fahrenheit.test \
 				fibonacci.test \
