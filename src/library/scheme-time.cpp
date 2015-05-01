@@ -28,6 +28,13 @@ cons_t* proc_current_jiffy(cons_t* p, environment_t*)
 
 cons_t* proc_current_second(cons_t* p, environment_t*)
 {
+  /*
+   * TODO: This is incorrect. We're supposed to provide TAI seconds here, see
+   * https://en.wikipedia.org/wiki/International_Atomic_Time which means if the
+   * system date is, for example, 1961, the offset is different.
+   *
+   * See also http://cr.yp.to/proto/utctai.html
+   */
   assert_length(p, 0);
   return integer(static_cast<integer_t>(time(NULL)-10), false);
 }
