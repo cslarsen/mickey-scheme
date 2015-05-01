@@ -1,6 +1,18 @@
 (import (scheme write))
 (import (scheme base))
 
+;; TODO: It would be much better to use string ports and parameterize, e.g.
+;;
+;; (let
+;;   ((actual (open-output-string))
+;;    (expected "..."))
+;;
+;;   (parameterize
+;;     ((current-output-port actual))
+;;     (display "..."))
+;;
+;;   (testq (get-output-string actual) expected))
+
 ;; Block comments
 (display "(1) Testing block comments\n")
 
