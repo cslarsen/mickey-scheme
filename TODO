@@ -13,6 +13,7 @@ Autotools
     Would be best if I could simply do "TESTS = test1.scm test2.scm ..."
   - Make a separate (test tap) library. Rename (tap-results) to (tap-range) for
     instance.
+  - Should be possible to add several paths to MICKEY_LIB, e.g. ="a:b:c"
 
 BUGS
 
