@@ -18,6 +18,8 @@ Autotools
 
 BUGS
 
+- #(a b c) should work because of implicit quoting, but (vector (+ 3 4)) should
+equal #(7), but that's also quoted here and not evaluated.
 - (begin) should be exported by (scheme base), seems it's built-in to mickey.
   Also, it's not expanded by readline when doing (b<TAB>.
 
