@@ -20,7 +20,8 @@ TESTS = \
 				scheme-inexact.test \
 				scheme-load.test \
 				spaced-symbols.test \
-				tail-call-elimination.test
+				tail-call-elimination.test \
+				vector.test
 
 EXTRA_DIST = $(TESTS)
 
