@@ -1,0 +1,17 @@
+;First time, unless expands but can't find display (it can't find v either)
+
+; mickey> (let ((v 1)) (unless #f (display "h\n")) v)
+<runtime> Unbound definition: display
+Backtrace:
+ - ((lambda (v) (begin (unless #f (display "h\n")) v)) 1)
+
+But when we do this:
+
+#; mickey> (unless #f (display "h\n"))
+ h
+
+Then suddenly everything works:
+
+#; mickey> (let ((v 1)) (unless #f (display "h\n")) v)
+ h
+ 1
