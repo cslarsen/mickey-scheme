@@ -21,6 +21,12 @@
 
 ;; Lists
 (test (list 1 2 (list 3 4)) (list 1 2 (list 3 4)))
+(test (list 1 2) '(1 2))
+(test '(1 2) (list 1 2))
+(test (list 1 2) (list 1 2))
+(test '(1 2) '(1 2))
+(test (quote (1 2)) '(1 2))
+(test (quote (1 2)) (quote (1 2)))
 
 ;; Apply
 (testq (apply + (list 1 2 3)) 6)
