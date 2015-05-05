@@ -18,8 +18,6 @@ Autotools
 
 BUGS
 
-- #(a b c) should work because of implicit quoting, but (vector (+ 3 4)) should
-equal #(7), but that's also quoted here and not evaluated.
 - (begin) should be exported by (scheme base), seems it's built-in to mickey.
   Also, it's not expanded by readline when doing (b<TAB>.
 
@@ -32,10 +30,6 @@ IMPORT-BUG
 
 (import (only (scheme base) display)) <== display is in (scheme write), so that
 should be an error, but mickey silently ignores it.
-
-VECTOR-BUG
-
-#(1 2 foo) is ok, but (vector 1 2 foo) should evlis and fail.
 
 IMMUTABLE STUFF
 

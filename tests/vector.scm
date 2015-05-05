@@ -2,10 +2,10 @@
         (scheme write)
         (test unit-test))
 
-(test (vector 1 2 3 (list 4 5) 6) #(1 2 3 (list 4 5) 6))
+(test (vector 1 2 3 (list 4 5) 6) #(1 2 3 (4 5) 6))
 (testq (vector? (vector 'abba)) #t)
 (testq (vector-length (vector 1 2 3 (list 4 5) 6)) 5)
-(test (make-vector 7 'a) (vector a a a a a a a))
+(test (make-vector 7 'a) (vector 'a 'a 'a 'a 'a 'a 'a))
 (test (make-vector 7 'a) #(a a a a a a a))
 
 ;; Here are some known bugs

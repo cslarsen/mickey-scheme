@@ -360,7 +360,8 @@ static cons_t* parse_vector(environment_t* e)
   /*
    * Replace #(<expr>) with (vector <expr>)
    */
-  return cons(symbol("vector"), parse_list(e, false));
+  return cons(symbol("list->vector"),
+          cons(cons(symbol("quote"), list(parse_list(e, false)))));
 }
 
 static cons_t* parse_bytevector(environment_t* e)

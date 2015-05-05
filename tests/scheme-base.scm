@@ -676,7 +676,7 @@
 ;; Vectors
 (testq (vector-length (vector 1 2 3)) 3)
 (testq (vector-length (vector)) 0)
-(testq (vector-length (vector 1 2 foo)) 3) ; self-evaluating elements
+(testq (vector-length (vector 1 2 'foo)) 3)
 (testq
   (vector-length
     (vector 1 2 (define (v foo) (* foo foo)) 100)) 4)
