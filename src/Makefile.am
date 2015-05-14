@@ -9,7 +9,8 @@ TEST_LOG_DRIVER_FLAGS = --comments --ignore-exit
 TESTS = \
 				begin.test \
 				block-comment.test \
-				bugs.test \
+				bugs-known.test \
+				bugs-regression.test \
 				bytevector.test \
 				celsius-fahrenheit.test \
 				fibonacci.test \
