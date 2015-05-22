@@ -13,7 +13,8 @@ Distributed under the LGPL 2.1
   (import (only (scheme base)
                 define)
           (only (mickey library)
-                open-internal-library bind-procedure))
+                open-internal-library-determine-extension
+                bind-procedure))
   (export
     global-options)
 

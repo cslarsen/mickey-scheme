@@ -88,6 +88,8 @@ bool parse_option(const char* s, struct options_t* p)
   } else if ( ARGHIT("-V", "--version") ) {
     version();
     exit(0);
+  } else if ( ARGHIT("", "--gc") ) {
+    p->gc = true;
   } else if ( ARGHIT("-h", "--help") ) {
     help(); 
     exit(0);
@@ -121,11 +123,12 @@ void help()
     "Options:\n"
     "  -             Read program from standard input\n"
     "  --            Rest of arguments are files, i.e. files can now begin with -\n"
-    "  -e --eval     Execute expression and print result\n"
-    "  -h --help     Print help\n"
+    "  --gc          Use GC (experimental)\n"
     "  -I<path>      Set include path for (load)\n"
     "  -L<path>      Set location for library imports\n"
     "  -V --version  Print version\n"
+    "  -e --eval     Execute expression and print result\n"
+    "  -h --help     Print help\n"
     "  -v --verbose  Increase verbosity level for each -v\n"
     "  -z --zero-env Start REPL with only (import) defined\n"
     "\n");

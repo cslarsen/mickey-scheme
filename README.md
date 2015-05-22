@@ -27,6 +27,8 @@ Current Features
   * Full support for the R7RS library system `define-library`
   * Tail call eliminiation
   * The `define-record-type` record system
+  * A simple mark-sweep garbage collector (experimental! enable with `--gc` for
+    REPL only)
 
 Some of these are demonstrated in the [example code section](#examples).
 
@@ -80,10 +82,6 @@ Current Shortcomings
 
   * It's __buggy__: There are inherent bugs in the engine as well as
     erronous implementations of library functions.
-
-  * It does not collect __garbage__: Currently, there is no garbage
-    collector.  Adding a simple mark-and-sweep GC is trivial, though, so
-    I'll get to it once I think it's important enough.
 
   * It doesn't support __continuations__ (yet):  I think I'll have to
     convert to continuation passing style for a proper implementation of

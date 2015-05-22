@@ -343,7 +343,7 @@ int repl()
         }
       }
 
-      {
+      if ( global_opts.gc ) {
         size_t size = gc_status();
         size_t dels = gc_collect(p);
         if ( dels > 0 )

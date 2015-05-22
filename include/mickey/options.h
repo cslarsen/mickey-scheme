@@ -34,6 +34,7 @@ struct options_t
   int argc;
   bool warn;
   bool empty_repl_env;
+  bool gc;
 };
 
 extern options_t global_opts;
