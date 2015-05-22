@@ -10,7 +10,10 @@
  */
 
 #include <map>
+#include <vector>
 #include "mickey/mickey.h"
+
+static std::vector<const cons_t*> global_roots;
 
 // TODO: Use tri-coloring
 enum gc_state {
@@ -112,6 +115,7 @@ class gc_storage {
 public:
   size_t size() const;
   size_t collect(const cons_t* roots);
+  size_t collect();
 
   cons_t* alloc_cons(const type_t& type);
   dict_t* alloc_dict();
@@ -181,6 +185,13 @@ void gc_storage::mark_by_type(const cons_t* p)
 size_t gc_storage::collect(const cons_t* root)
 {
   mark(root);
+  return sweep();
+}
+
+size_t gc_storage::collect()
+{
+  for ( size_t n=0; n < global_roots.size(); ++n )
+    mark(global_roots[n]);
   return sweep();
 }
 
@@ -633,6 +644,11 @@ size_t gc_status()
   return gc.size();
 }
 
+size_t gc_collect()
+{
+  return gc.collect();
+}
+
 size_t gc_collect(cons_t* roots)
 {
   return gc.collect(roots);
@@ -742,4 +758,19 @@ char* gc_alloc_string(const size_t length)
 dict_t* gc_alloc_dict()
 {
   return gc.alloc_dict();
+}
+
+void gc_add_root(const cons_t* p)
+{
+  global_roots.push_back(p);
+}
+
+void gc_add_root(environment_t* e)
+{
+  global_roots.push_back(environment(e));
+}
+
+void gc_add_root(program_t* p)
+{
+  global_roots.push_back(cons(p->root, environment(p->globals)));
 }

@@ -16,6 +16,7 @@
 #include "mickey/library.h"
 
 size_t gc_status();
+size_t gc_collect();
 size_t gc_collect(cons_t* root);
 size_t gc_collect(program_t* program);
 
@@ -46,5 +47,9 @@ char* gc_alloc_string(const size_t length);
 
 struct library_t;
 library_t* gc_alloc_library();
+
+void gc_add_root(const cons_t*);
+void gc_add_root(environment_t*);
+void gc_add_root(program_t*);
 
 #endif

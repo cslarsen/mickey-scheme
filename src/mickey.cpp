@@ -60,6 +60,7 @@ void execute_string(const char* s)
 
     program_t *p = parse(s, env);
     p->root = cons(symbol("begin"), p->root);
+    gc_add_root(p);
     printf("%s\n", sprint(eval(p->root, env)).c_str());
   }
   CATCH (const exception_t& e) {

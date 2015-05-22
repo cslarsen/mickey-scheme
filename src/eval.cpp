@@ -12,6 +12,7 @@
 #include "mickey/mickey.h"
 #include "mickey/core-transition.h"
 #include "mickey/assertions.h"
+#include "mickey/options.h"
 
 extern "C" {
 
@@ -126,7 +127,15 @@ static cons_t* eval_quasiquote(cons_t* p, environment_t* e)
  */
 cons_t* eval(cons_t* p, environment_t* e)
 {
+  const size_t gc_it = 1000;
+  size_t gc_cnt = gc_it;
+
   for(;;) {
+    if ( global_opts.gc && --gc_cnt == 0 ) {
+      gc_cnt = gc_it;
+      gc_collect();
+    }
+
     if ( atomp(p) ) {
       if ( symbolp(p) )
         return e->lookup_or_throw(*p->symbol);

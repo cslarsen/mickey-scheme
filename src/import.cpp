@@ -282,6 +282,7 @@ void load(const std::string& file, environment_t* target)
     fprintf(stderr, "Loading file %s\n", file.c_str());
 
   program_t *p = parse(slurp(open_file(file)), target);
+  gc_add_root(p);
   eval(cons(symbol("begin"), p->root), p->globals);
 }
 
