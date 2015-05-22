@@ -239,6 +239,8 @@ int repl()
   init_readline();
   #endif
 
+  size_t gc_countdown = 10;
+
   for(;;) {
     static char *input = reinterpret_cast<char*>(1);
 
@@ -343,12 +345,13 @@ int repl()
         }
       }
 
-      if ( global_opts.gc ) {
+      if ( global_opts.gc && --gc_countdown <= 1 ) {
+        gc_countdown = 10;
         size_t size = gc_status();
         size_t dels = gc_collect(p);
         if ( dels > 0 )
-          printf("** gc reclaimed %zu / %zu objects (~ %zu kb) -- %zu objects left\n",
-              dels, size, dels*sizeof(cons_t)/1000, gc_status());
+          printf("\n; gc reclaimed %zu / %zu objects -- %zu objects left\n\n",
+              dels, size, gc_status());
       }
     }
     CATCH (const exception_t& e) {
