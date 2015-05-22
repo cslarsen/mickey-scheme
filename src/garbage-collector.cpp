@@ -451,7 +451,6 @@ void gc_storage::mark(const symbol_t* p)
     if ( kv != symbols.end() ) {
       if ( kv->second == GC_UNREACHABLE ) {
         kv->second = GC_REACHABLE;
-        // TODO: Remember to check symbol tables (they should be root)
       }
     } else
       printf("gc error: symbol_t* %p not in root set.\n", p);
@@ -484,10 +483,8 @@ void gc_storage::mark(const cons_t* p)
         kv->second = GC_REACHABLE;
         mark_by_type(p);
       }
-    } else {
+    } else
       printf("gc error: cons_t* %p not in root set.\n", p);
-      mark_by_type(p);
-    }
   }
 }
 
@@ -594,11 +591,8 @@ void gc_storage::mark(const dict_t* p)
         for ( dict_t::const_iterator i = p->begin(); i != p->end(); ++i )
           mark(i->second);
       }
-    } else {
+    } else
       printf("gc error: dict_t* %p not in root set.\n", p);
-      for ( dict_t::const_iterator i = p->begin(); i != p->end(); ++i )
-        mark(i->second);
-    }
   }
 }
 
