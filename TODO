@@ -1,3 +1,8 @@
+Garbage collection
+- Need to add a translation_unit or similar to program_t that makes sure that
+we add links to the loaded libraries, so they are not deleted.
+- Must implement tri-color, it should be faster for our depth-first approach.
+
 Autotools
   - Use mickey/$VERSION subfolders for
     - C++ include files

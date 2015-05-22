@@ -304,7 +304,6 @@ int repl()
 
         s += " ";
         s += input;
-        delete p;
 
         #ifdef HAVE_LIBREADLINE
         free(input);
@@ -320,14 +319,6 @@ int repl()
 
       for ( cons_t *i = p->root; !nullp(i); i = cdr(i) ) {
         cons_t *result = eval(car(i), p->globals);
-
-        {
-          size_t size = gc_status();
-          size_t dels = gc_collect(p);
-          if ( dels > 0 )
-            printf("** gc reclaimed %zu / %zu objects (~ %zu kb) -- %zu objects left\n",
-                dels, size, dels*sizeof(cons_t)/1000, gc_status());
-        }
 
         if ( circularp(result) ) {
           fflush(stdout);
@@ -352,7 +343,13 @@ int repl()
         }
       }
 
-      delete p;
+      {
+        size_t size = gc_status();
+        size_t dels = gc_collect(p);
+        if ( dels > 0 )
+          printf("** gc reclaimed %zu / %zu objects (~ %zu kb) -- %zu objects left\n",
+              dels, size, dels*sizeof(cons_t)/1000, gc_status());
+      }
     }
     CATCH (const exception_t& e) {
       if ( *e.what() != '\0' )

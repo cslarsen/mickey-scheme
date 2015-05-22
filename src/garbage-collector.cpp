@@ -212,12 +212,12 @@ size_t gc_storage::sweep()
        + sweep_ptr(closures)
        + sweep_ptr(conses)
        + sweep_ptr(continuations)
-//       + sweep_ptr(dicts)
+       + sweep_ptr(dicts)
        + sweep_ptr(environments)
-//       + sweep_ptr(libraries)
+       + sweep_ptr(libraries)
        + sweep_ptr(pointers)
        + sweep_ptr(ports)
-//       + sweep_ptr(programs)
+       + sweep_ptr(programs)
        + sweep_ptr(pstrings)
        + sweep_ptr(strings)
        + sweep_ptr(syntaxes)
@@ -434,13 +434,9 @@ void gc_storage::mark(const library_t* p)
     if ( kv != libraries.end() ) {
       if ( kv->second == GC_UNREACHABLE ) {
         kv->second = GC_REACHABLE;
-        // Don't follow libraries yet, because it's hard to determine at which
-        // points it's safe to run the GC for this to work. What we need is to
-        // set up _translation units_ for each source file, which then links to
-        // each library, so that they are part of the root set. (TODO)
-        //mark(p->name);
-        //mark(p->exports);
-        //mark(p->internals);
+        mark(p->name);
+        mark(p->exports);
+        mark(p->internals);
       }
     } else
       printf("gc error: symbol_t* %p not in root set.\n", p);
