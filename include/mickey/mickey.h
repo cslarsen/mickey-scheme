@@ -1,8 +1,8 @@
 /*
  * Mickey Scheme
  *
- * Copyright (C) 2011-2012 Christian Stigen Larsen <csl@sublevel3.org>
- * http://csl.sublevel3.org                              _
+ * Copyright (C) 2011-2015 Christian Stigen Larsen <csl@csl.name>
+ * http://csl.name
  *                                                        \
  * Distributed under the LGPL 2.1; see LICENSE            /\
  * Please post bugfixes and suggestions to the author.   /  \_
@@ -36,6 +36,7 @@ const char MICKEY_COPYRIGHT[] = "(C) 2011-2015 Christian Stigen Larsen";
 #include "mickey/evlis.h"
 #include "mickey/exceptions.h"
 #include "mickey/file-io.h"
+#include "mickey/garbage-collector.h"
 #include "mickey/import.h"
 #include "mickey/options.h"
 #include "mickey/parser.h"

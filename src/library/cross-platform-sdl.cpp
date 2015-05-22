@@ -131,9 +131,8 @@ cons_t* set_video_mode(cons_t* p, environment_t*)
   if ( screen == NULL )
     raise(runtime_exception(SDL_GetError()));
 
-  return pointer(
-    new pointer_t("sdl-surface",
-                  reinterpret_cast<void*>(screen)));
+  return pointer(gc_alloc_pointer("sdl-surface",
+                                  reinterpret_cast<void*>(screen)));
 }
 
 };

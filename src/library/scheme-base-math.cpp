@@ -627,7 +627,7 @@ cons_t* proc_exact_to_inexact(cons_t* p, environment_t*)
   assert_number(q);
   assert_exact(q);
 
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   *r = *q;
   r->number.exact = false;
   return r;

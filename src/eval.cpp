@@ -1,8 +1,8 @@
 /*
  * Mickey Scheme
  *
- * Copyright (C) 2011-2013 Christian Stigen Larsen <csl@sublevel3.org>
- * http://csl.sublevel3.org                              _
+ * Copyright (C) 2011-2015 Christian Stigen Larsen <csl@csl.name>
+ * http://csl.name
  *                                                        \
  * Distributed under the LGPL 2.1; see LICENSE            /\
  * Please post bugfixes and suggestions to the author.   /  \_
@@ -238,8 +238,8 @@ cons_t* eval(cons_t* p, environment_t* e)
 
         // search for definition and set if found
         for ( ; i != NULL; i = i->outer ) {
-          if ( i->symbols.find(name) != i->symbols.end() ) {
-            i->symbols[name] = car(evlis(def_body, e));
+          if ( i->symbols->find(name) != i->symbols->end() ) {
+            i->symbols->operator[](name) = car(evlis(def_body, e));
             return unspecified();
           }
         }

@@ -14,6 +14,7 @@
 #include "mickey/parser.h"
 #include "mickey/primitives.h"
 #include "mickey/print.h"
+#include "mickey/garbage-collector.h"
 #include "mickey/strings.h"
 #include "mickey/types/radix_t.h"
 #include "mickey/types/real_t.h"
@@ -395,7 +396,7 @@ program_t* parse(const std::string& program, environment_t *env)
   if ( env == NULL )
     raise(runtime_exception("parse: null environment"));
 
-  program_t *p = new program_t();
+  program_t *p = gc_alloc_program();
   p->globals = env;
   p->parens = parens = 0;
   p->root = parse_list(p->globals);

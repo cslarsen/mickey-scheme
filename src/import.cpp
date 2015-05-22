@@ -22,6 +22,7 @@
 #include "mickey/options.h"
 #include "mickey/eval.h"
 #include "mickey/file-io.h"
+#include "mickey/library.h"
 #include "mickey/debug.h"
 #include "mickey/system-features.h"
 #include "mickey/cond-expand.h"
@@ -54,19 +55,6 @@ cons_t* proc_import(cons_t* p, environment_t* e);
 named_function_t exports_import[] = {
   {"import", proc_import, true},
   {NULL, NULL, false}
-};
-
-struct library_t {
-  cons_t *name;
-  environment_t *exports; // exported definitions
-  environment_t *internals; // imported libs/defs
-
-  library_t() :
-    name(nil()),
-    exports(null_environment()),
-    internals(exports->extend())
-  {
-  }
 };
 
 /*
@@ -389,7 +377,7 @@ static cons_t* include_ci(cons_t* p, environment_t* e, const char* basedir)
  */
 static library_t* define_library(cons_t* p, const char* file)
 {
-  library_t *r = new library_t();
+  library_t *r = gc_alloc_library();
   cons_t *exports = nil();
 
   // find current dir for resolving include and include-ci
@@ -633,8 +621,8 @@ static environment_t* rename(environment_t* e, cons_t* ids)
   environment_t *r = null_environment();
 
   // TODO: Below code runs in slow O(n^2) time
-  for ( dict_t::const_iterator i = e->symbols.begin();
-        i != e->symbols.end(); ++i )
+  for ( dict_t::const_iterator i = e->symbols->begin();
+        i != e->symbols->end(); ++i )
   {
     std::string name = (*i).first;
 
@@ -649,7 +637,7 @@ static environment_t* rename(environment_t* e, cons_t* ids)
       }
     }
 
-    r->symbols[name] = (*i).second;
+    r->symbols->operator[](name) = (*i).second;
   }
 
   return r;
@@ -662,12 +650,12 @@ static environment_t* prefix(environment_t* e, cons_t* identifier)
   // build a new environment and return it
   environment_t *r = null_environment();
 
-  for ( dict_t::const_iterator i = e->symbols.begin();
-        i != e->symbols.end(); ++i )
+  for ( dict_t::const_iterator i = e->symbols->begin();
+        i != e->symbols->end(); ++i )
   {
     const std::string prefix = symbol_name(identifier);
     const std::string name = (*i).first;
-    r->symbols[prefix + name] = (*i).second;
+    r->symbols->operator[](prefix + name) = (*i).second;
   }
 
   return r;
@@ -680,8 +668,8 @@ static environment_t* only(environment_t* e, cons_t* ids)
   // build a new environment and return it
   environment_t *r = null_environment();
 
-  for ( dict_t::const_iterator i = e->symbols.begin();
-        i != e->symbols.end(); ++i )
+  for ( dict_t::const_iterator i = e->symbols->begin();
+        i != e->symbols->end(); ++i )
   {
     std::string name = (*i).first;
 
@@ -691,7 +679,7 @@ static environment_t* only(environment_t* e, cons_t* ids)
       assert_type(SYMBOL, car(id));
 
       if ( symbol_name(car(id)) == name ) {
-        r->symbols[name] = (*i).second;
+        r->symbols->operator[](name) = (*i).second;
         break;
       }
     }
@@ -707,8 +695,8 @@ static environment_t* except(environment_t* e,  cons_t* ids)
   // build a new environment and return it
   environment_t *r = null_environment();
 
-  for ( dict_t::const_iterator i = e->symbols.begin();
-        i != e->symbols.end(); ++i )
+  for ( dict_t::const_iterator i = e->symbols->begin();
+        i != e->symbols->end(); ++i )
   {
     std::string name = (*i).first;
 
@@ -721,7 +709,7 @@ static environment_t* except(environment_t* e,  cons_t* ids)
         goto DO_NOT_IMPORT;
     }
 
-    r->symbols[name] = (*i).second;
+    r->symbols->operator[](name) = (*i).second;
 
 DO_NOT_IMPORT:
     continue;

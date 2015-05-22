@@ -16,13 +16,15 @@
 #include "mickey/types/dict_t.h"
 #include "mickey/types/lambda_t.h"
 
+dict_t* gc_alloc_dict();
+
 /*
  * Environment holds a symbol table and points to an optional outer (or
  * parent) environment.
  */
 struct environment_t {
   struct environment_t *outer;
-  dict_t symbols;
+  dict_t* symbols;
 
   environment_t* extend();
   struct cons_t* lookup(const std::string& name) const;
@@ -32,7 +34,7 @@ struct environment_t {
   environment_t* outermost();
 
 private:
-  environment_t() : outer(NULL)
+  environment_t() : outer(NULL), symbols(gc_alloc_dict())
   {
   }
 
@@ -47,6 +49,8 @@ private:
    */
   environment_t(const environment_t&);
   environment_t& operator=(const environment_t&);
+
+  friend class gc_storage;
 };
 
 /*

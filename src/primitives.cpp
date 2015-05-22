@@ -14,6 +14,7 @@
 #include <limits.h>
 #include <math.h>
 #include "mickey/mickey.h"
+#include "mickey/garbage-collector.h"
 
 /*
  * Marks that return-value is unspecified.
@@ -33,7 +34,7 @@ cons_t* emptylist()
 
 cons_t* cons(const cons_t* h, const cons_t* t)
 {
-  cons_t *p = new cons_t();
+  cons_t *p = gc_alloc_cons();
   p->type = PAIR;
   p->car = const_cast<cons_t*>(h);
   p->cdr = const_cast<cons_t*>(t);
@@ -47,7 +48,7 @@ cons_t* list(const cons_t* h, const cons_t* t)
 
 cons_t* symbol(const char* s)
 {
-  cons_t *p = new cons_t();
+  cons_t *p = gc_alloc_cons();
   p->type = SYMBOL;
   p->symbol = create_symbol(s);
   return p;
@@ -55,14 +56,14 @@ cons_t* symbol(const char* s)
 
 cons_t* nil()
 {
-  cons_t *p = new cons_t();
+  cons_t *p = gc_alloc_cons();
   p->type = NIL;
   return p;
 }
 
 cons_t* integer(integer_t n, bool exact)
 {
-  cons_t *p = new cons_t();
+  cons_t *p = gc_alloc_cons();
   p->type = INTEGER;
   p->number.integer = n;
   p->number.exact = exact;
@@ -74,7 +75,7 @@ cons_t* rational(rational_t r, bool exact, bool promote_to_int)
   if ( r.denominator == 0 )
     raise(runtime_exception("Cannot divide by zero: " + to_s(r)));
 
-  cons_t *p = new cons_t();
+  cons_t *p = gc_alloc_cons();
   p->type = RATIONAL;
   p->number.rational = simplify(r);
   p->number.exact = exact;
@@ -92,7 +93,7 @@ cons_t* rational(rational_t r, bool exact, bool promote_to_int)
 
 cons_t* port(port_t* p)
 {
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   r->type = PORT;
   r->port = p;
   return r;
@@ -100,7 +101,7 @@ cons_t* port(port_t* p)
 
 cons_t* environment(environment_t* e)
 {
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   r->type = ENVIRONMENT;
   r->environment = e;
   return r;
@@ -108,7 +109,7 @@ cons_t* environment(environment_t* e)
 
 cons_t* pointer(pointer_t* p)
 {
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   r->type = POINTER;
   r->pointer = p;
   return r;
@@ -116,9 +117,9 @@ cons_t* pointer(pointer_t* p)
 
 cons_t* pointer(const char* tag, void* value)
 {
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   r->type = POINTER;
-  r->pointer = new pointer_t(tag, value);
+  r->pointer = gc_alloc_pointer(tag, value);
   return r;
 }
 
@@ -134,7 +135,7 @@ bool pointerp(cons_t* p)
 
 cons_t* real(real_t n)
 {
-  cons_t *p = new cons_t();
+  cons_t *p = gc_alloc_cons();
   p->type = REAL;
   p->number.real = n;
   p->number.exact = false;
@@ -143,7 +144,7 @@ cons_t* real(real_t n)
 
 cons_t* real(rational_t r)
 {
-  cons_t *p = new cons_t();
+  cons_t *p = gc_alloc_cons();
   p->type = REAL;
   p->number.exact = false;
   p->number.real = static_cast<real_t>(r.numerator) /
@@ -153,7 +154,7 @@ cons_t* real(rational_t r)
 
 cons_t* boolean(bool f)
 {
-  cons_t *p = new cons_t();
+  cons_t *p = gc_alloc_cons();
   p->type = BOOLEAN;
   p->boolean = f;
   return p;
@@ -161,7 +162,7 @@ cons_t* boolean(bool f)
 
 cons_t* character(character_t c)
 {
-  cons_t *p = new cons_t();
+  cons_t *p = gc_alloc_cons();
   p->type = CHAR;
   p->character = c;
   return p;
@@ -169,7 +170,7 @@ cons_t* character(character_t c)
 
 cons_t* string(const char* s)
 {
-  cons_t *p = new cons_t();
+  cons_t *p = gc_alloc_cons();
   p->type = STRING;
   p->string = copy_str(s);
   return p;
@@ -180,9 +181,9 @@ cons_t* vector(cons_t* p, size_t size, cons_t* fill)
   vector_t *v;
 
   if ( size )
-    v = fill? new vector_t(size, fill) : new vector_t(size, nil());
+    v = fill? gc_alloc_vector(size, fill) : gc_alloc_vector(size, nil());
   else {
-    v = new vector_t();
+    v = gc_alloc_vector();
 
     while ( !nullp(p) ) {
       v->vector.push_back(car(p));
@@ -190,7 +191,7 @@ cons_t* vector(cons_t* p, size_t size, cons_t* fill)
     }
   }
 
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   r->type = VECTOR;
   r->vector = v;
   return r;
@@ -201,11 +202,11 @@ cons_t* bytevector(size_t size, const uint8_t* fill)
   bytevector_t *v;
 
   if ( size )
-    if ( fill ) v = new bytevector_t(size, *fill);
-    else        v = new bytevector_t(size);
-  else          v = new bytevector_t();
+    if ( fill ) v = gc_alloc_bytevector(size, *fill);
+    else        v = gc_alloc_bytevector(size);
+  else          v = gc_alloc_bytevector();
 
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   r->type = BYTEVECTOR;
   r->bytevector = v;
   return r;
@@ -213,9 +214,9 @@ cons_t* bytevector(size_t size, const uint8_t* fill)
 
 cons_t* bytevector(const std::vector<uint8_t>& p)
 {
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   r->type = BYTEVECTOR;
-  r->bytevector = new bytevector_t(p);
+  r->bytevector = gc_alloc_bytevector(p);
   return r;
 }
 
@@ -581,12 +582,12 @@ cons_t* splice_into(cons_t *src, cons_t *dst)
 
 cons_t* closure(lambda_t f, environment_t* e, bool syntactic)
 {
-  closure_t *c = new closure_t();
+  closure_t *c = gc_alloc_closure();
   c->function = f;
   c->environment = e;
   c->syntactic = syntactic;
 
-  cons_t *p = new cons_t();
+  cons_t *p = gc_alloc_cons();
   p->type = CLOSURE;
   p->closure = c;
 
@@ -736,7 +737,7 @@ environment_t* null_environment(int version)
   if ( version != 7 )
     raise(runtime_exception(format("Unsupported null environment version: %d", version)));
 
-  environment_t *r = new environment_t();
+  environment_t *r = gc_alloc_environment();
 
   /*
    * Used to import(r, exports_import); here,
@@ -752,7 +753,7 @@ environment_t* null_environment(int version)
  */
 environment_t* null_import_environment()
 {
-  environment_t *r = new environment_t();
+  environment_t *r = gc_alloc_environment();
   import(r, exports_import);
   return r;
 }

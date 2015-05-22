@@ -25,7 +25,7 @@ static void sighandler(int sig)
   if ( proc == NULL )
     return;
 
-  cons_t *p = new cons_t();
+  cons_t *p = gc_alloc_cons();
   p->type = CLOSURE;
   p->closure = proc;
 

@@ -13,9 +13,7 @@
 
 #include "mickey/cons.h"
 #include "mickey/exceptions.h"
-
-typedef std::set<symbol_t> symbols_t;
-static symbols_t symbols;
+#include "mickey/garbage-collector.h"
 
 const symbol_t* create_symbol(const std::string& s)
 {
@@ -23,13 +21,5 @@ const symbol_t* create_symbol(const std::string& s)
   if ( s.empty() )
     raise(runtime_exception("Symbols must have names"));
 
-  symbols_t::iterator i = symbols.find(s);
-
-  // return symbol if it already exists
-  if ( i != symbols.end() )
-    return &(*i); // return it
-
-  // if not, create it
-  std::pair<symbols_t::iterator, bool> p = symbols.insert(s);
-  return &(*p.first);
+  return gc_alloc_symbol(s.c_str());
 }

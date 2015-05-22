@@ -16,6 +16,7 @@
 #include "mickey/util.h"
 #include "mickey/primitives.h"
 #include "mickey/parser.h"
+#include "mickey/garbage-collector.h"
 #include "mickey/platform-limits.h"
 #include "mickey/print.h"
 
@@ -61,12 +62,7 @@ bool char_in(char ch, const char* s)
 
 char* copy_str(const char* s)
 {
-  s = s? s : "";
-#ifdef BOHEM_GC
-  return strcpy((char*) GC_MALLOC(1 + strlen(s)), s);
-#else
-  return strcpy((char*) malloc(1 + strlen(s)), s);
-#endif
+  return gc_alloc_string(s? s : "");
 }
 
 std::string encode_str(const char* s)
@@ -105,7 +101,7 @@ cons_t* deep_copy(const cons_t *p)
   if ( !p )
     return NULL;
 
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   memcpy(r, p, sizeof(cons_t));
 
   if ( listp(r) ) {

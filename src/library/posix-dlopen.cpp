@@ -117,9 +117,7 @@ cons_t* proc_dlopen(cons_t* p, environment_t*)
 
   void *h = dlopen(car(p)->string, parse_dlopen_mode(cdr(p)));
 
-  return h!=NULL?
-    pointer(new pointer_t(TYPE_TAG, h)) :
-    boolean(false);
+  return h!=NULL?  pointer(gc_alloc_pointer(TYPE_TAG, h)) : boolean(false);
 }
 
 /*
@@ -154,9 +152,7 @@ cons_t* proc_dlopen_self(cons_t* p, environment_t*)
 
   void *h = dlopen(NULL, mode);
 
-  return h!=NULL?
-    pointer(new pointer_t(TYPE_TAG, h)) :
-    boolean(false);
+  return h!=NULL?  pointer(gc_alloc_pointer(TYPE_TAG, h)) : boolean(false);
 }
 
 /*
@@ -183,9 +179,7 @@ cons_t* proc_dlopen_internal(cons_t* p, environment_t*)
     if ( file_exists(file.c_str()) ) {
       void *h = dlopen(file.c_str(), parse_dlopen_mode(cdr(p)));
 
-      return h!=NULL?
-        pointer(new pointer_t(TYPE_TAG, h)) :
-        boolean(false);
+      return h!=NULL?  pointer(gc_alloc_pointer(TYPE_TAG, h)) : boolean(false);
     }
   }
 

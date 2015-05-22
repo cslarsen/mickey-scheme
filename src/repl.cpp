@@ -36,9 +36,9 @@ cons_t* proc_list_globals(cons_t*, environment_t *env)
   cons_t *r = list(NULL);
 
   for ( ; env != NULL; env = env->outer ) {
-    dict_t::const_iterator i = env->symbols.begin();
+    dict_t::const_iterator i = env->symbols->begin();
 
-    while ( i != env->symbols.end() ) {
+    while ( i != env->symbols->end() ) {
       std::string n = (*i).first;
       r = append(r, cons(symbol(n.c_str())));
       ++i;
@@ -279,7 +279,6 @@ int repl()
           printf("   To quit, hit CTRL+D or type (exit).  Use (help) for an introduction.\n");
           printf("   Distributed under the LGPL 2.1; see LICENSE\n");
           printf("\n");
-          printf("   WARNING: There's no garbage collector in Mickey yet!\n");
           printf("|#\n\n");
 
           import_defaults(env);
@@ -321,6 +320,14 @@ int repl()
 
       for ( cons_t *i = p->root; !nullp(i); i = cdr(i) ) {
         cons_t *result = eval(car(i), p->globals);
+
+        {
+          size_t size = gc_status();
+          size_t dels = gc_collect(p);
+          if ( dels > 0 )
+            printf("** gc reclaimed %zu / %zu objects (~ %zu kb) -- %zu objects left\n",
+                dels, size, dels*sizeof(cons_t)/1000, gc_status());
+        }
 
         if ( circularp(result) ) {
           fflush(stdout);

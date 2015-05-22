@@ -13,6 +13,7 @@
 #include "mickey/util.h"
 #include "mickey/primitives.h"
 #include "mickey/syntax-rules.h"
+#include "mickey/garbage-collector.h"
 #include "mickey/print.h"
 #include "mickey/exceptions.h"
 #include "mickey/arguments.h"
@@ -192,11 +193,11 @@ cons_t* syntax_expand(cons_t *macro, cons_t *code, environment_t* e)
 
 cons_t* make_syntax(cons_t* body, environment_t* e)
 {
-  syntax_t *s = new syntax_t();
+  syntax_t *s = gc_alloc_syntax();
   s->transformer = body;
   s->environment = e;
 
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   r->type = SYNTAX;
   r->syntax = s;
   return r;

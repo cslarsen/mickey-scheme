@@ -85,6 +85,7 @@ libmickey_la_SOURCES=apply.cpp \
 										 evlis.cpp \
 										 exceptions.cpp \
 										 file-io.cpp \
+										 garbage-collector.cpp \
 										 import.cpp \
 										 make-closure.cpp \
 										 options.cpp \

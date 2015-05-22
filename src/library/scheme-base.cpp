@@ -14,6 +14,7 @@
 #include <cmath>
 #include "mickey/library/scheme-base.h"
 #include "mickey/system-features.h"
+#include "mickey/garbage-collector.h"
 
 extern "C" {
 
@@ -342,9 +343,9 @@ cons_t* proc_list_to_vector(cons_t* p, environment_t*)
   assert_length(p, 1);
   assert_type(PAIR, car(p));
 
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   r->type = VECTOR;
-  r->vector = new vector_t(length(car(p)));
+  r->vector = gc_alloc_vector(length(car(p)));
 
   size_t n=0;
 
@@ -359,9 +360,9 @@ cons_t* proc_vector_copy(cons_t* p, environment_t*)
   assert_length(p, 1);
   assert_type(VECTOR, car(p));
 
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   r->type = VECTOR;
-  r->vector = new vector_t(*car(p)->vector);
+  r->vector = gc_alloc_vector(car(p)->vector);
   return r;
 }
 
@@ -370,9 +371,9 @@ cons_t* proc_bytevector_copy(cons_t* p, environment_t*)
   assert_length(p, 1);
   assert_type(BYTEVECTOR, car(p));
 
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   r->type = BYTEVECTOR;
-  r->bytevector = new bytevector_t(*car(p)->bytevector);
+  r->bytevector = gc_alloc_bytevector(car(p)->bytevector);
   return r;
 }
 
@@ -520,9 +521,9 @@ cons_t* proc_string_to_vector(cons_t* p, environment_t*)
   assert_length(p, 1);
   assert_type(STRING, car(p));
 
-  cons_t *r = new cons_t();
+  cons_t *r = gc_alloc_cons();
   r->type = VECTOR;
-  r->vector = new vector_t(strlen(car(p)->string));
+  r->vector = gc_alloc_vector(strlen(car(p)->string));
 
   size_t n=0;
   const char* s = car(p)->string;
@@ -1179,7 +1180,7 @@ cons_t* proc_read_line(cons_t* p, environment_t*)
 cons_t* proc_eof_object(cons_t* p, environment_t*)
 {
   assert_length(p, 0);
-  return pointer(new pointer_t("eof-object", NULL));
+  return pointer(gc_alloc_pointer("eof-object", NULL));
 }
 
 cons_t* proc_peek_char(cons_t* p, environment_t*)

@@ -13,6 +13,7 @@
 #include "mickey/exceptions.h"
 #include "mickey/primitives.h"
 #include "mickey/print.h"
+#include "mickey/garbage-collector.h"
 
 cons_t* environment_t::lookup_or_throw(const std::string& name) const
 {
@@ -31,7 +32,7 @@ cons_t* environment_t::lookup(const std::string& name) const
   dict_t::const_iterator i;
 
   do {
-    if ( (i = e->symbols.find(name)) != e->symbols.end() )
+    if ( (i = e->symbols->find(name)) != e->symbols->end() )
       return (*i).second;
 
   } while ( (e = e->outer) != NULL);
@@ -50,8 +51,8 @@ struct cons_t* environment_t::define(const std::string& name, lambda_t f, bool s
     fprintf(stderr, "WARNING: Already have a definition for %s\n",
       name.c_str());
 
-  symbols[name] = closure(f, this, syntactic);
-  return symbols[name];
+  symbols->operator[](name) = closure(f, this, syntactic);
+  return symbols->operator[](name);
 }
 
 struct cons_t* environment_t::define(const std::string& name, cons_t* body)
@@ -65,12 +66,12 @@ struct cons_t* environment_t::define(const std::string& name, cons_t* body)
     fprintf(stderr, "WARNING: Already have a definition for %s\n",
       name.c_str());
 
-  return symbols[name] = body;
+  return symbols->operator[](name) = body;
 }
 
 struct environment_t* environment_t::extend()
 {
-  environment_t *r = new environment_t();
+  environment_t *r = gc_alloc_environment();
   r->outer = this;
   return r;
 }
@@ -89,14 +90,14 @@ int merge(environment_t *to, const environment_t *from)
 {
   int r = 0;
 
-  for ( dict_t::const_iterator i = from->symbols.begin();
-        i != from->symbols.end(); ++i )
+  for ( dict_t::const_iterator i = from->symbols->begin();
+        i != from->symbols->end(); ++i )
   {
     std::string name = (*i).first;
 
     // copy binding
     if ( to->lookup(name) == NULL ) {
-      to->symbols[name] = (*i).second;
+      to->symbols->operator[](name) = (*i).second;
       ++r;
       continue;
     }

@@ -78,8 +78,8 @@ cons_t* proc_env_bound_names(cons_t* p, environment_t*)
   environment_t *e = car(p)->environment;
   cons_t *r = list(), *end = r;
 
-  for ( dict_t::const_iterator i = e->symbols.begin();
-        i != e->symbols.end(); ++i )
+  for ( dict_t::const_iterator i = e->symbols->begin();
+        i != e->symbols->end(); ++i )
   {
     // append name only
     end->car = symbol((*i).first.c_str());
@@ -98,8 +98,8 @@ cons_t* proc_env_bindings(cons_t* p, environment_t*)
   environment_t *e = car(p)->environment;
   cons_t *r = list(), *end = r;
 
-  for ( dict_t::const_iterator i = e->symbols.begin();
-        i != e->symbols.end(); ++i )
+  for ( dict_t::const_iterator i = e->symbols->begin();
+        i != e->symbols->end(); ++i )
   {
     cons_t *name = symbol((*i).first.c_str());
     cons_t *value = (*i).second;
@@ -179,8 +179,8 @@ cons_t* proc_env_assign(cons_t* p, environment_t*)
 
   // search for definition and set if found
   for ( ; i != NULL; i = i->outer ) {
-    if ( i->symbols.find(name) != i->symbols.end() ) {
-      i->symbols[name] = value;
+    if ( i->symbols->find(name) != i->symbols->end() ) {
+      i->symbols->operator[](name) = value;
       return nil();
     }
   }
