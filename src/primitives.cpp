@@ -34,8 +34,7 @@ cons_t* emptylist()
 
 cons_t* cons(const cons_t* h, const cons_t* t)
 {
-  cons_t *p = gc_alloc_cons();
-  p->type = PAIR;
+  cons_t *p = gc_alloc_cons(PAIR);
   p->car = const_cast<cons_t*>(h);
   p->cdr = const_cast<cons_t*>(t);
   return p;
@@ -48,23 +47,19 @@ cons_t* list(const cons_t* h, const cons_t* t)
 
 cons_t* symbol(const char* s)
 {
-  cons_t *p = gc_alloc_cons();
-  p->type = SYMBOL;
+  cons_t *p = gc_alloc_cons(SYMBOL);
   p->symbol = create_symbol(s);
   return p;
 }
 
 cons_t* nil()
 {
-  cons_t *p = gc_alloc_cons();
-  p->type = NIL;
-  return p;
+  return gc_alloc_cons(NIL);
 }
 
 cons_t* integer(integer_t n, bool exact)
 {
-  cons_t *p = gc_alloc_cons();
-  p->type = INTEGER;
+  cons_t *p = gc_alloc_cons(INTEGER);
   p->number.integer = n;
   p->number.exact = exact;
   return p;
@@ -75,8 +70,7 @@ cons_t* rational(rational_t r, bool exact, bool promote_to_int)
   if ( r.denominator == 0 )
     raise(runtime_exception("Cannot divide by zero: " + to_s(r)));
 
-  cons_t *p = gc_alloc_cons();
-  p->type = RATIONAL;
+  cons_t *p = gc_alloc_cons(RATIONAL);
   p->number.rational = simplify(r);
   p->number.exact = exact;
 
@@ -93,32 +87,28 @@ cons_t* rational(rational_t r, bool exact, bool promote_to_int)
 
 cons_t* port(port_t* p)
 {
-  cons_t *r = gc_alloc_cons();
-  r->type = PORT;
+  cons_t *r = gc_alloc_cons(PORT);
   r->port = p;
   return r;
 }
 
 cons_t* environment(environment_t* e)
 {
-  cons_t *r = gc_alloc_cons();
-  r->type = ENVIRONMENT;
+  cons_t *r = gc_alloc_cons(ENVIRONMENT);
   r->environment = e;
   return r;
 }
 
 cons_t* pointer(pointer_t* p)
 {
-  cons_t *r = gc_alloc_cons();
-  r->type = POINTER;
+  cons_t *r = gc_alloc_cons(POINTER);
   r->pointer = p;
   return r;
 }
 
 cons_t* pointer(const char* tag, void* value)
 {
-  cons_t *r = gc_alloc_cons();
-  r->type = POINTER;
+  cons_t *r = gc_alloc_cons(POINTER);
   r->pointer = gc_alloc_pointer(tag, value);
   return r;
 }
@@ -135,8 +125,7 @@ bool pointerp(cons_t* p)
 
 cons_t* real(real_t n)
 {
-  cons_t *p = gc_alloc_cons();
-  p->type = REAL;
+  cons_t *p = gc_alloc_cons(REAL);
   p->number.real = n;
   p->number.exact = false;
   return p;
@@ -144,8 +133,7 @@ cons_t* real(real_t n)
 
 cons_t* real(rational_t r)
 {
-  cons_t *p = gc_alloc_cons();
-  p->type = REAL;
+  cons_t *p = gc_alloc_cons(REAL);
   p->number.exact = false;
   p->number.real = static_cast<real_t>(r.numerator) /
                    static_cast<real_t>(r.denominator);
@@ -154,24 +142,21 @@ cons_t* real(rational_t r)
 
 cons_t* boolean(bool f)
 {
-  cons_t *p = gc_alloc_cons();
-  p->type = BOOLEAN;
+  cons_t *p = gc_alloc_cons(BOOLEAN);
   p->boolean = f;
   return p;
 }
 
 cons_t* character(character_t c)
 {
-  cons_t *p = gc_alloc_cons();
-  p->type = CHAR;
+  cons_t *p = gc_alloc_cons(CHAR);
   p->character = c;
   return p;
 }
 
 cons_t* string(const char* s)
 {
-  cons_t *p = gc_alloc_cons();
-  p->type = STRING;
+  cons_t *p = gc_alloc_cons(STRING);
   p->string = copy_str(s);
   return p;
 }
@@ -191,31 +176,30 @@ cons_t* vector(cons_t* p, size_t size, cons_t* fill)
     }
   }
 
-  cons_t *r = gc_alloc_cons();
-  r->type = VECTOR;
+  cons_t *r = gc_alloc_cons(VECTOR);
   r->vector = v;
   return r;
 }
 
 cons_t* bytevector(size_t size, const uint8_t* fill)
 {
-  bytevector_t *v;
+  cons_t *r = gc_alloc_cons(BYTEVECTOR);
 
-  if ( size )
-    if ( fill ) v = gc_alloc_bytevector(size, *fill);
-    else        v = gc_alloc_bytevector(size);
-  else          v = gc_alloc_bytevector();
+  if ( size ) {
+    if ( fill )
+      r->bytevector = gc_alloc_bytevector(size, *fill);
+    else
+      r->bytevector = gc_alloc_bytevector(size);
+  } else {
+    r->bytevector = gc_alloc_bytevector();
+  }
 
-  cons_t *r = gc_alloc_cons();
-  r->type = BYTEVECTOR;
-  r->bytevector = v;
   return r;
 }
 
 cons_t* bytevector(const std::vector<uint8_t>& p)
 {
-  cons_t *r = gc_alloc_cons();
-  r->type = BYTEVECTOR;
+  cons_t *r = gc_alloc_cons(BYTEVECTOR);
   r->bytevector = gc_alloc_bytevector(p);
   return r;
 }
@@ -587,8 +571,7 @@ cons_t* closure(lambda_t f, environment_t* e, bool syntactic)
   c->environment = e;
   c->syntactic = syntactic;
 
-  cons_t *p = gc_alloc_cons();
-  p->type = CLOSURE;
+  cons_t *p = gc_alloc_cons(CLOSURE);
   p->closure = c;
 
   return p;

@@ -20,7 +20,8 @@ size_t gc_collect();
 size_t gc_collect(cons_t* root);
 size_t gc_collect(program_t* program);
 
-cons_t* gc_alloc_cons();
+cons_t* gc_alloc_cons(const type_t& type = NIL);
+
 const symbol_t* gc_alloc_symbol(const char* name);
 pointer_t* gc_alloc_pointer(const char* tag, void* ptr);
 program_t* gc_alloc_program();

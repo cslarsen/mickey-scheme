@@ -664,6 +664,11 @@ cons_t* gc_alloc_cons()
   return gc.alloc_cons(NIL);
 }
 
+cons_t* gc_alloc_cons(const type_t& type)
+{
+  return gc.alloc_cons(type);
+}
+
 const symbol_t* gc_alloc_symbol(const char* name)
 {
   return gc.alloc_symbol(name);
