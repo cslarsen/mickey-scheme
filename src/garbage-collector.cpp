@@ -14,6 +14,7 @@
 #include "mickey/mickey.h"
 
 static std::vector<const cons_t*> global_roots;
+static std::vector<const char**> global_roots_strings;
 
 // TODO: Use tri-coloring
 enum gc_state {
@@ -159,6 +160,7 @@ public:
 
   char* alloc_string(const size_t length);
   char* alloc_string(const char* source);
+  const char** alloc_strings(const size_t size);
 
   void mark(const bytevector_t* p);
   void mark(const char* p);
@@ -262,6 +264,10 @@ size_t gc_storage::collect()
 {
   for ( size_t n=0; n < global_roots.size(); ++n )
     mark(global_roots[n]);
+
+  for ( size_t n=0; n < global_roots_strings.size(); ++n )
+    mark(global_roots_strings[n]);
+
   return sweep();
 }
 
@@ -456,6 +462,14 @@ library_t* gc_storage::alloc_library()
 {
   library_t* p = new library_t();
   libraries[p] = GC_UNREACHABLE;
+  return p;
+}
+
+const char** gc_storage::alloc_strings(const size_t length)
+{
+  const char** p = new const char*[length];
+  pstrings[p] = GC_UNREACHABLE;
+  memset(p, 0, length*sizeof(char*));
   return p;
 }
 
@@ -848,6 +862,11 @@ void gc_add_root(const cons_t* p)
   global_roots.push_back(p);
 }
 
+void gc_add_root(const char** p)
+{
+  global_roots_strings.push_back(p);
+}
+
 void gc_add_root(environment_t* e)
 {
   global_roots.push_back(environment(e));
@@ -891,4 +910,9 @@ cons_t* make_pair(cons_t* car, cons_t* cdr)
 cons_t* make_string(const char* s)
 {
   return gc.make_string(s);
+}
+
+const char** gc_alloc_strings(const size_t size)
+{
+  return gc.alloc_strings(size);
 }

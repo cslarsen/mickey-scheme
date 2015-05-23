@@ -186,8 +186,8 @@ void scan_for_library_files()
       library_map = static_cast<library_map_t*>(
           realloc(library_map, sizeof(library_map_t)*(len+2)));
 
-      library_map[len].library_name = strdup(name.c_str());
-      library_map[len].source_file = strdup(files[n].c_str());
+      library_map[len].library_name = copy_str(name.c_str());
+      library_map[len].source_file = copy_str(files[n].c_str());
 
       library_map[len+1].library_name = NULL;
       library_map[len+1].source_file = NULL;
@@ -203,6 +203,10 @@ void load_library_index()
   std::string filename = library_file(library_index_file);
   environment_t *env = null_environment();
   program_t *p = parse(slurp(open_file(filename)), env);
+
+  // Keep the library code around, so it's not collected. TODO: We should
+  // gather up stuff like this in a centralized place.
+  gc_add_root(p);
 
   cons_t *index = p->root;
 
@@ -230,8 +234,8 @@ void load_library_index()
         if ( !listp(name) || !stringp(file) )
           invalid_index_format(filename + ": not list/string pair");
 
-        library_map[i].library_name = strdup(sprint(name).c_str());
-        library_map[i].source_file = strdup(file->string);
+        library_map[i].library_name = copy_str(sprint(name).c_str());
+        library_map[i].source_file = copy_str(file->string);
       }
 
       // important to signal end of list:
@@ -249,12 +253,13 @@ void load_library_index()
       }
 
       size_t len = length(cdar(index));
-      repl_libraries = (const char**) malloc((1+len)*sizeof(char*));
+      repl_libraries = gc_alloc_strings(1+len);
+      gc_add_root(repl_libraries); // keep this around as well
 
       const char **s = repl_libraries;
       for ( cons_t *lib = cdar(index); !nullp(lib); lib = cdr(lib), ++s ) {
         cons_t *name = car(lib);
-        *s = strdup(sprint(name).c_str());
+        *s = copy_str(sprint(name).c_str());
       }
       *s = NULL;
       continue;

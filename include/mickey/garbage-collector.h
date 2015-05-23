@@ -45,6 +45,7 @@ bytevector_t* gc_alloc_bytevector(const std::vector<uint8_t>& v);
 
 char* gc_alloc_string(const char* source);
 char* gc_alloc_string(const size_t length);
+const char** gc_alloc_strings(const size_t size);
 
 struct library_t;
 library_t* gc_alloc_library();
@@ -52,6 +53,7 @@ library_t* gc_alloc_library();
 void gc_add_root(const cons_t*);
 void gc_add_root(environment_t*);
 void gc_add_root(program_t*);
+void gc_add_root(const char**);
 
 cons_t* make_bytevector(const size_t size = 0);
 cons_t* make_bytevector(const size_t size, const uint8_t fill);
