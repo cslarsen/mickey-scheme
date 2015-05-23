@@ -34,10 +34,7 @@ cons_t* emptylist()
 
 cons_t* cons(const cons_t* h, const cons_t* t)
 {
-  cons_t *p = gc_alloc_cons(PAIR);
-  p->car = const_cast<cons_t*>(h);
-  p->cdr = const_cast<cons_t*>(t);
-  return p;
+  return make_pair(const_cast<cons_t*>(h), const_cast<cons_t*>(t));
 }
 
 cons_t* list(const cons_t* h, const cons_t* t)
@@ -47,9 +44,19 @@ cons_t* list(const cons_t* h, const cons_t* t)
 
 cons_t* symbol(const char* s)
 {
-  cons_t *p = gc_alloc_cons(SYMBOL);
-  p->symbol = create_symbol(s);
-  return p;
+  // TODO: Valiate that s is a valid symbol, and remove the one in cons.cpp
+  if ( !s || strlen(s)==0 )
+    raise(runtime_exception("Cannot create empty symbol"));
+
+  if ( isdigit(s[0]) )
+    raise(runtime_exception("Symbol cannot begin with a digit."));
+
+  // TODO: This is not correct, see R7RS 2.1, should be able to do |H\x65;llo|,
+  // but this should be handled by the parser, for the most part.
+  if ( strchr(s, '(') || strchr(s, ')') || !strcmp(s, ".") || strchr(s, '\\') )
+    raise(runtime_exception("Symbol contained invalid character(s)."));
+
+  return make_symbol(s);
 }
 
 cons_t* nil()
@@ -156,9 +163,7 @@ cons_t* character(character_t c)
 
 cons_t* string(const char* s)
 {
-  cons_t *p = gc_alloc_cons(STRING);
-  p->string = copy_str(s);
-  return p;
+  return make_string(s);
 }
 
 cons_t* vector(cons_t* p, size_t size, cons_t* fill)

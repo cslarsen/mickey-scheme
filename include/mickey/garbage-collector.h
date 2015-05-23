@@ -53,4 +53,12 @@ void gc_add_root(const cons_t*);
 void gc_add_root(environment_t*);
 void gc_add_root(program_t*);
 
+cons_t* make_bytevector(const size_t size = 0);
+cons_t* make_bytevector(const size_t size, const uint8_t fill);
+cons_t* make_symbol(const char* name);
+cons_t* make_vector(const size_t size = 0, cons_t* fill = NULL);
+cons_t* make_vector(const vector_t* v);
+cons_t* make_pair(cons_t* car = NULL, cons_t* cdr = NULL);
+cons_t* make_string(const char* s);
+
 #endif

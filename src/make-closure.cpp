@@ -13,15 +13,11 @@
 
 cons_t* make_closure(cons_t* args, cons_t* body, environment_t* e)
 {
-  closure_t *c = gc_alloc_closure();
-  c->function = NULL;
-  c->environment = e;
-  c->args = args;
-  c->body = cons(symbol("begin"), body);
-
-  cons_t* r = gc_alloc_cons();
-  r->type = CLOSURE;
-  r->closure = c;
+  cons_t* r = gc_alloc_cons(CLOSURE);
+  r->closure = gc_alloc_closure();
+  r->closure->function = NULL;
+  r->closure->environment = e;
+  r->closure->args = args;
+  r->closure->body = cons(symbol("begin"), body);
   return r;
 }
-

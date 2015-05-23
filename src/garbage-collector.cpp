@@ -158,6 +158,59 @@ public:
   void mark(const symbol_t* p);
   void mark(const syntax_t* p);
   void mark(const vector_t* p);
+
+  cons_t* make_bytevector(const size_t size)
+  {
+    cons_t* p = alloc_cons(BYTEVECTOR);
+    p->bytevector = alloc_bytevector(size);
+    return p;
+  }
+
+  cons_t* make_bytevector(const size_t size, const uint8_t fill)
+  {
+    cons_t* p = alloc_cons(BYTEVECTOR);
+    p->bytevector = alloc_bytevector(size, fill);
+    return p;
+  }
+
+  cons_t* make_symbol(const char* name)
+  {
+    cons_t* p = alloc_cons(SYMBOL);
+    p->symbol = alloc_symbol(name);
+    return p;
+  }
+
+  cons_t* make_vector(const size_t size, cons_t* fill)
+  {
+    cons_t* p = alloc_cons(VECTOR);
+    p->vector = alloc_vector(size, fill);
+    return p;
+  }
+
+  cons_t* make_vector(const vector_t* v)
+  {
+    cons_t* p = alloc_cons(VECTOR);
+    p->vector = alloc_vector(v);
+    return p;
+  }
+
+  cons_t* make_pair(cons_t* car, cons_t* cdr)
+  {
+    cons_t* p = alloc_cons(PAIR);
+    p->car = car;
+    p->cdr = cdr;
+    return p;
+  }
+
+  cons_t* make_string(const char* s)
+  {
+    if ( !s )
+      raise(runtime_exception("Cannot create NULL string."));
+
+    cons_t* p = alloc_cons(STRING);
+    p->string = alloc_string(s);
+    return p;
+  }
 };
 
 void gc_storage::mark_by_type(const cons_t* p)
@@ -240,8 +293,9 @@ size_t gc_storage::sweep()
 cons_t* gc_storage::alloc_cons(const type_t& type)
 {
   cons_t* p = new cons_t();
-  p->type = type;
   conses[p] = GC_UNREACHABLE;
+  memset(p, 0, sizeof(cons_t));
+  p->type = type;
   return p;
 }
 
@@ -305,9 +359,9 @@ pointer_t* gc_storage::alloc_pointer(const char* tag, void* ptr)
 syntax_t* gc_storage::alloc_syntax(cons_t* transformer, environment_t* env)
 {
   syntax_t* p = new syntax_t();
+  syntaxes[p] = GC_UNREACHABLE;
   p->transformer = transformer;
   p->environment = env;
-  syntaxes[p] = GC_UNREACHABLE;
   return p;
 }
 
@@ -391,16 +445,16 @@ library_t* gc_storage::alloc_library()
 char* gc_storage::alloc_string(const size_t length)
 {
   char* p = new char[1+length];
-  memset(p, 0, 1+length);
   strings[p] = GC_UNREACHABLE;
+  memset(p, 0, 1+length);
   return p;
 }
 
 char* gc_storage::alloc_string(const char* source)
 {
   char* p = new char[1+strlen(source? source : "")];
-  strcpy(p, source);
   strings[p] = GC_UNREACHABLE;
+  strcpy(p, source);
   return p;
 }
 
@@ -778,4 +832,39 @@ void gc_add_root(environment_t* e)
 void gc_add_root(program_t* p)
 {
   global_roots.push_back(cons(p->root, environment(p->globals)));
+}
+
+cons_t* make_bytevector(const size_t size)
+{
+  return gc.make_bytevector(size);
+}
+
+cons_t* make_bytevector(const size_t size, const uint8_t fill)
+{
+  return gc.make_bytevector(size, fill);
+}
+
+cons_t* make_symbol(const char* name)
+{
+  return gc.make_symbol(name);
+}
+
+cons_t* make_vector(const size_t size, cons_t* fill)
+{
+  return gc.make_vector(size, fill);
+}
+
+cons_t* make_vector(const vector_t* v)
+{
+  return gc.make_vector(v);
+}
+
+cons_t* make_pair(cons_t* car, cons_t* cdr)
+{
+  return gc.make_pair(car, cdr);
+}
+
+cons_t* make_string(const char* s)
+{
+  return gc.make_string(s);
 }
