@@ -127,13 +127,24 @@ static cons_t* eval_quasiquote(cons_t* p, environment_t* e)
  */
 cons_t* eval(cons_t* p, environment_t* e)
 {
-  const size_t gc_it = 1000;
-  size_t gc_cnt = gc_it;
+  size_t gc_cnt = global_opts.gc_iterations;
 
   for(;;) {
     if ( global_opts.gc && --gc_cnt == 0 ) {
-      gc_cnt = gc_it;
-      gc_collect();
+      gc_cnt = global_opts.gc_iterations;
+
+      if ( global_opts.gc_verbose ) {
+        fprintf(stderr, "* running gc (%zu iterations, %zu objects) ... ",
+            global_opts.gc_iterations, gc_status());
+        fflush(stderr);
+      }
+
+      const size_t objs = gc_collect();
+
+      if ( global_opts.gc_verbose ) {
+        fprintf(stderr, "%zu objects reclaimed\n", objs);
+        fflush(stderr);
+      }
     }
 
     if ( atomp(p) ) {

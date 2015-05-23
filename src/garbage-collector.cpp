@@ -58,6 +58,21 @@ class gc_storage {
   size_t sweep();
 
   template<typename E>
+  void delete_all(typename std::map<E, gc_state>& s)
+  {
+    for ( typename std::map<E, gc_state>::iterator kv = s.begin();
+          kv != s.end(); )
+    {
+      E ptr = kv->first;
+      delete(ptr);
+      kv = s.erase(kv);
+    }
+
+    if ( s.size() != 0 )
+      printf("Warning: Did not free up everyting.");
+  }
+
+  template<typename E>
   size_t sweep_ptr(typename std::map<E, gc_state>& s)
   {
     size_t reclaimed = 0;
@@ -113,6 +128,8 @@ class gc_storage {
   }
 
 public:
+  ~gc_storage();
+
   size_t size() const;
   size_t collect(const cons_t* roots);
   size_t collect();
@@ -687,6 +704,13 @@ void gc_storage::mark(const port_t* p)
     } else
       printf("gc error: port_t* %p not in root set.\n", p);
   }
+}
+
+gc_storage::~gc_storage()
+{
+  // The OS will actually free up everything for us, but to be a bit graceful,
+  // we'll manually close up resources.
+  delete_all(ports);
 }
 
 /*****************************************************************************/

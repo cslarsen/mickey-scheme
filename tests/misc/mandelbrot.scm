@@ -38,7 +38,7 @@
   (or (= x y)
       (< x y)))
 
-(define (1- n)
+(define (dec n)
   (- n 1))
 
 ; C_{n+1} = C_{n}^2  + c, C_{0} = c
@@ -47,7 +47,7 @@
   (if (> (complex-mag z) threshold) #t
       (mandelbrot?-iter
         (+complex c (*complex z z))
-                  c (1- nmax)))))
+                  c (dec nmax)))))
 
 (define (mandelbrot? z)
   (mandelbrot?-iter

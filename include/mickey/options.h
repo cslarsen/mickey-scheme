@@ -35,6 +35,8 @@ struct options_t
   bool warn;
   bool empty_repl_env;
   bool gc;
+  size_t gc_iterations;
+  bool gc_verbose;
 };
 
 extern options_t global_opts;

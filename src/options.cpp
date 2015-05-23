@@ -32,6 +32,8 @@ void set_default(struct options_t* p, int argc, char** argv)
   p->argv = argv;
   p->warn = false;
   p->gc = false;
+  p->gc_iterations = 1000;
+  p->gc_verbose = false;
 
   /*
    * Current working directory at time of execution.

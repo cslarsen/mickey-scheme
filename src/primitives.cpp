@@ -49,12 +49,14 @@ cons_t* symbol(const char* s)
     raise(runtime_exception("Cannot create empty symbol"));
 
   if ( isdigit(s[0]) )
-    raise(runtime_exception("Symbol cannot begin with a digit."));
+    raise(runtime_exception(format("Symbol cannot begin with a digit: '%s'",
+            s)));
 
   // TODO: This is not correct, see R7RS 2.1, should be able to do |H\x65;llo|,
   // but this should be handled by the parser, for the most part.
   if ( strchr(s, '(') || strchr(s, ')') || !strcmp(s, ".") || strchr(s, '\\') )
-    raise(runtime_exception("Symbol contained invalid character(s)."));
+    raise(runtime_exception(
+          format("Symbol contained invalid character(s): '%s'", s)));
 
   return make_symbol(s);
 }

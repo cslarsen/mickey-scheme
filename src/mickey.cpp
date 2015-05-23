@@ -45,6 +45,7 @@ void execute(const char* file)
       has_file? " in " : "",
       has_file? file : "",
       e.what());
+    fflush(stderr);
 
     backtrace();
     backtrace_clear();
@@ -65,6 +66,7 @@ void execute_string(const char* s)
   }
   CATCH (const exception_t& e) {
     fprintf(stderr, "\nError: %s\n", e.what());
+    fflush(stderr);
     backtrace();
     backtrace_clear();
     exit(1);
@@ -91,6 +93,10 @@ bool parse_option(const char* s, struct options_t* p)
     exit(0);
   } else if ( ARGHIT("", "--gc") ) {
     p->gc = true;
+  } else if ( ARGHIT("", "--gc-verbose") ) {
+    p->gc_verbose = true;
+  } else if ( !strncmp(s, "--gc-iterations=", 16) ) {
+    p->gc_iterations = atol(s+16);
   } else if ( ARGHIT("-h", "--help") ) {
     help(); 
     exit(0);
@@ -125,6 +131,8 @@ void help()
     "  -             Read program from standard input\n"
     "  --            Rest of arguments are files, i.e. files can now begin with -\n"
     "  --gc          Use GC (experimental)\n"
+    "  --gc-iterations=NUM  Number of evals before running GC\n"
+    "  --gc-verbose  Print GC stats to stderr\n"
     "  -I<path>      Set include path for (load)\n"
     "  -L<path>      Set location for library imports\n"
     "  -V --version  Print version\n"
