@@ -14,6 +14,18 @@ The current project goals are to
 Note that _Mickey_ is just a codeword for the early stages of this project.
 The name will change as the project matures.
 
+Update June, 2017
+-----------------
+
+Having done nothing with this project for years, it looks pretty dead from
+where I'm standing!
+
+Note to self: Next time I implement a LISP system, turn down the ambition level
+somewhat.
+
+It was a tremendously fun project, and I recommend everyone to do this at home.
+I learnt a *lot* while doing this. Would have done it again!
+
 Current Features
 ----------------
 
@@ -27,6 +39,9 @@ Current Features
   * Full support for the R7RS library system `define-library`
   * Tail call eliminiation
   * The `define-record-type` record system
+  * An experimental, rudimentary foreign-function interface via libffi (see
+      [working libcurl dlopen example](lib/optional/libffi/example.scm)).
+  * Includes the compulsory (Mandelbrot program)[examples/mandelbrot.scm]
 
 Some of these are demonstrated in the [example code section](#examples).
 
