@@ -324,9 +324,12 @@ int repl()
         {
           size_t size = gc_status();
           size_t dels = gc_collect(p);
-          if ( dels > 0 )
+          if ( dels > 0 ) {
+#ifndef NDEBUG
             printf("** gc reclaimed %zu / %zu objects (~ %zu kb) -- %zu objects left\n",
                 dels, size, dels*sizeof(cons_t)/1000, gc_status());
+#endif
+          }
         }
 
         if ( circularp(result) ) {
