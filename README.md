@@ -41,7 +41,7 @@ Current Features
   * The `define-record-type` record system
   * An experimental, rudimentary foreign-function interface via libffi (see
       [working libcurl dlopen example](lib/optional/libffi/example.scm)).
-  * Includes the compulsory (Mandelbrot program)[examples/mandelbrot.scm]
+  * Includes the compulsory [Mandelbrot program](examples/mandelbrot.scm)
 
 Some of these are demonstrated in the [example code section](#examples).
 
