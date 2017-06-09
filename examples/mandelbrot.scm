@@ -51,16 +51,13 @@
 
 ;; Complex functions
 
-(define (make-complex re im)
-  (cons re im))
+(define make-complex cons) ; constructs a complex number
+(define re car) ; extract real part
+(define im cdr) ; extract imaginary part
 
-; Real part
-(define (re z)
-  (car z))
-
-; Imaginary part
-(define (im z)
-  (cdr z))
+(define (magnitude z)
+  (sqrt (+ (* (re z) (re z))
+           (* (im z) (im z)))))
 
 (define (add-complex a b)
   (make-complex (+ (re a) (re b))
@@ -74,10 +71,6 @@
                 (+ (* (re a) (im b))     ; ad
                    (* (im a) (re b)))))  ; bc
 
-(define (magnitude z)
-  (sqrt (+ (* (re z) (re z))
-           (* (im z) (im z)))))
-
 ;; The actual Mandelbrot program starts here
 ;; =========================================
 
@@ -89,46 +82,42 @@
 (define screen-columns 78)
 (define screen-rows    25)
 
-; Characters used for drawing
-(define dot-char "*")
-(define space-char " ")
-
-(define escape-radius 2.0)
-
 ; Area of the Mandelbrot set to render
 (define x-start -2.0)
 (define x-stop   1.0)
 (define y-start -1.0)
 (define y-stop   1.0)
 
-(define x-step   (/ (- x-stop x-start) (+ 0.5 (- screen-columns 1))))
-(define y-step   (/ (- y-stop y-start) (- screen-rows 1)))
-
 (define (mandelbrot? z)
-  ; C_{n+1} = C_{n}^2  + c, C_{0} = c
-  (define (mandelbrot?-iter z c nmax)
-    (if (zero? nmax) #f
-      (if (> (magnitude z) escape-radius) #t
-          (mandelbrot?-iter
-            (add-complex c (multiply-complex z z))
-                         c (- nmax 1)))))
-  (mandelbrot?-iter
-    (make-complex 0.0 0.0)
-     z iterations))
+  (let ((escape-radius 2.0))
+    ; C_{n+1} = C_{n}^2  + c, C_{0} = c
+    (define (iterate z c nmax)
+      (if (zero? nmax) #f
+        (if (> (magnitude z) escape-radius) #t
+            (iterate
+              (add-complex c (multiply-complex z z))
+                           c (- nmax 1)))))
+    (iterate (make-complex 0 0) z iterations)))
 
-(define (plot x y)
-  (display (if (mandelbrot? (make-complex x y)) space-char dot-char)))
+(define (render y)
+  (let ((x-step (/ (- x-stop x-start)
+                   (+ 0.5 (- screen-columns 1))))
+        (y-step (/ (- y-stop y-start)
+                   (- screen-rows 1))))
 
-(define (y-loop y)
-  (define (x-loop x y)
-    (if (not (<= x x-stop)) 0
+    (define (plot x y)
+      (display (if (mandelbrot? (make-complex x y)) " " "*")))
+
+    (define (x-loop x y)
+      (if (not (<= x x-stop)) 0
+          (begin
+            (plot x y)
+            (x-loop (+ x x-step) y))))
+
+    (if (not (<= y y-stop)) 0
         (begin
-          (plot x y)
-          (x-loop (+ x x-step) y))))
-  (if (not (<= y y-stop)) 0
-      (begin
-        (x-loop x-start y)
-        (display "\n")
-        (y-loop (+ y y-step)))))
+          (x-loop x-start y)
+          (display "\n")
+          (render (+ y y-step))))))
 
-(y-loop y-start)
+(render y-start)
