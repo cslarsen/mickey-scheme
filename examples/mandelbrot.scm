@@ -10,9 +10,12 @@
 ;; Note that this version is tailored for Mickey Schee, meaning that it
 ;; actually uses a subset of RnRS Scheme.
 ;;
-;; It's been verified to work with Chicken Scheme.
+;; It's been verified to work with Chicken Scheme (well, originally, it was).
 ;;
-;; Made by Christian Stigen Larsen in 2011
+;; Also, for extra geek cred, I tried to make this output as close as possible
+;; to the original render done at IBM in 1980!
+;;
+;; Made by Christian Stigen Larsen in 2011 (minor updates in 2017)
 ;; Placed in the public domain.
 
 ;; Expected output
@@ -50,6 +53,7 @@
         (scheme load))
 
 ;; Complex functions
+;; =================
 
 (define make-complex cons) ; constructs a complex number
 (define re car) ; extract real part
@@ -71,11 +75,13 @@
                 (+ (* (re a) (im b))     ; ad
                    (* (im a) (re b)))))  ; bc
 
+(define (square-complex z) (multiply-complex z z))
+
 ;; The actual Mandelbrot program starts here
 ;; =========================================
 
-; Number of iterations, increase for more accurate answer at a cost of slower
-; computation
+; Number of iterations until we give up and mark the point as converging.
+; Increase for more accucary, but don't expect the ASCII output to look nicer!
 (define iterations 20)
 
 ; Output size
@@ -90,13 +96,13 @@
 
 (define (mandelbrot? z)
   (let ((escape-radius 2.0))
-    ; C_{n+1} = C_{n}^2  + c, C_{0} = c
     (define (iterate z c nmax)
       (if (zero? nmax) #f
         (if (> (magnitude z) escape-radius) #t
             (iterate
-              (add-complex c (multiply-complex z z))
-                           c (- nmax 1)))))
+              ;; Iterates C_{n+1} = C_{n}^2 + c where C_{0} = c
+              (add-complex c (square-complex z))
+              c (- nmax 1)))))
     (iterate (make-complex 0 0) z iterations)))
 
 (define (render y)
