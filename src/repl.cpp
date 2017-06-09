@@ -321,16 +321,19 @@ int repl()
       for ( cons_t *i = p->root; !nullp(i); i = cdr(i) ) {
         cons_t *result = eval(car(i), p->globals);
 
+        /*
+         * The garbage collector doesn't work correctly, so disable it for now.
+         * Test it by starting mickey, then run "(<= 10 2)" until it crashes to
+         * test.
         {
           size_t size = gc_status();
           size_t dels = gc_collect(p);
           if ( dels > 0 ) {
-#ifndef NDEBUG
             printf("** gc reclaimed %zu / %zu objects (~ %zu kb) -- %zu objects left\n",
                 dels, size, dels*sizeof(cons_t)/1000, gc_status());
-#endif
           }
         }
+        */
 
         if ( circularp(result) ) {
           fflush(stdout);
