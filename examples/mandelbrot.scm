@@ -56,8 +56,8 @@
 ;; =================
 
 (define make-complex cons) ; constructs a complex number
-(define re car) ; extract real part
-(define im cdr) ; extract imaginary part
+(define re car)            ; extracts real part
+(define im cdr)            ; extracts imaginary part
 
 (define (magnitude z)
   (sqrt (+ (* (re z) (re z))
@@ -80,50 +80,37 @@
 ;; The actual Mandelbrot program starts here
 ;; =========================================
 
-; Number of iterations until we give up and mark the point as converging.
-; Increase for more accucary, but don't expect the ASCII output to look nicer!
-(define iterations 20)
-
-; Output size
-(define screen-columns 78)
-(define screen-rows    25)
-
-; Area of the Mandelbrot set to render
-(define x-start -2.0)
-(define x-stop   1.0)
-(define y-start -1.0)
-(define y-stop   1.0)
-
 (define (mandelbrot? z)
-  (let ((escape-radius 2.0))
+  (let ((escape-radius 2.0)
+        (iterations 20))
+
     (define (iterate z c nmax)
       (if (zero? nmax) #f
         (if (> (magnitude z) escape-radius) #t
-            (iterate
-              ;; Iterates C_{n+1} = C_{n}^2 + c where C_{0} = c
+            (iterate ;; iterates C_{n+1} = C_{n}^2 + c where C_{0} = c
               (add-complex c (square-complex z))
               c (- nmax 1)))))
+
     (iterate (make-complex 0 0) z iterations)))
 
-(define (render y)
-  (let ((x-step (/ (- x-stop x-start)
-                   (+ 0.5 (- screen-columns 1))))
-        (y-step (/ (- y-stop y-start)
-                   (- screen-rows 1))))
+(define (render-area x-start y-start x-stop y-stop)
+  (let* ((screen-cols 78)
+         (screen-rows 25)
+         (x-step (/ (- x-stop x-start) (+ 0.5 (- screen-cols 1))))
+         (y-step (/ (- y-stop y-start) (- screen-rows 1))))
 
-    (define (plot x y)
-      (display (if (mandelbrot? (make-complex x y)) " " "*")))
-
-    (define (x-loop x y)
+    (define (render-line x y)
       (if (not (<= x x-stop)) 0
           (begin
-            (plot x y)
-            (x-loop (+ x x-step) y))))
+            (display (if (mandelbrot? (make-complex x y)) " " "*"))
+            (render-line (+ x x-step) y))))
 
-    (if (not (<= y y-stop)) 0
-        (begin
-          (x-loop x-start y)
-          (display "\n")
-          (render (+ y y-step))))))
+    (let next-line ((y y-start))
+      (if (not (<= y y-stop)) 0
+          (begin
+            (render-line x-start y)
+            (display "\n")
+            (next-line (+ y y-step)))))))
 
-(render y-start)
+; Renders given area of the Mandelbrot set
+(render-area -2.0 -1.0 1.0 1.0)
